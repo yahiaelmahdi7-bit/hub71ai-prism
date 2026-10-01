@@ -1,0 +1,10 @@
+{
+  "chaperone": {
+    "act_at": 0.14,
+    "review_at": 0.14,
+    "n_fit": 35,
+    "n_unseen": 35,
+    "unseen_precision": 0.9411764705882353,
+    "date": "2026-10-01"
+  }
+}

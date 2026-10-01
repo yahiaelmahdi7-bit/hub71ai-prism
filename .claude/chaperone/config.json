@@ -1,0 +1,11 @@
+{
+ "ttl_seconds": 480,
+ "grey_distance_lines": 15,
+ "jev_enabled": true,
+ "jev_timeout": 1.5,
+ "jev_combine": "max",
+ "t_warn": 0.25,
+ "t_deny": 0.5,
+ "jev_may_deny": true,
+ "_note": "t_warn/t_deny hardened to mid-gap values after the fit picked razor-edge 0.08/0.13; see CALIBRATION.md"
+}

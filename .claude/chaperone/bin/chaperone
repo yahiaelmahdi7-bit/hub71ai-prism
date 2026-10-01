@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""chaperone CLI: status | log [n] | release <agent> | off | on"""
+import json, os, sys, time
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "..", "..", "hooks"))
+import chaperone as c
+
+
+def sdir():
+    cwd = os.getcwd()
+    _, main = c.git_info(cwd, cwd)
+    return c.store_dir(main, cwd) if (main or os.environ.get("CHAPERONE_DIR")) else os.path.normpath(os.path.join(HERE, ".."))
+
+
+def main(a):
+    cmd, d = (a[1] if len(a) > 1 else "status"), sdir()
+    cfg, now = c.load_config(d), time.time()
+    off = c.kill_switch(d)
+    if cmd == "status":
+        print("Chaperone is %s." % ("OFF (everything is allowed)" if off else "ON"))
+        cl = c.live(c.read_claims(d), now, cfg["ttl_seconds"])
+        if not cl:
+            print("Nobody is holding any file right now.")
+        for x in sorted(cl, key=lambda x: (x["file"], x["start"])):
+            left = cfg["ttl_seconds"] - (now - x["ts"])
+            print("- %s is editing %s lines %d-%d (touched %s ago, hold ends in %s)" % (
+                x["label"], x["file"], x["start"], x["end"], c.fmt_age(now - x["ts"]), c.fmt_age(left)))
+    elif cmd == "log":
+        n = int(a[2]) if len(a) > 2 else 20
+        try:
+            rows = open(os.path.join(d, "log.jsonl")).read().splitlines()[-n:]
+        except OSError:
+            rows = []
+        for r in rows:
+            j = json.loads(r)
+            print("%s %-6s %-22s %s %s %s%s" % (j.get("ts", ""), j.get("decision", ""), j.get("rule", ""),
+                  j.get("caller", ""), j.get("file", ""), "p=%s " % j["p"] if "p" in j else "",
+                  "%sms" % j["latency_ms"] if "latency_ms" in j else ""))
+    elif cmd == "release" and len(a) > 2:
+        with c.locked(d):
+            cl = c.read_claims(d)
+            keep = [x for x in cl if a[2] not in x["agent"] and a[2] not in x["label"]]
+            c.write_claims(d, keep)
+        print("Released %d claim(s) held by '%s'." % (len(cl) - len(keep), a[2]))
+    elif cmd == "off":
+        os.makedirs(d, exist_ok=True); open(os.path.join(d, "OFF"), "w").close()
+        print("Chaperone OFF: every edit is allowed. Turn back on with: chaperone on")
+    elif cmd == "on":
+        for p in (os.path.join(d, "OFF"),):
+            if os.path.exists(p): os.remove(p)
+        print("Chaperone ON." + (" (CHAPERONE_OFF=1 is still set in this shell.)" if os.environ.get("CHAPERONE_OFF") == "1" else ""))
+    else:
+        print(__doc__); return 1
+    return 0
+
+
+sys.exit(main(sys.argv))

@@ -1,0 +1,55 @@
+{
+ "n_total": 70,
+ "n_fit": 35,
+ "n_unseen": 35,
+ "seed": 7,
+ "modes": {
+  "max": {
+   "t_deny": 0.13,
+   "t_warn": 0.08,
+   "unseen_deny_precision": 1.0,
+   "unseen_deny_recall": 1.0,
+   "unseen_deny_n": 15,
+   "unseen_warn_precision": 0.6818181818181818,
+   "unseen_warn_recall": 1.0,
+   "unseen_warn_n": 22
+  },
+  "mean": {
+   "t_deny": 0.07500000000000001,
+   "t_warn": 0.05500000000000001,
+   "unseen_deny_precision": 1.0,
+   "unseen_deny_recall": 1.0,
+   "unseen_deny_n": 15,
+   "unseen_warn_precision": 0.7894736842105263,
+   "unseen_warn_recall": 1.0,
+   "unseen_warn_n": 19
+  },
+  "uses": {
+   "t_deny": 0.05,
+   "t_warn": 0.04,
+   "unseen_deny_precision": 0.9375,
+   "unseen_deny_recall": 1.0,
+   "unseen_deny_n": 16,
+   "unseen_warn_precision": 0.8333333333333334,
+   "unseen_warn_recall": 1.0,
+   "unseen_warn_n": 18
+  },
+  "breaks": {
+   "t_deny": 0.13,
+   "t_warn": 0.08,
+   "unseen_deny_precision": 1.0,
+   "unseen_deny_recall": 1.0,
+   "unseen_deny_n": 15,
+   "unseen_warn_precision": 0.6818181818181818,
+   "unseen_warn_recall": 1.0,
+   "unseen_warn_n": 22
+  }
+ },
+ "chosen_mode": "max",
+ "jev_kit_calibrate": {
+  "rc": 0,
+  "stdout": "site=chaperone act_at=0.1400 review_at=0.1400 (thresholds on answer confidence) n_fit=35 n_unseen=35\nUNSEEN: precision=0.941 (Jev right, among acted)  act=0.971 review=0.000 escalate=0.029\nwrote /private/tmp/claude-501/-Users-y-Projects-jev-kit/e30e9be2-44ec-403c-825b-727e3daccfe7/scratchpad/bankable-chaperone/.claude/chaperone/tests/kit_thresholds.json",
+  "stderr": ""
+ },
+ "jev_may_deny": true
+}

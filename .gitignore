@@ -42,3 +42,7 @@ next-env.d.ts
 
 !.env.example
 .playwright-mcp/
+
+# python caches (chaperone hooks)
+__pycache__/
+*.pyc
