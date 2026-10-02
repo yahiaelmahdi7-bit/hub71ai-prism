@@ -1,0 +1,69 @@
+{
+  "asOf": "2026-10-02",
+  "organization": {
+    "id": "org-falcon-analytics",
+    "name": "Falcon Analytics FZ-LLC",
+    "hasUaeEntity": true
+  },
+  "program": {
+    "id": "program-falcon-october-2026",
+    "name": "October 2026 Abu Dhabi team move",
+    "officeArea": "Al Maryah Island",
+    "teamSize": 5,
+    "moveDate": "2026-11-15",
+    "housingAllowanceAnnualAed": 105000,
+    "jurisdiction": "adgm"
+  },
+  "employees": [
+    {
+      "personId": "person-sara",
+      "caseId": "case-sara",
+      "name": "Sara Haddad",
+      "workType": "self_employed_consultant",
+      "household": "single",
+      "monthlyIncomeAed": 28000,
+      "privateDocuments": ["bank_statement", "licence", "invoices"],
+      "preferredAreas": ["Al Reem Island", "Al Nahyan", "Khalifa City"]
+    },
+    {
+      "personId": "person-maya",
+      "caseId": "case-maya",
+      "name": "Maya Singh",
+      "workType": "employee",
+      "household": "couple",
+      "monthlyIncomeAed": 33500,
+      "privateDocuments": ["employment_contract", "passport"],
+      "preferredAreas": ["Al Reem Island", "Al Raha Beach"]
+    },
+    {
+      "personId": "person-omar",
+      "caseId": "case-omar",
+      "name": "Omar Nasser",
+      "workType": "employee",
+      "household": "family_with_children",
+      "monthlyIncomeAed": 42000,
+      "privateDocuments": ["salary_certificate", "ids"],
+      "preferredAreas": ["Khalifa City", "Yas Island", "Al Raha Beach"]
+    },
+    {
+      "personId": "person-lina",
+      "caseId": "case-lina",
+      "name": "Lina Petrov",
+      "workType": "employee",
+      "household": "single",
+      "monthlyIncomeAed": 23000,
+      "privateDocuments": ["employment_contract"],
+      "preferredAreas": ["Al Nahyan", "Hamdan Street", "Al Khalidiyah"]
+    },
+    {
+      "personId": "person-daniel",
+      "caseId": "case-daniel",
+      "name": "Daniel Okafor",
+      "workType": "employee",
+      "household": "couple_with_child",
+      "monthlyIncomeAed": 39000,
+      "privateDocuments": ["employment_contract", "ids"],
+      "preferredAreas": ["Yas Island", "Al Raha Beach", "Khalifa City"]
+    }
+  ]
+}

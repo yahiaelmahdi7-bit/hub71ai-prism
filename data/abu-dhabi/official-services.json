@@ -1,0 +1,131 @@
+{
+  "asOf": "2026-10-02",
+  "jurisdictions": [
+    {
+      "id": "mainland",
+      "label": "Abu Dhabi mainland",
+      "authority": "Abu Dhabi Department of Economic Development",
+      "officialUrl": "https://added.gov.ae/en/set-up/establish-your-business/licensing-requirements",
+      "handoffUrl": "https://www.tamm.abudhabi/en/life-events/business/Start-a-Business",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "H",
+      "steps": [
+        "Choose business activity",
+        "Choose legal form",
+        "Reserve trade name",
+        "Issue economic licence through official services",
+        "Attach lease or premises evidence when required"
+      ],
+      "notes": "ADDED describes economic licences and permits, including standard, freelancer, virtual and dual licence categories. Bankable only routes and tracks the handoff."
+    },
+    {
+      "id": "adgm",
+      "label": "ADGM",
+      "authority": "Abu Dhabi Global Market Registration Authority",
+      "officialUrl": "https://www.adgm.com/registration-authority/registration-and-incorporation",
+      "handoffUrl": "https://www.adgm.com/operating-in-adgm/e-services/online-registry-solution",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "H",
+      "steps": [
+        "Prepare business plan and application requirements",
+        "Choose ADGM legal entity and activity",
+        "Submit application through the ADGM Online Registry Solution",
+        "Respond to Registrar requests",
+        "Receive registration and commercial licence when approved by ADGM"
+      ],
+      "notes": "ADGM says the Registration Authority registers and licenses ADGM establishments. Bankable must not show automatic ADGM filing status without a provider event or user-reported reference."
+    },
+    {
+      "id": "kezad",
+      "label": "KEZAD",
+      "authority": "Khalifa Economic Zones Abu Dhabi",
+      "officialUrl": "https://www.kezadgroup.com/en/business-setup",
+      "handoffUrl": "https://www.kezadgroup.com/en/business-setup",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "H",
+      "steps": [
+        "Choose mainland or free zone jurisdiction",
+        "Choose licence type and legal type",
+        "Choose facilities such as offices, workstations, land, warehouse or build-to-suit",
+        "Submit registration and licensing application through KEZAD channels",
+        "Complete authority review and receive licence only when KEZAD confirms"
+      ],
+      "notes": "KEZAD presents business setup, jurisdictions, licence types, legal types and business facilities. Bankable keeps KEZAD separate from mainland and ADGM."
+    }
+  ],
+  "personalServices": [
+    {
+      "id": "adro-freelancer-green-visa",
+      "label": "Freelancer Green Visa route",
+      "authority": "Abu Dhabi Residents Office",
+      "officialUrl": "https://www.adro.gov.ae/en/Visas/Types-of-Visas/Abu-Dhabi-Green-Visa/Freelancers",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "H",
+      "requirements": [
+        "Freelance work permit from MOHRE",
+        "Bachelor's degree, specialised diploma or equivalent",
+        "AED 360,000 annual self-employment income for the previous two years or proof of financial solvency"
+      ],
+      "notes": "ADRO states that nomination request submission for this category is currently unavailable through ADRO. Bankable can explain readiness factors and route to official sources, not submit for the user."
+    },
+    {
+      "id": "icp-work-bundle",
+      "label": "Employee permits and residence Work Bundle",
+      "authority": "Federal Authority for Identity, Citizenship, Customs and Ports Security",
+      "officialUrl": "https://icp.gov.ae/en/services/shared-services/",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "H",
+      "requirements": [
+        "Employer-owned hiring or renewal flow",
+        "Integrated services from participating federal and local entities",
+        "Provider or employer reference needed for submitted or confirmed states"
+      ],
+      "notes": "The ICP page describes Work Bundle services for hiring new employees, pre-renewing work permits and cancelling permits and residence."
+    },
+    {
+      "id": "abu-dhabi-health-insurance",
+      "label": "Abu Dhabi health insurance enrolment",
+      "authority": "Department of Health - Abu Dhabi",
+      "officialUrl": "https://www.doh.gov.ae/-/media/AFAD86A6E3FF447DA030ED194F31CFB6.ashx",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "M",
+      "requirements": [
+        "Employer or sponsor arranges health insurance policy with insurer",
+        "Applies to non-UAE citizen residents and their families under Abu Dhabi health insurance rules",
+        "Policy issuance belongs to insurer or competent authority"
+      ],
+      "notes": "Bankable tracks employer task and evidence reference only; it does not issue policies."
+    }
+  ],
+  "financeReferences": [
+    {
+      "id": "cbuae-mortgage-important-ratios",
+      "label": "Mortgage readiness ratios",
+      "authority": "Central Bank of the UAE",
+      "officialUrl": "https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "H",
+      "notes": "Use for readiness factors such as deposit, debt burden and affordability. Do not display loan-approval probability."
+    }
+  ],
+  "workspaceSources": [
+    {
+      "id": "hub71",
+      "label": "Hub71",
+      "area": "Al Maryah Island",
+      "officialUrl": "https://www.hub71.com/",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "M",
+      "contactType": "official site"
+    },
+    {
+      "id": "regus-abu-dhabi",
+      "label": "Regus Abu Dhabi",
+      "area": "Abu Dhabi",
+      "officialUrl": "https://www.regus.com/en-gb/united-arab-emirates/abu-dhabi",
+      "sourceCheckedAt": "2026-10-02",
+      "sourceConfidence": "M",
+      "contactType": "provider booking/contact"
+    }
+  ]
+}

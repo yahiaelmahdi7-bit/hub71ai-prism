@@ -1,0 +1,32 @@
+{
+  "asOf": "2026-10-02",
+  "currency": "AED",
+  "period": "year",
+  "method": "Illustrative asking-rent bands triangulated from H1 2026 portal market reports and public Abu Dhabi listing pages, not ADREC transaction averages. Synthetic examples are not real homes or market-wide estimates.",
+  "sources": [
+    "https://www.bayut.com/mybayut/abu-dhabi-rental-market-report-h1-2026/",
+    "https://www.dubizzle.com/blog/property/abu-dhabi-h1-rental-property-report-2026/",
+    "https://abudhabi.dubizzle.com/en/property-for-rent/residential/",
+    "https://adrec.gov.ae/en/property_and_index/interactive-map"
+  ],
+  "bands": [
+    { "area": "Khalifa City", "bedrooms": 0, "minRentAed": 30000, "maxRentAed": 50000, "minSqft": 420, "maxSqft": 700 },
+    { "area": "Khalifa City", "bedrooms": 1, "minRentAed": 56000, "maxRentAed": 60000, "minSqft": 700, "maxSqft": 1100 },
+    { "area": "Al Nahyan", "bedrooms": 0, "minRentAed": 40000, "maxRentAed": 50000, "minSqft": 400, "maxSqft": 650 },
+    { "area": "Al Nahyan", "bedrooms": 1, "minRentAed": 60000, "maxRentAed": 66000, "minSqft": 650, "maxSqft": 950 },
+    { "area": "Hamdan Street", "bedrooms": 0, "minRentAed": 47000, "maxRentAed": 56000, "minSqft": 400, "maxSqft": 650 },
+    { "area": "Hamdan Street", "bedrooms": 1, "minRentAed": 70000, "maxRentAed": 74000, "minSqft": 650, "maxSqft": 950 },
+    { "area": "Al Khalidiyah", "bedrooms": 0, "minRentAed": 44000, "maxRentAed": 50000, "minSqft": 400, "maxSqft": 650 },
+    { "area": "Al Khalidiyah", "bedrooms": 1, "minRentAed": 75000, "maxRentAed": 84000, "minSqft": 700, "maxSqft": 1100 },
+    { "area": "Al Reem Island", "bedrooms": 0, "minRentAed": 58000, "maxRentAed": 90000, "minSqft": 400, "maxSqft": 700 },
+    { "area": "Al Reem Island", "bedrooms": 1, "minRentAed": 94000, "maxRentAed": 115000, "minSqft": 650, "maxSqft": 1100 },
+    { "area": "Al Reem Island", "bedrooms": 2, "minRentAed": 128000, "maxRentAed": 175000, "minSqft": 1050, "maxSqft": 1600 },
+    { "area": "Al Raha Beach", "bedrooms": 0, "minRentAed": 80000, "maxRentAed": 90000, "minSqft": 450, "maxSqft": 700 },
+    { "area": "Al Raha Beach", "bedrooms": 1, "minRentAed": 110000, "maxRentAed": 125000, "minSqft": 700, "maxSqft": 1100 },
+    { "area": "Yas Island", "bedrooms": 0, "minRentAed": 79000, "maxRentAed": 90000, "minSqft": 430, "maxSqft": 700 },
+    { "area": "Yas Island", "bedrooms": 1, "minRentAed": 100000, "maxRentAed": 123000, "minSqft": 650, "maxSqft": 1100 },
+    { "area": "Yas Island", "bedrooms": 2, "minRentAed": 155000, "maxRentAed": 200000, "minSqft": 1050, "maxSqft": 1700 },
+    { "area": "Al Ghadeer", "bedrooms": 0, "minRentAed": 45000, "maxRentAed": 53000, "minSqft": 400, "maxSqft": 650 },
+    { "area": "Al Ghadeer", "bedrooms": 1, "minRentAed": 60000, "maxRentAed": 66000, "minSqft": 650, "maxSqft": 950 }
+  ]
+}

@@ -46,3 +46,6 @@ next-env.d.ts
 # python caches (chaperone hooks)
 __pycache__/
 *.pyc
+
+# Private local relocation database and SQLite sidecars
+/.bankable/

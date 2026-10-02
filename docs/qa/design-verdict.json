@@ -1,0 +1,17 @@
+{
+  "score": 84,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Root screenshot docs/qa/first-ui-1440.png showed a six-line hero pushing the active hub below the first screen",
+    "Priority and section headings needed clearer hierarchy and readable date/source labels",
+    "Earlier UI draft used preview fixtures as if they were private progress and included unsupported real-listing claims"
+  ],
+  "suggestions": [
+    "Use the shorter heading 'Your Abu Dhabi move, in one place.' and reduce desktop title sizing",
+    "Load HR-safe preview separately from private bearer-token employee hubs",
+    "Show homes only after affordability and allowance filters, with contact controls only for non-synthetic contactable listings",
+    "Run a fresh screenshot verdict after the next browser pass and continue until the score is at least 90"
+  ],
+  "reasoning": "This file records the observed root visual verdict, not a self-reported pass. The current UI edits target the identified layout and product-truth issues and still need fresh screenshot verification."
+}

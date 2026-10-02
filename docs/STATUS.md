@@ -1,7 +1,12 @@
 # STATUS — Bankable (OpenAI hackathon, Abu Dhabi, 2026-10-02)
 
+## Product direction update (2026-10-02)
+- The current product direction is the Abu Dhabi relocation action hub in [product-brief.md](product-brief.md). This supersedes the earlier banking-only story ladder as the main user experience.
+- Banking, credit, and mortgages remain important connected actions. Document extraction is a supporting evidence feature.
+- The first data slice is a bounded hackathon rental pull at `/api/properties`, with Dubizzle attempted first and an explicitly attributed Property Finder fallback. Synthetic examples are generated separately from dated calibration bands; see [property-data.md](property-data.md). This is not a production-cleared portal integration.
+
 ## Settled (Yahia's decisions, do not re-litigate)
-- Solo build; Yahia directs the bankable-* crew in Claude Code; the PRODUCT runs on OpenAI (lib/openai.ts).
+- Solo build; Yahia directs the project-scoped `bankable-*` crew in Codex (with `.claude/agents` retained as the detailed role-contract source); the PRODUCT runs on OpenAI (`lib/openai.ts`).
 - Persona: Sara Haddad (fictional), sample-docs/ + sample-docs/PERSONA.md (test oracle).
 - Three moments, in this order (the story ladder): 1) business bank account (arrive), 2) credit card (settle, build credit), 3) home loan (build a future).
 - Rules only from docs/rules-research.md, H/M confidence, every rule with source_url. No haircut %. No bank-partner or traction claims.
@@ -10,7 +15,7 @@
 ## Exists (built 2026-10-01 night)
 - Starter app (commit 9e4be1d): upload UI, /api/analyze, lib/openai.ts (model gpt-5.6, untested until the key is in), npm run smoke.
 - lib/types.ts: IncomeProfile / Rule / Verdict contract.
-- .claude/: 18 bankable-* agents, /bk-* commands, CREW.md, chaperone hook (see .claude/chaperone/README.md).
+- `.codex/`: 18 project-scoped `bankable-*` agent adapters plus multi-agent config. `.claude/`: the detailed role contracts, legacy `/bk-*` commands, CREW.md, and chaperone hook (see `.claude/chaperone/README.md`).
 - ~/Projects/oss-library: vetted open-source picks (`~/Projects/oss-library/bin/oss find <tag>`).
 
 ## Timeline (Gulf time)
@@ -18,3 +23,15 @@
 
 ## Stage log
 (orchestrator appends here)
+
+## Relocation infrastructure — 2026-10-02
+
+- User confirmed the theme: practical solutions for individuals and companies moving to, settling in, and building a future in Abu Dhabi. Current infrastructure scope is [infrastructure-plan.md](infrastructure-plan.md), based on the diagram in [app-flow.md](app-flow.md).
+- Repository review: the homepage is still the document-upload starter. There is no relocation persistence, invitation flow, consent model, or company action ledger yet. Existing property adapters and calibration are a useful starting point; automated portal extraction is not approved production access.
+- Three native helpers dispatched after read-only review: official Abu Dhabi catalog, property data/affordability, and relocation persistence/API/privacy. Lead owns `lib/types.ts`, integration and verification. No overlapping write scopes, commits, pushes, or external invitation messages.
+- Shared relocation/reference/property contracts added alongside the existing income-evidence types. Installed Node 24 supports built-in SQLite; local private database files will live under ignored `.bankable/`.
+- Baseline typecheck passed; baseline lint has zero errors and two existing sample-document warnings. Delivery verification pending implementation.
+- User reassigned helper 3 to UX/UI and helpers 1/2 to data/backend. Helper 2 now owns the relocation domain/API as well as housing; helper 3 owns pages/components/styles, excluding APIs. Current delivery includes the user-facing hub, not only infrastructure.
+- Resume hook activated Forge. Grounding context and PRD/test-spec artifacts are in `.rcs/context/` and `.rcs/plans/`; execution follows the existing Next.js relocation product plan.
+- The first UI draft is visible on the existing local dev server at port 3000. It still needs API integration and removal of temporary market fixtures; it is not a completed user flow. Root captured `docs/qa/first-ui-1440.png`; the observed visual verdict is 84/revise, with hero hierarchy and real-action wiring pending.
+- Eleven initial catalog/property tests passed. Root added HTTP authorization/source-boundary checks; these are pending the in-progress backend replacement (current route builds return 500 during module replacement). No final delivery gate has passed yet.

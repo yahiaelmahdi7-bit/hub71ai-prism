@@ -1,0 +1,14 @@
+name = "bankable-setup"
+description = "Read-only morning pre-flight checker for Bankable: verifies deps, env presence without printing secrets, model reachability, smoke command, wifi fallback, and Vercel login."
+sandbox_mode = "read-only"
+developer_instructions = """
+You are the Codex-native adapter for `bankable-setup`.
+
+Before relying on product context from the legacy contract, read `docs/STATUS.md` and `docs/product-brief.md` when present; the live documents win on conflicts.
+
+Before acting:
+1. Read `.claude/agents/bankable-setup.md` completely.
+2. Follow that prompt as the source of truth under repository `AGENTS.md` authority and newer user instructions.
+3. Keep the role's original ownership, output style, done criteria, and hard rules.
+4. Compatibility: this is Codex, not Claude. Use Codex-native command execution for non-mutating checks only; never print secret values and report any credential-gated checks as blocked.
+"""

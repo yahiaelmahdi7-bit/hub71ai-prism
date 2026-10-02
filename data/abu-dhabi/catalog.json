@@ -1,0 +1,723 @@
+{
+  "version": "2026-10-02.abudhabi-relocation.v1",
+  "checkedAt": "2026-10-02T10:40:06+04:00",
+  "sources": [
+    {
+      "id": "added-licensing",
+      "title": "Abu Dhabi DED licensing requirements",
+      "publisher": "Abu Dhabi Department of Economic Development",
+      "url": "https://www.added.gov.ae/en/set-up/establish-your-business/licensing-requirements",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "publishedAt": "2026-09-24",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "ADDED licensing services include economic licences and permits.",
+        "Primary services include reserving a trade name, issuing, renewing, cancelling and amending an economic licence.",
+        "Licence types shown include Abu Dhabi Trader, Dual Licence, Freelancer Licence, Standard Licence and Virtual Licence."
+      ],
+      "limitations": [
+        "Specific activity eligibility, final fees and issue status remain with ADDED/TAMM."
+      ]
+    },
+    {
+      "id": "adgm-registration",
+      "title": "ADGM Registration and Incorporation",
+      "publisher": "Abu Dhabi Global Market",
+      "url": "https://www.adgm.com/registration-authority/registration-and-incorporation",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "ADGM Registration Authority licenses and registers ADGM establishments.",
+        "Applications can be submitted through the ADGM Online Registry Solution.",
+        "The process starts with business plan and documentation review, then application submission to the Registrar."
+      ],
+      "limitations": [
+        "Bankable must not claim ADGM submission or approval without an ADGM/provider event or explicit user/HR reference."
+      ]
+    },
+    {
+      "id": "kezad-setup",
+      "title": "KEZAD free zone business setup solutions",
+      "publisher": "KEZAD Group",
+      "url": "https://www.kezadgroup.com/business-facilities/free-zone-business-setup-solutions/",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "KEZAD offers Mainland and Free Zone facilities.",
+        "Free zone startup solutions include licences, shared workstations or dedicated offices.",
+        "The setup flow shown is choose package, submit documents and payments, receive licence."
+      ],
+      "limitations": [
+        "Published package prices and visa provisions may change; final eligibility and licence issue belong to KEZAD."
+      ]
+    },
+    {
+      "id": "adro-freelancer-green-visa",
+      "title": "Abu Dhabi Green Visa - Freelancers",
+      "publisher": "Abu Dhabi Residents Office",
+      "url": "https://www.adro.gov.ae/en/Visas/Types-of-Visas/Abu-Dhabi-Green-Visa/Freelancers",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "medium",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "The page lists a freelance work permit from MoHRE as a criterion.",
+        "The page lists bachelor's degree, specialized diploma or equivalent as a criterion.",
+        "The page lists AED 360,000 annual self-employment income for the previous two years or proof of financial solvency.",
+        "The page says nomination request submission for this category is currently unavailable through ADRO."
+      ],
+      "limitations": [
+        "Availability of the official application path needs provider confirmation at the time of action."
+      ]
+    },
+    {
+      "id": "uae-work-permits",
+      "title": "Work permits",
+      "publisher": "The Official Portal of the UAE Government",
+      "url": "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "publishedAt": "2026-07-01",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "MoHRE issues work permits to establishments registered with it.",
+        "The Work Bundle covers issuance, renewal and cancellation of work permits and residency visas.",
+        "The Work Bundle includes medical examination and fingerprinting services required for Emirates ID issuance."
+      ],
+      "limitations": [
+        "The page describes government process; individual case status requires official/provider reference."
+      ]
+    },
+    {
+      "id": "uae-working-residence",
+      "title": "Residence visa for working in the UAE",
+      "publisher": "The Official Portal of the UAE Government",
+      "url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/residence-visa-for-working-in-the-uae",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "publishedAt": "2026-03-03",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Standard work visa is for employees of government and private sectors.",
+        "The employer must apply for the standard work visa.",
+        "The page distinguishes Green Visa, standard work visa and domestic worker visa routes."
+      ],
+      "limitations": [
+        "Validity and conditions remain subject to visa-issuing authority rules."
+      ]
+    },
+    {
+      "id": "uae-leasing",
+      "title": "Leasing a property in the UAE",
+      "publisher": "The Official Portal of the UAE Government",
+      "url": "https://u.ae/en/information-and-services/moving-to-the-uae/leasing-a-property-in-the-uae",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "publishedAt": "2026-02-09",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Tenant documents include passport copy, valid residence visa and Emirates ID.",
+        "Post-dated cheques cover payments for the agreed lease period.",
+        "Abu Dhabi landlords register lease contracts in Tawtheeq.",
+        "Broker commission may be up to 5% of total rent."
+      ],
+      "limitations": [
+        "Specific cheque count, deposit amount and agent admin charges are not universal rules from this source."
+      ]
+    },
+    {
+      "id": "addc-municipality-fee",
+      "title": "Residential municipality fees",
+      "publisher": "TAQA Distribution",
+      "url": "https://www.addc.ae/en-US/residential/Pages/Municipality-Fee.aspx",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Residential municipality fees are collected with water and electricity bills.",
+        "The fee is calculated at 5% of rental value or rental index, whichever is higher.",
+        "Registering the tenancy with Tawtheeq automatically enrolls the tenant for municipality fees."
+      ],
+      "limitations": [
+        "Utility connection and fee billing status belongs to TAQA Distribution and the municipality."
+      ]
+    },
+    {
+      "id": "uae-health-insurance",
+      "title": "Getting a health insurance",
+      "publisher": "The Official Portal of the UAE Government",
+      "url": "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "publishedAt": "2025-10-28",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "In Abu Dhabi, employers and sponsors are responsible for health insurance coverage for employees and their families.",
+        "The family coverage text names one spouse and three children under 18.",
+        "Private-sector employee health insurance is a prerequisite for residence permit issuance or renewal under the described scheme."
+      ],
+      "limitations": [
+        "Policy issue, network and premium details belong to insurers and competent authorities."
+      ]
+    },
+    {
+      "id": "cbuae-mortgage-ratios",
+      "title": "Mortgage loan important ratios",
+      "publisher": "Central Bank of the UAE",
+      "url": "https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios",
+      "kind": "regulator",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "The rulebook sets loan-to-value limits for mortgages.",
+        "Debt burden ratio is capped at 50% of gross income.",
+        "Maximum tenor and income-multiple constraints are listed."
+      ],
+      "limitations": [
+        "These are readiness factors, not lender approval or pre-approval."
+      ]
+    },
+    {
+      "id": "adrec-rental-index",
+      "title": "ADREC rental index interactive map",
+      "publisher": "Abu Dhabi Real Estate Centre",
+      "url": "https://adrec.gov.ae/en/property_and_index/interactive-map",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "The rental index is a general guide to rental prices across the Emirate of Abu Dhabi.",
+        "The rental index is based on aggregate data.",
+        "ADREC states the index should not be used as a legal reference for the exact rental value of any residential unit."
+      ],
+      "limitations": [
+        "Use as an official benchmark only; do not treat it as a live listing, completed lease, or exact rent for a unit."
+      ]
+    },
+    {
+      "id": "enbd-current-account",
+      "title": "Open Current Account Online UAE - Quick guide",
+      "publisher": "Emirates NBD",
+      "url": "https://www.emiratesnbd.com/en/knowledge-hub/open-a-current-account-online",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "medium",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Emirates NBD says current accounts are open to individual UAE resident customers, both salaried and non-salaried.",
+        "For self-employed or non-salaried applicants, the page says a trade licence or three-month bank statement can substitute for a salary certificate.",
+        "Core documents listed include passport, UAE residence visa page, original Emirates ID, salary certificate or trade licence/bank statement, and proof of address.",
+        "The page states Personal Banking Classic has no minimum salary requirement but has a minimum average monthly balance."
+      ],
+      "limitations": [
+        "This is one bank provider route; account approval and onboarding status belong to the bank."
+      ]
+    },
+    {
+      "id": "adgm-visa-government-services",
+      "title": "ADGM Visa and Government Services",
+      "publisher": "Abu Dhabi Global Market",
+      "url": "https://www.adgm.com/operating-in-adgm/post-registration-services/visa-and-government-services",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "ADGM says all visa and government services are processed online through ACCESSADGM.",
+        "Newly registered ADGM entities must apply for an Establishment Card and E-Channels account for visa-related services.",
+        "The page says ADGM entities can login to ACCESSADGM and apply for the required visa service."
+      ],
+      "limitations": [
+        "ADGM and competent authority approvals remain provider-owned; Bankable records only sourced handoffs and reported references."
+      ]
+    },
+    {
+      "id": "kezad-tariffs",
+      "title": "KEZAD tariffs",
+      "publisher": "KEZAD Group",
+      "url": "https://www.kezadgroup.com/business-facilities/tariffs/",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "medium",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "The tariff page lists Establishment Card services.",
+        "The tariff page lists Employment Residence under Permitting Services.",
+        "The tariff page lists Residence Permit Renewal, ID Card and Residence Permit Cancellation services."
+      ],
+      "limitations": [
+        "Tariffs are provider-published and may change; eligibility, submission and approval remain with KEZAD and competent authorities."
+      ]
+    },
+    {
+      "id": "masdar-city-about",
+      "title": "About Masdar City",
+      "publisher": "Masdar City",
+      "url": "https://www.masdarcity.ae/about",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "medium",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Masdar City states it is located in Abu Dhabi.",
+        "The page describes Masdar City as connected to sustainability, business ecosystem and innovation themes."
+      ],
+      "limitations": [
+        "This validates Masdar City as a named Abu Dhabi place only; housing fit still requires live listing or rental evidence."
+      ]
+    },
+    {
+      "id": "wework-hub71",
+      "title": "WeWork Hub71 Abu Dhabi",
+      "publisher": "WeWork",
+      "url": "https://www.wework.com/buildings/hub71--abu-dhabi",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "WeWork Hub71 is listed at Al Khatem Tower, ADGM Square, Al Maryah Island.",
+        "The page describes coworking areas and flexible private offices.",
+        "The page offers a location interest, tour or sales contact path."
+      ],
+      "limitations": [
+        "Booking confirmation and pricing require WeWork action or response."
+      ]
+    },
+    {
+      "id": "cloudspaces-locations",
+      "title": "Cloud Spaces locations",
+      "publisher": "Cloud Spaces",
+      "url": "https://www.cloudspaces.ae/en/locations",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Cloud Spaces lists Abu Dhabi locations at Yas Mall, The Mall World Trade Center and Abu Dhabi Global Market.",
+        "The page includes contact/enquiry form fields.",
+        "The Galleria location is shown as opening soon, not active."
+      ],
+      "limitations": [
+        "Availability and final membership terms require provider confirmation."
+      ]
+    },
+    {
+      "id": "cloudspaces-yas",
+      "title": "Cloud Spaces Yas Mall",
+      "publisher": "Cloud Spaces",
+      "url": "https://www.cloudspaces.ae/en-location/yas-mall",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "The location is Level 1, Town Square, Yas Mall, Yas Island.",
+        "The page offers Book Now and Enquire Now actions.",
+        "The page lists coworking day access and monthly products with published starting prices."
+      ],
+      "limitations": [
+        "Displayed prices are provider-published and may change before booking."
+      ]
+    },
+    {
+      "id": "cloudspaces-adgm",
+      "title": "Cloud Spaces ADGM",
+      "publisher": "Cloud Spaces",
+      "url": "https://www.cloudspaces.ae/en-location/abu-dhabi-global-market",
+      "kind": "provider",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "The location is Level 11, 14 and 15, Al Sarab Tower, Al Maryah Island.",
+        "The page offers Book a Tour and Enquire Now actions.",
+        "The page describes private offices, dedicated desks, meeting rooms and event spaces."
+      ],
+      "limitations": [
+        "Booking and office availability require provider confirmation."
+      ]
+    },
+    {
+      "id": "adgm-office-space",
+      "title": "ADGM office space",
+      "publisher": "Abu Dhabi Global Market",
+      "url": "https://www.adgm.com/operating-in-adgm/office-space",
+      "kind": "government",
+      "checkedAt": "2026-10-02T10:40:06+04:00",
+      "confidence": "high",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "ADGM lists Cloud Spaces, Regus, Signature, The Executive Centre and WeWork/Hub71 as business centre options.",
+        "Cloud Spaces is identified as located in ADGM's Al Sarab Tower.",
+        "Regus is described as serviced and coworking office space in Al Maqam Tower."
+      ],
+      "limitations": [
+        "ADGM office-space descriptions are not booking confirmations."
+      ]
+    }
+  ],
+  "areas": [
+    {
+      "id": "al-reem-island",
+      "name": "Al Reem Island",
+      "summary": "A useful shortlist area for employees who want Abu Dhabi island apartment inventory near Al Maryah and ADGM-side workplaces.",
+      "sourceIds": ["wework-hub71", "cloudspaces-adgm", "adgm-office-space"]
+    },
+    {
+      "id": "khalifa-city",
+      "name": "Khalifa City",
+      "summary": "Supported by current Property Finder snapshot records in the housing catalog; use listing facts rather than unsourced lifestyle claims.",
+      "sourceIds": ["adrec-rental-index"]
+    },
+    {
+      "id": "al-maryah-island",
+      "name": "Al Maryah Island",
+      "summary": "Supported as an ADGM office and workspace area with WeWork Hub71 and Cloud Spaces ADGM provider pages.",
+      "sourceIds": ["wework-hub71", "cloudspaces-adgm", "adgm-office-space"]
+    },
+    {
+      "id": "masdar-city",
+      "name": "Masdar City",
+      "summary": "Validated as a named Abu Dhabi location by Masdar City; use for relocation planning only when housing or office evidence supports it.",
+      "sourceIds": ["masdar-city-about"]
+    },
+    {
+      "id": "yas-island",
+      "name": "Yas Island",
+      "summary": "Supported by Cloud Spaces Yas Mall and current housing-search calibration; useful when matching homes around a Yas-side workspace.",
+      "sourceIds": ["cloudspaces-yas", "cloudspaces-locations"]
+    },
+    {
+      "id": "al-raha-beach",
+      "name": "Al Raha Beach",
+      "summary": "Supported by current Property Finder snapshot records in the housing catalog; rank only after rent and allowance filters.",
+      "sourceIds": ["adrec-rental-index"]
+    },
+    {
+      "id": "al-khalidiyah",
+      "name": "Al Khalidiyah",
+      "summary": "A supported housing-search area in the existing property calibration dataset; avoid unsourced commute or lifestyle claims.",
+      "sourceIds": ["adrec-rental-index"]
+    },
+    {
+      "id": "al-nahyan",
+      "name": "Al Nahyan",
+      "summary": "A supported housing-search area in the existing property calibration dataset; use current listing prices when ranking.",
+      "sourceIds": ["adrec-rental-index"]
+    }
+  ],
+  "workspaces": [
+    {
+      "id": "wework-hub71",
+      "name": "WeWork Hub71",
+      "areaId": "al-maryah-island",
+      "address": "Al Khatem Tower, ADGM Square, Al Maryah Island",
+      "kind": "coworking",
+      "actionUrl": "https://www.wework.com/buildings/hub71--abu-dhabi",
+      "actionLabel": "Open contact page",
+      "priceAed": null,
+      "sourceIds": ["wework-hub71"]
+    },
+    {
+      "id": "cloudspaces-yas",
+      "name": "Cloud Spaces Yas Mall",
+      "areaId": "yas-island",
+      "address": "Level 1, Town Square, Yas Mall, Yas Island",
+      "kind": "coworking",
+      "actionUrl": "https://www.cloudspaces.ae/en-location/yas-mall",
+      "actionLabel": "Open booking page",
+      "priceAed": 120,
+      "sourceIds": ["cloudspaces-yas"]
+    },
+    {
+      "id": "cloudspaces-wtc",
+      "name": "Cloud Spaces The Mall WTC",
+      "areaId": "al-khalidiyah",
+      "address": "The Mall, World Trade Center, Level 3, Al Danah",
+      "kind": "coworking",
+      "actionUrl": "https://www.cloudspaces.ae/en-location/wtc-mall-abu-dhabi",
+      "actionLabel": "Open contact page",
+      "priceAed": null,
+      "sourceIds": ["cloudspaces-locations"]
+    },
+    {
+      "id": "cloudspaces-adgm",
+      "name": "Cloud Spaces ADGM",
+      "areaId": "al-maryah-island",
+      "address": "Level 11, 14 and 15, Al Sarab Tower, Al Maryah Island",
+      "kind": "serviced_office",
+      "actionUrl": "https://www.cloudspaces.ae/en-location/abu-dhabi-global-market",
+      "actionLabel": "Open booking page",
+      "priceAed": null,
+      "sourceIds": ["cloudspaces-adgm", "adgm-office-space"]
+    }
+  ],
+  "services": [
+    {
+      "id": "company-mainland-added",
+      "title": "Mainland company setup through ADDED",
+      "category": "setup",
+      "authority": "ADDED / TAMM",
+      "audience": "company_setup",
+      "jurisdictions": ["mainland"],
+      "workTypes": ["employee", "freelancer", "self_employed"],
+      "actionUrl": "https://www.added.gov.ae/en/set-up/establish-your-business/licensing-requirements",
+      "nextAction": "Open ADDED licensing requirements, choose activity/licence route, then record the TAMM reference only after official submission.",
+      "requirements": [
+        "Choose licence or permit category.",
+        "Use primary services such as trade-name reservation and economic licence issue where applicable.",
+        "Confirm activity and premises requirements with ADDED/TAMM."
+      ],
+      "sourceIds": ["added-licensing"],
+      "limitations": [
+        "This is not a generic legal checklist and does not apply to ADGM or KEZAD setup."
+      ]
+    },
+    {
+      "id": "company-adgm-registration",
+      "title": "ADGM registration and incorporation",
+      "category": "setup",
+      "authority": "ADGM Registration Authority",
+      "audience": "company_setup",
+      "jurisdictions": ["adgm"],
+      "workTypes": ["employee", "freelancer", "self_employed"],
+      "actionUrl": "https://www.adgm.com/registration-authority/registration-and-incorporation",
+      "nextAction": "Prepare business plan and checklist evidence, then open ADGM Online Registry Solution.",
+      "requirements": [
+        "Review legal-structure checklist.",
+        "Prepare application documents.",
+        "Submit through ADGM registry channel and track official responses."
+      ],
+      "sourceIds": ["adgm-registration"],
+      "limitations": [
+        "Bankable can record an opened handoff or user-reported reference; it cannot sync ADGM status without approved access."
+      ]
+    },
+    {
+      "id": "company-kezad-setup",
+      "title": "KEZAD free zone setup",
+      "category": "setup",
+      "authority": "KEZAD Group",
+      "audience": "company_setup",
+      "jurisdictions": ["kezad"],
+      "workTypes": ["employee", "freelancer", "self_employed"],
+      "actionUrl": "https://www.kezadgroup.com/business-facilities/free-zone-business-setup-solutions/",
+      "nextAction": "Choose KEZAD package and workspace option, then submit documents and payments through KEZAD channels.",
+      "requirements": [
+        "Choose free zone or mainland facility path.",
+        "Choose package and visa provision level.",
+        "Submit documents and payments to KEZAD."
+      ],
+      "sourceIds": ["kezad-setup"],
+      "limitations": [
+        "KEZAD approval, timing and licence issue remain provider-owned."
+      ]
+    },
+    {
+      "id": "employee-work-bundle",
+      "title": "Mainland / MoHRE employee work permit and residence handoff",
+      "category": "residence",
+      "authority": "MoHRE / ICP / Work Bundle",
+      "audience": "employer",
+      "jurisdictions": ["mainland"],
+      "workTypes": ["employee"],
+      "actionUrl": "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits",
+      "nextAction": "For a mainland/MoHRE-registered employer, HR opens the official Work Bundle path and records a reference only after submission.",
+      "requirements": [
+        "Employer-owned MoHRE work permit or renewal flow for establishments registered with MoHRE.",
+        "Medical examination and fingerprinting where required for Emirates ID.",
+        "Provider, HR or employee reference for any submitted or confirmed state."
+      ],
+      "sourceIds": ["uae-work-permits", "uae-working-residence"],
+      "limitations": [
+        "Opening the official portal is only opened; it is not submitted or approved.",
+        "Do not show this as the universal route for ADGM or KEZAD entities."
+      ]
+    },
+    {
+      "id": "adgm-employee-visa-services",
+      "title": "ADGM employee visa and government services",
+      "category": "residence",
+      "authority": "ADGM / ACCESSADGM",
+      "audience": "employer",
+      "jurisdictions": ["adgm"],
+      "workTypes": ["employee"],
+      "actionUrl": "https://www.adgm.com/operating-in-adgm/post-registration-services/visa-and-government-services",
+      "nextAction": "For an ADGM entity, HR uses ACCESSADGM visa and government services and records official references after provider submission.",
+      "requirements": [
+        "ADGM entity creates or uses ACCESSADGM account.",
+        "Apply for Establishment Card and E-Channels account where required.",
+        "Apply for required employee visa service through ACCESSADGM."
+      ],
+      "sourceIds": ["adgm-visa-government-services"],
+      "limitations": [
+        "ADGM and competent authority approvals remain provider-owned; no automatic Bankable status sync is verified."
+      ]
+    },
+    {
+      "id": "kezad-employee-residence-services",
+      "title": "KEZAD employment residence services",
+      "category": "residence",
+      "authority": "KEZAD Group / competent authorities",
+      "audience": "employer",
+      "jurisdictions": ["kezad"],
+      "workTypes": ["employee"],
+      "actionUrl": "https://www.kezadgroup.com/business-facilities/tariffs/",
+      "nextAction": "For a KEZAD entity, HR confirms the relevant KEZAD permitting service and records the provider reference after submission.",
+      "requirements": [
+        "Establishment Card service where applicable.",
+        "Employment Residence service where applicable.",
+        "Residence Permit Renewal, ID Card or cancellation service where applicable."
+      ],
+      "sourceIds": ["kezad-tariffs"],
+      "limitations": [
+        "Tariff presence does not prove eligibility for a specific employee; KEZAD and competent authorities decide."
+      ]
+    },
+    {
+      "id": "freelancer-added-licence",
+      "title": "ADDED Freelancer Licence route",
+      "category": "setup",
+      "authority": "ADDED / TAMM",
+      "audience": "person",
+      "jurisdictions": ["mainland"],
+      "workTypes": ["freelancer", "self_employed"],
+      "actionUrl": "https://www.added.gov.ae/en/set-up/establish-your-business/licensing-requirements",
+      "nextAction": "Open ADDED licensing requirements, confirm the Freelancer Licence activity path, then record official references only after provider submission.",
+      "requirements": [
+        "Confirm activity eligibility for Freelancer Licence.",
+        "Prepare evidence requested by ADDED/TAMM for the selected activity.",
+        "Use the official ADDED/TAMM service for submission."
+      ],
+      "sourceIds": ["added-licensing"],
+      "limitations": [
+        "ADDED lists Freelancer Licence as a licence type; activity-specific requirements and approval remain with ADDED/TAMM."
+      ]
+    },
+    {
+      "id": "freelancer-green-visa-readiness",
+      "title": "Freelancer Green Visa readiness",
+      "category": "residence",
+      "authority": "ADRO / MoHRE / visa authorities",
+      "audience": "person",
+      "jurisdictions": ["mainland", "adgm", "kezad"],
+      "workTypes": ["freelancer", "self_employed"],
+      "actionUrl": "https://www.adro.gov.ae/en/Visas/Types-of-Visas/Abu-Dhabi-Green-Visa/Freelancers",
+      "nextAction": "Check freelance permit, education and income or solvency evidence; confirm application availability with the official provider.",
+      "requirements": [
+        "Freelance work permit from MoHRE.",
+        "Bachelor's degree, specialized diploma or equivalent.",
+        "AED 360,000 annual self-employment income for the previous two years or proof of financial solvency."
+      ],
+      "sourceIds": ["adro-freelancer-green-visa"],
+      "limitations": [
+        "ADRO states this nomination request is currently unavailable through ADRO."
+      ]
+    },
+    {
+      "id": "personal-bank-current-account",
+      "title": "Personal current account readiness",
+      "category": "finance",
+      "authority": "Emirates NBD",
+      "audience": "person",
+      "jurisdictions": ["mainland", "adgm", "kezad"],
+      "workTypes": ["employee", "freelancer", "self_employed"],
+      "actionUrl": "https://www.emiratesnbd.com/en/knowledge-hub/open-a-current-account-online",
+      "nextAction": "Review bank document readiness and open the bank application only when the person chooses to apply.",
+      "requirements": [
+        "Valid passport and UAE residence visa page.",
+        "Original Emirates ID.",
+        "Salary certificate or, for non-salaried applicants, trade licence or three-month bank statement.",
+        "Proof of address such as tenancy contract or utility bill."
+      ],
+      "sourceIds": ["enbd-current-account"],
+      "limitations": [
+        "This is a bank-provider readiness route, not an approval or account-opening guarantee."
+      ]
+    },
+    {
+      "id": "tawtheeq-tenancy",
+      "title": "Tawtheeq tenancy registration handoff",
+      "category": "housing",
+      "authority": "Abu Dhabi municipality / Tawtheeq",
+      "audience": "person",
+      "jurisdictions": ["mainland", "adgm", "kezad"],
+      "workTypes": ["employee", "freelancer", "self_employed"],
+      "actionUrl": "https://u.ae/en/information-and-services/moving-to-the-uae/leasing-a-property-in-the-uae",
+      "nextAction": "Ask the agent or landlord how Tawtheeq will be registered and record the official tenancy reference once available.",
+      "requirements": [
+        "Passport copy, valid residence visa and Emirates ID.",
+        "Post-dated cheques covering the agreed lease period.",
+        "Registered Tawtheeq contract for Abu Dhabi tenancy."
+      ],
+      "sourceIds": ["uae-leasing", "addc-municipality-fee"],
+      "limitations": [
+        "No agent contact button should appear for synthetic homes."
+      ]
+    },
+    {
+      "id": "abu-dhabi-health-insurance",
+      "title": "Abu Dhabi health insurance enrollment",
+      "category": "insurance",
+      "authority": "Employer / sponsor / insurer",
+      "audience": "employer",
+      "jurisdictions": ["mainland", "adgm", "kezad"],
+      "workTypes": ["employee"],
+      "actionUrl": "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+      "nextAction": "HR confirms the insurer or broker path and records policy evidence when issued.",
+      "requirements": [
+        "Employer or sponsor coverage responsibility in Abu Dhabi.",
+        "Employee and eligible family coverage details confirmed by provider.",
+        "Policy evidence recorded only when issued."
+      ],
+      "sourceIds": ["uae-health-insurance"],
+      "limitations": [
+        "Bankable tracks the task; it does not issue insurance."
+      ]
+    }
+  ],
+  "financialFactors": [
+    {
+      "id": "mortgage-ltv",
+      "title": "Mortgage loan-to-value",
+      "detail": "Compare the property price, deposit and requested loan against CBUAE LTV limits before starting a lender application.",
+      "sourceIds": ["cbuae-mortgage-ratios"],
+      "providerDecides": true
+    },
+    {
+      "id": "mortgage-dbr",
+      "title": "Debt burden ratio",
+      "detail": "Estimate whether total monthly debts fit within the CBUAE 50% gross-income DBR factor; the lender decides using its own assessment.",
+      "sourceIds": ["cbuae-mortgage-ratios"],
+      "providerDecides": true
+    },
+    {
+      "id": "mortgage-tenor-income-multiple",
+      "title": "Tenor and income multiple",
+      "detail": "Check tenor and income-multiple factors early so the user understands what may block a mortgage conversation.",
+      "sourceIds": ["cbuae-mortgage-ratios"],
+      "providerDecides": true
+    },
+    {
+      "id": "current-account-documents",
+      "title": "Current account document readiness",
+      "detail": "Prepare Emirates ID, passport, visa page, address proof and salary certificate or non-salaried substitute before opening a bank application.",
+      "sourceIds": ["enbd-current-account"],
+      "providerDecides": true
+    }
+  ]
+}
