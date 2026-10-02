@@ -139,8 +139,9 @@ export function personHub(data: RelocationStoreData, personId: string, activeCas
   );
   const recommendations = data.recommendations[relocationCase.id] ?? [];
   const housingSearch = housingSearchFor(profile, relocationCase.housingPolicy);
+  const rentalCatalog = getRentalCatalog();
   const selectedHome = relocationCase.selectedListingId
-    ? [...getRentalCatalog().snapshot, ...getRentalCatalog().synthetic].find((home) => home.id === relocationCase.selectedListingId) ?? null
+    ? [...rentalCatalog.snapshot, ...rentalCatalog.synthetic].find((home) => home.id === relocationCase.selectedListingId) ?? null
     : null;
   const { privateEvidence, ...publicProfile } = profile;
   void privateEvidence;

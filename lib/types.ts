@@ -130,6 +130,15 @@ export type PersonProfile = {
   household: Household;
   income: IncomeRange;
   preferredAreaIds: string[];
+  planningContext?: {
+    nationality: string;
+    purposeOfMove: string;
+    employmentStatus: string;
+    sponsor: string;
+    alreadyInUae: string;
+    documentsAvailable: string[];
+    completedSteps: string[];
+  };
   createdAt: string;
   updatedAt: string;
   synthetic: boolean;

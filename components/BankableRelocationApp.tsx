@@ -33,7 +33,8 @@ type ActionRecommendation = Exclude<Recommendation, { type: "home" }>;
 type EmployeeToken = DemoCapabilities["employees"][number];
 type Notice = { tone: "neutral" | "success" | "error"; text: string } | null;
 type SavedSession = { hrToken: string | null; programId: string | null; employeeTokens: EmployeeToken[]; selectedId: string };
-type PersonalValues = { displayName: string; workType: string; household: string; incomeMin: number; incomeMax: number | null; preferredAreaIds: string[] };
+type PlanningContext = { nationality: string; purposeOfMove: string; employmentStatus: string; sponsor: string; alreadyInUae: string; documentsAvailable: string[]; completedSteps: string[] };
+type PersonalValues = { displayName: string; workType: string; household: string; incomeMin: number; incomeMax: number | null; preferredAreaIds: string[]; planningContext: PlanningContext };
 type ProgramValues = { organizationName: string; hasUaeEntity: boolean; jurisdiction: string; officeAreaId: string; teamSize: number; moveDate: string; annualAllowanceAed: number };
 type WorkspaceSection = "overview" | "areas" | "homes" | "workspaces" | "setup" | "finance" | "timeline";
 type WorkspaceArea = { id: string; name: string; summary: string; offers: string[]; image?: { src: string; alt: string; credit: string } };
@@ -44,6 +45,19 @@ const SESSION_KEY = "bankable-relocation-session-v2";
 const LEGACY_SESSION_KEY = "bankable-relocation-session-v1";
 const money = new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 });
 const workspaceAreas = buildWorkspaceAreas();
+const documentOptions = [
+  { value: "passport", label: "Passport" },
+  { value: "offer", label: "Offer / employment contract" },
+  { value: "education", label: "Education or professional certificates" },
+  { value: "income", label: "Income evidence" },
+  { value: "uae-id", label: "UAE ID or residence evidence" },
+];
+const completedOptions = [
+  { value: "job", label: "Found a job or confirmed work" },
+  { value: "company", label: "Started company setup" },
+  { value: "residence", label: "Started residence / visa steps" },
+  { value: "housing", label: "Shortlisted or secured housing" },
+];
 
 export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) {
   const router = useRouter();
@@ -326,6 +340,27 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
     }
   }
 
+  async function selectProperty(listingId: string | null) {
+    if (!selected || !selectedToken) {
+      setNotice({ tone: "error", text: "Create or restore a private move before selecting a home." });
+      return;
+    }
+    setBusy(true);
+    setNotice(null);
+    try {
+      const result = await apiPost<PersonHubPayload>("/api/relocation/properties/selection", {
+        caseId: selected.case.id,
+        listingId,
+      }, selectedToken);
+      setPeople((current) => upsertHub(current, result.view));
+      setNotice({ tone: "success", text: listingId ? "Home selected. Your rent and finance view now reflects this property." : "Selected home cleared." });
+    } catch (error) {
+      setNotice({ tone: "error", text: error instanceof Error ? error.message : "Could not select this home." });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const shell = (children: ReactNode) => (
     <main className="min-h-screen app-shell">
       <Header demoMode={isSyntheticContext(selected, hrView, demoMode)} onDemo={seedDemo} busy={busy} />
@@ -355,7 +390,7 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
 
   return shell(
     <MoveShell hub={selected} selectedId={selectedId} people={people} setSelectedId={setSelectedId}>
-      <MoveWorkspace hub={selected} homes={homes} services={services} workspaces={workspaces} finance={finance} busy={busy} initialSection={sectionForScreen(screen)} onOpen={openTarget} onReport={reportManualStatus} />
+      <MoveWorkspace hub={selected} homes={homes} services={services} workspaces={workspaces} finance={finance} busy={busy} initialSection={sectionForScreen(screen)} onOpen={openTarget} onSelectProperty={selectProperty} onReport={reportManualStatus} />
     </MoveShell>,
   );
 }
@@ -414,7 +449,7 @@ function MoveShell({ hub, people, selectedId, setSelectedId, children }: { hub: 
   return <section className="screen-card wide relocation-workspace-shell"><div className="screen-head"><div><p className="kicker">Private workspace</p><h1>{hub.profile.displayName}</h1></div>{people.length > 1 ? <select aria-label="Choose private profile" value={selectedId} onChange={(event) => chooseProfile(event.target.value)}>{people.map((person) => <option key={person.profile.id} value={person.profile.id}>{person.profile.displayName}</option>)}</select> : null}</div>{children}</section>;
 }
 
-function MoveWorkspace({ hub, homes, services, workspaces, finance, busy, initialSection, onOpen, onReport }: { hub: PersonHub; homes: HomeRecommendation[]; services: ActionRecommendation[]; workspaces: ActionRecommendation[]; finance: ActionRecommendation[]; busy: boolean; initialSection: WorkspaceSection; onOpen: (target: { id: string; url: string | null }) => void; onReport: (taskId: string, state: string, nextAction: string, reference: string, blocker: string) => Promise<void> }) {
+function MoveWorkspace({ hub, homes, services, workspaces, finance, busy, initialSection, onOpen, onSelectProperty, onReport }: { hub: PersonHub; homes: HomeRecommendation[]; services: ActionRecommendation[]; workspaces: ActionRecommendation[]; finance: ActionRecommendation[]; busy: boolean; initialSection: WorkspaceSection; onOpen: (target: { id: string; url: string | null }) => void; onSelectProperty: (listingId: string | null) => Promise<void>; onReport: (taskId: string, state: string, nextAction: string, reference: string, blocker: string) => Promise<void> }) {
   const [areaId, setAreaId] = useState(hub.profile.preferredAreaIds[0] ?? "all");
   // The area choice ranks nearest-first; it never hides options, so no section is left empty.
   const focusAreaId = areaId === "all" ? null : areaId;
@@ -430,15 +465,100 @@ function MoveWorkspace({ hub, homes, services, workspaces, finance, busy, initia
     const frame = window.requestAnimationFrame(() => document.getElementById(targetId)?.scrollIntoView({ block: "start" }));
     return () => window.cancelAnimationFrame(frame);
   }, [hub.profile.id, initialSection]);
-  return <div className="move-workspace" id={initialSection}><nav className="workspace-jump" aria-label="Workspace sections"><a href="#areas">Areas</a><a href="#homes">Homes</a><a href="#workspaces">Workspaces</a><a href="#budget">Budget</a><a href="#setup">Setup</a><a href="#timeline">Roadmap</a><Link href="/move/profile">Edit inputs</Link></nav><section className="workspace-hero-card"><div><p className="kicker">Filtered workspace</p><h2>Your Abu Dhabi move in one view.</h2><p>Choose an area once, then see what it offers, homes that pass budget checks, nearby workspace options, setup actions, finance factors and the next milestone.</p><div className="workspace-quick-stats"><Metric label="Rent budget" value={`${money.format(hub.budget.annualBudgetAed)}/yr`} detail={allowanceDetail(hub)} /><Metric label="Next action" value={nextTaskLabel(hub)} detail={nextTaskDetail(hub)} /></div></div><label>Area filter<select value={areaId} onChange={(event) => setAreaId(event.target.value)}><option value="all">All source-backed areas</option>{workspaceAreas.map((area) => <option value={area.id} key={area.id}>{area.name}</option>)}</select></label></section><section className="workspace-section" id="areas"><SectionHead label="Areas and what they offer" action={selectedArea ? selectedArea.name : `${workspaceAreas.length} areas`} /><div className={areasToShow.length === 1 ? "area-mini-grid is-single" : "area-rail"}>{areasToShow.map((area) => <article key={area.id} className="area-mini-card">{area.image ? <figure><img src={area.image.src} alt={area.image.alt} /><figcaption>{area.image.credit}</figcaption></figure> : null}<span>{area.name}</span><p>{area.summary}</p>{areasToShow.length === 1 ? <ul>{area.offers.map((offer) => <li key={offer}>{offer}</li>)}</ul> : <details className="area-info"><summary>What it offers</summary><ul>{area.offers.map((offer) => <li key={offer}>{offer}</li>)}</ul></details>}<Link href={`/areas/${area.id}`}>Open area guide</Link></article>)}</div></section><section className="workspace-section" id="homes"><SectionHead label="Homes after affordability and policy filters" action={`${rankedHomes.length} shown`} />{selectedArea ? <RankNote areaName={selectedArea.name} inArea={inAreaHomes} total={rankedHomes.length} /> : null}{rankedHomes.length > 0 ? <div className="home-grid">{rankedHomes.map(({ item, km }) => <HomeCard key={item.id} item={item} busy={busy} onOpen={onOpen} distanceKm={km} />)}</div> : <HousingEmpty hub={hub} baselineCount={homes.length} areaName={null} onClearArea={() => setAreaId("all")} />}</section><section className="workspace-section split" id="workspaces"><div className="plain-panel"><SectionHead label="Nearby workspaces" action={`${rankedWorkspaces.length} shown`} />{selectedArea ? <RankNote areaName={selectedArea.name} inArea={inAreaWorkspaces} total={rankedWorkspaces.length} /> : null}{rankedWorkspaces.length > 0 ? rankedWorkspaces.map(({ item, km }) => <ActionRow key={item.id} item={item} busy={busy} onOpen={onOpen} distanceKm={km} />) : <EmptyState text="No source-backed workspace is in the catalog yet. Open the public area guide for local options." />}</div><BudgetPanel hub={hub} /></section><section className="workspace-section split" id="setup"><div className="plain-panel"><SectionHead label="Setup actions" action={`${services.length} actions`} />{services.length > 0 ? services.map((item) => <ActionRow key={item.id} item={item} busy={busy} onOpen={onOpen} />) : <EmptyState text="No source-backed setup actions are available for this profile yet." />}</div><FinancePanel hub={hub} finance={finance} /></section><section className="workspace-section" id="timeline"><RoadmapTimeline hub={hub} busy={busy} onReport={onReport} /></section></div>;
+  return (
+    <div className="move-workspace" id={initialSection}>
+      <nav className="workspace-jump" aria-label="Workspace sections">
+        <a href="#areas">Areas</a><a href="#homes">Homes</a><a href="#workspaces">Workspaces</a>
+        <a href="#budget">Budget</a><a href="#setup">Setup</a><a href="#timeline">Roadmap</a>
+        <Link href="/move/profile">Edit inputs</Link>
+      </nav>
+      <section className="workspace-hero-card">
+        <div>
+          <p className="kicker">Filtered workspace</p><h2>Your Abu Dhabi move in one view.</h2>
+          <p>Choose an area once, then see what it offers, homes that pass budget checks, nearby workspace options, setup actions, finance factors and the next milestone.</p>
+          <div className="workspace-quick-stats">
+            <Metric label="Rent budget" value={`${money.format(hub.budget.annualBudgetAed)}/yr`} detail={allowanceDetail(hub)} />
+            <Metric label="Next action" value={nextTaskLabel(hub)} detail={nextTaskDetail(hub)} />
+          </div>
+        </div>
+        <label>Area filter<select value={areaId} onChange={(event) => setAreaId(event.target.value)}>
+          <option value="all">All source-backed areas</option>
+          {workspaceAreas.map((area) => <option value={area.id} key={area.id}>{area.name}</option>)}
+        </select></label>
+      </section>
+      <section className="workspace-section" id="areas">
+        <SectionHead label="Areas and what they offer" action={selectedArea ? selectedArea.name : `${workspaceAreas.length} areas`} />
+        <div className={areasToShow.length === 1 ? "area-mini-grid is-single" : "area-rail"}>
+          {areasToShow.map((area) => <article key={area.id} className="area-mini-card">
+            {area.image ? <figure><img src={area.image.src} alt={area.image.alt} /><figcaption>{area.image.credit}</figcaption></figure> : null}
+            <span>{area.name}</span><p>{area.summary}</p>
+            {areasToShow.length === 1 ? <ul>{area.offers.map((offer) => <li key={offer}>{offer}</li>)}</ul> : <details className="area-info"><summary>What it offers</summary><ul>{area.offers.map((offer) => <li key={offer}>{offer}</li>)}</ul></details>}
+            <Link href={`/areas/${area.id}`}>Open area guide</Link>
+          </article>)}
+        </div>
+      </section>
+      <section className="workspace-section" id="homes">
+        <SectionHead label="Homes after affordability and policy filters" action={`${rankedHomes.length} shown`} />
+        {selectedArea ? <RankNote areaName={selectedArea.name} inArea={inAreaHomes} total={rankedHomes.length} /> : null}
+        {rankedHomes.length > 0 ? <div className="home-grid">{rankedHomes.map(({ item, km }) => <HomeCard
+          key={item.id}
+          item={item}
+          busy={busy}
+          selected={hub.case.selectedListingId === item.home.id}
+          onOpen={onOpen}
+          onSelect={() => void onSelectProperty(hub.case.selectedListingId === item.home.id ? null : item.home.id)}
+          distanceKm={km}
+        />)}</div> : <HousingEmpty hub={hub} baselineCount={homes.length} areaName={null} onClearArea={() => setAreaId("all")} />}
+      </section>
+      <section className="workspace-section split" id="workspaces">
+        <div className="plain-panel">
+          <SectionHead label="Nearby workspaces" action={`${rankedWorkspaces.length} shown`} />
+          {selectedArea ? <RankNote areaName={selectedArea.name} inArea={inAreaWorkspaces} total={rankedWorkspaces.length} /> : null}
+          {rankedWorkspaces.length > 0 ? rankedWorkspaces.map(({ item, km }) => <ActionRow key={item.id} item={item} busy={busy} onOpen={onOpen} distanceKm={km} />) : <EmptyState text="No source-backed workspace is in the catalog yet. Open the public area guide for local options." />}
+        </div>
+        <BudgetPanel hub={hub} busy={busy} onSelectProperty={onSelectProperty} />
+      </section>
+      <section className="workspace-section split" id="setup">
+        <div className="plain-panel">
+          <SectionHead label="Setup actions" action={`${services.length} actions`} />
+          {services.length > 0 ? services.map((item) => <ActionRow key={item.id} item={item} busy={busy} onOpen={onOpen} />) : <EmptyState text="No source-backed setup actions are available for this profile yet." />}
+        </div>
+        <FinancePanel hub={hub} finance={finance} />
+      </section>
+      <section className="workspace-section" id="timeline"><RoadmapTimeline hub={hub} busy={busy} onReport={onReport} /></section>
+    </div>
+  );
 }
 
-function BudgetPanel({ hub }: { hub: PersonHub }) {
-  return <section className="plain-panel" id="budget"><SectionHead label="Budget" /><div className="metric-grid compact stat-list"><Metric label="Income" value={`${money.format(hub.budget.minMonthlyIncomeAed)}/mo`} detail="Private to you" /><Metric label="Rent budget" value={`${money.format(hub.budget.annualBudgetAed)}/yr`} detail={allowanceDetail(hub)} /><Metric label="Initial cash" value="Unknown" detail="Payment terms not verified" /></div><details className="row-info"><summary>How this budget is worked out</summary><p className="form-note">{hub.housingSearch.assumptions.join(" ")}</p></details></section>;
+function BudgetPanel({ hub, busy, onSelectProperty }: { hub: PersonHub; busy: boolean; onSelectProperty: (listingId: string | null) => Promise<void> }) {
+  const selectedProperty = hub.selectedProperty;
+  return <section className="plain-panel" id="budget">
+    <SectionHead label="Budget" />
+    <div className="metric-grid compact stat-list">
+      <Metric label="Income" value={`${money.format(hub.budget.minMonthlyIncomeAed)}/mo`} detail="Private to you" />
+      <Metric label="Rent budget" value={`${money.format(hub.budget.annualBudgetAed)}/yr`} detail={allowanceDetail(hub)} />
+      <Metric label="Initial cash" value="Unknown" detail="Payment terms not verified" />
+    </div>
+    {selectedProperty ? <div className="selected-property-summary" role="status">
+      <strong>Selected: {selectedProperty.title}</strong>
+      <span>{money.format(selectedProperty.annualRentAed)}/year · {selectedProperty.withinBudget ? "within your current rent budget" : "above your current rent budget"}</span>
+      <span>{selectedProperty.rentShareOfIncomePercent === null ? "Rent-to-income share unavailable at zero stated income." : `${selectedProperty.rentShareOfIncomePercent}% of stated minimum income.`}</span>
+      {!selectedProperty.withinPolicyAllowance ? <span>Above the company housing allowance.</span> : null}
+      <span>Initial cash remains unknown until the listing or provider confirms payment terms.</span>
+      <button className="text-action" type="button" disabled={busy} onClick={() => void onSelectProperty(null)}>Clear selected home</button>
+    </div> : <p className="form-note">Select a home to see how its rent compares with your current plan.</p>}
+    <details className="row-info"><summary>How this budget is worked out</summary><p className="form-note">{hub.housingSearch.assumptions.join(" ")}</p></details>
+  </section>;
 }
 
 function FinancePanel({ hub, finance }: { hub: PersonHub; finance: ActionRecommendation[] }) {
-  return <section className="plain-panel"><SectionHead label="Finance readiness" /><p className="panel-lead">Readiness factors only. No approval probability: lender and bank decisions remain provider-owned.</p><details className="row-info"><summary>What lenders look at ({hub.financeReadiness.factors.length})</summary><ul className="check-list">{hub.financeReadiness.factors.map((factor) => <li key={factor}>{factor}</li>)}</ul>{finance.map((item) => <SourceLinks sources={item.sources} key={item.id} />)}</details><p className="form-note">Evidence is optional. Income documents, bank results and identity evidence stay private unless you grant recipient-specific consent.</p></section>;
+  return <section className="plain-panel">
+    <SectionHead label="Finance readiness" />
+    <p className="panel-lead">Readiness factors only. No approval probability: lender and bank decisions remain provider-owned.</p>
+    {hub.selectedProperty ? <p className="form-note">Selected rental: {hub.selectedProperty.withinBudget && hub.selectedProperty.withinPolicyAllowance ? "passes the current rent and allowance filters" : "does not pass the current rent or allowance filters"}. This is a rental budget check, not a mortgage or move-in cash approval.</p> : null}
+    <details className="row-info"><summary>What lenders look at ({hub.financeReadiness.factors.length})</summary><ul className="check-list">{hub.financeReadiness.factors.map((factor) => <li key={factor}>{factor}</li>)}</ul>{finance.map((item) => <SourceLinks sources={item.sources} key={item.id} />)}</details>
+    <p className="form-note">Evidence is optional. Income documents, bank results and identity evidence stay private unless you grant recipient-specific consent.</p>
+  </section>;
 }
 
 function RoadmapTimeline({ hub, busy, onReport }: { hub: PersonHub; busy: boolean; onReport: (taskId: string, state: string, nextAction: string, reference: string, blocker: string) => Promise<void> }) {
@@ -462,7 +582,7 @@ function RoadmapTimeline({ hub, busy, onReport }: { hub: PersonHub; busy: boolea
 
 function ProfileScreen({ hub, busy, onUpdate }: { hub: PersonHub; busy: boolean; onUpdate: (values: PersonalValues) => Promise<void> }) {
   const household = hub.profile.household.children > 0 ? "family" : hub.profile.household.adults > 1 ? "couple" : "single";
-  return <section className="plain-panel"><SectionHead label="Edit my plan" /><p className="form-note">Updates reuse this private profile. They do not create a duplicate move, erase timeline history, or change a company allowance.</p><PersonalForm busy={busy} preferredArea={hub.profile.preferredAreaIds[0] ?? ""} submitLabel="Save plan inputs" onSubmit={onUpdate} initial={{ displayName: hub.profile.displayName, workType: hub.profile.workType, household, incomeMin: hub.profile.income.minMonthlyAed, incomeMax: hub.profile.income.maxMonthlyAed === hub.profile.income.minMonthlyAed ? null : hub.profile.income.maxMonthlyAed }} /></section>;
+  return <section className="plain-panel"><SectionHead label="Edit my plan" /><p className="form-note">Updates reuse this private profile. They do not create a duplicate move, erase timeline history, or change a company allowance.</p><PersonalForm busy={busy} preferredArea={hub.profile.preferredAreaIds[0] ?? ""} submitLabel="Save plan inputs" onSubmit={onUpdate} initial={{ displayName: hub.profile.displayName, workType: hub.profile.workType, household, incomeMin: hub.profile.income.minMonthlyAed, incomeMax: hub.profile.income.maxMonthlyAed === hub.profile.income.minMonthlyAed ? null : hub.profile.income.maxMonthlyAed, planningContext: hub.profile.planningContext }} /></section>;
 }
 
 function PersonalForm({ busy, preferredArea, submitLabel, onSubmit, initial }: { busy: boolean; preferredArea: string; submitLabel: string; onSubmit: (values: PersonalValues) => Promise<void>; initial?: Partial<PersonalValues> }) {
@@ -474,19 +594,33 @@ function PersonalForm({ busy, preferredArea, submitLabel, onSubmit, initial }: {
     setError("");
     await onSubmit(parsed);
   }
-  return <form className="intake-form" method="post" onSubmit={submit}>{error ? <p className="error-note" role="alert">{error}</p> : null}<label>Name <span>(optional)</span><input name="displayName" placeholder="Private mover" defaultValue={initial?.displayName ?? ""} /></label><label>Work type<select name="workType" defaultValue={initial?.workType ?? "employee"}><option value="employee">Employee</option><option value="freelancer">Freelancer</option><option value="self_employed">Self-employed</option></select></label><label>Household<select name="household" defaultValue={initial?.household ?? "single"}><option value="single">Single</option><option value="couple">Couple</option><option value="family">Family with children</option></select></label><label>Monthly income (AED)<input name="incomeMin" inputMode="numeric" placeholder="8000" defaultValue={initial?.incomeMin ?? ""} /></label><label>Monthly income upper range <span>(optional)</span><input name="incomeMax" inputMode="numeric" placeholder="Optional upper range" defaultValue={initial?.incomeMax ?? ""} /></label>{preferredArea ? <p className="form-note">Area preference added from directory: {areaLabel(preferredArea)}.</p> : null}<button className="primary-action" disabled={busy}>{busy ? "Working…" : submitLabel}</button></form>;
+  const context = initial?.planningContext;
+  return <form className="intake-form" method="post" onSubmit={submit}>{error ? <p className="error-note" role="alert">{error}</p> : null}<label>Name <span>(optional)</span><input name="displayName" placeholder="Private mover" defaultValue={initial?.displayName ?? ""} /></label><label>Work type<select name="workType" defaultValue={initial?.workType ?? "employee"}><option value="employee">Employee</option><option value="freelancer">Freelancer</option><option value="self_employed">Self-employed</option></select></label><label>Household<select name="household" defaultValue={initial?.household ?? "single"}><option value="single">Single</option><option value="couple">Couple</option><option value="family">Family with children</option></select></label><label>Monthly income (AED)<input name="incomeMin" inputMode="numeric" placeholder="8000" defaultValue={initial?.incomeMin ?? ""} /></label><label>Monthly income upper range <span>(optional)</span><input name="incomeMax" inputMode="numeric" placeholder="Optional upper range" defaultValue={initial?.incomeMax ?? ""} /></label><details className="intake-context"><summary>Improve my setup route <span>(optional · can add later)</span></summary><p className="form-note">These answers help shape your next steps. Skip anything you don’t know; no document upload is needed here.</p><label>Nationality / passport country <span>(optional)</span><input name="nationality" autoComplete="country-name" placeholder="Country" defaultValue={context?.nationality ?? ""} /></label><label>Purpose of move<select name="purposeOfMove" defaultValue={context?.purposeOfMove ?? ""}><option value="">Not sure yet</option><option value="work">Work / employment</option><option value="business">Start or run a business</option><option value="family">Join family</option><option value="study">Study</option><option value="other">Other</option></select></label><label>Employment status<select name="employmentStatus" defaultValue={context?.employmentStatus ?? ""}><option value="">Not sure / prefer not to say</option><option value="offer">Have a job offer</option><option value="employed">Already employed</option><option value="seeking">Looking for work</option><option value="freelance">Freelance / self-employed</option><option value="not-working">Not currently working</option></select></label><label>Who will sponsor your residence? <span>(if known)</span><select name="sponsor" defaultValue={context?.sponsor ?? ""}><option value="">Not sure yet</option><option value="employer">Employer</option><option value="self">Myself / my business</option><option value="family">Family member</option><option value="other">Another sponsor</option></select></label><label>Where are you now?<select name="alreadyInUae" defaultValue={context?.alreadyInUae ?? ""}><option value="">Not answered</option><option value="outside">Outside the UAE</option><option value="inside">Already in the UAE</option></select></label><fieldset><legend>Documents you already have <span>(optional)</span></legend>{documentOptions.map((item) => <label className="check-option" key={item.value}><input type="checkbox" name="documentsAvailable" value={item.value} defaultChecked={context?.documentsAvailable.includes(item.value)} />{item.label}</label>)}</fieldset><fieldset><legend>What have you completed? <span>(optional)</span></legend>{completedOptions.map((item) => <label className="check-option" key={item.value}><input type="checkbox" name="completedSteps" value={item.value} defaultChecked={context?.completedSteps.includes(item.value)} />{item.label}</label>)}</fieldset></details>{preferredArea ? <p className="form-note">Area preference added from directory: {areaLabel(preferredArea)}.</p> : null}<button className="primary-action" disabled={busy}>{busy ? "Working…" : submitLabel}</button></form>;
 }
 
-function HomeCard({ item, busy, onOpen, distanceKm }: { item: HomeRecommendation; busy: boolean; onOpen: (target: { id: string; url: string | null }) => void; distanceKm?: number | null }) {
+function HomeCard({ item, busy, selected, onOpen, onSelect, distanceKm }: { item: HomeRecommendation; busy: boolean; selected: boolean; onOpen: (target: { id: string; url: string | null }) => void; onSelect: () => void; distanceKm?: number | null }) {
   const source = item.sources[0];
   const home = item.home;
   const imageUrl = (home as { imageUrl?: string | null }).imageUrl ?? null;
   const areaPhoto = imageUrl ? null : areaPhotoFor(home.areaId);
-  // Every real observation opens its portal page: the exact listing when we have it, otherwise the page it was seen on.
   const openUrl = home.synthetic ? null : home.listingUrl ?? home.sourceUrl;
   const publisher = home.source === "dubizzle" ? "Dubizzle" : "Property Finder";
   const away = distanceKm ? ` · ${kmLabel(distanceKm)}` : "";
-  return <article className="home-card photo-home"><figure className="home-photo">{imageUrl ? <img src={imageUrl} alt={`Listing photo for ${home.title}`} /> : areaPhoto ? <><img src={areaPhoto.src} alt={areaPhoto.alt} /><span className="photo-chip">Area photo · not this listing</span></> : <div className="photo-empty" role="img" aria-label="No listing photo available"><span>No listing photo available</span></div>}</figure><div className="home-topline"><span>{home.bedrooms === 0 ? "Studio" : `${home.bedrooms} bed`}</span><span>{item.policyFit ? "Within allowance" : "Over allowance"}</span></div><h3>{home.title}</h3><p>{home.area}{away} · {home.availability === "illustrative" ? "Synthetic planning example" : "Availability unconfirmed"}</p><strong>{money.format(home.annualRentAed)}/year</strong><ul className="reason-list">{item.reasons.slice(0, 2).map((reason) => <li key={reason}>{reason}</li>)}</ul>{source ? <SourceLinks sources={item.sources} /> : <small>Checked {formatDateTime(home.checkedAt)}</small>}{openUrl ? <button className="primary-action" type="button" disabled={busy} onClick={() => onOpen({ id: item.id, url: openUrl })}>{home.listingUrl ? `Open listing on ${publisher}` : `View on ${publisher}`}</button> : <button type="button" disabled>Synthetic planning only</button>}</article>;
+  return <article className="home-card photo-home">
+    <figure className="home-photo">
+      {imageUrl ? <img src={imageUrl} alt={`Listing photo for ${home.title}`} /> : areaPhoto ? <><img src={areaPhoto.src} alt={areaPhoto.alt} /><span className="photo-chip">Area photo · not this listing</span></> : <div className="photo-empty" role="img" aria-label="No listing photo available"><span>No listing photo available</span></div>}
+    </figure>
+    <div className="home-topline"><span>{home.bedrooms === 0 ? "Studio" : `${home.bedrooms} bed`}</span><span>{item.policyFit ? "Within allowance" : "Over allowance"}</span></div>
+    <h3>{home.title}</h3>
+    <p>{home.area}{away} · {home.availability === "illustrative" ? "Synthetic planning example" : "Availability unconfirmed"}</p>
+    <strong>{money.format(home.annualRentAed)}/year</strong>
+    <ul className="reason-list">{item.reasons.slice(0, 2).map((reason) => <li key={reason}>{reason}</li>)}</ul>
+    {source ? <SourceLinks sources={item.sources} /> : <small>Checked {formatDateTime(home.checkedAt)}</small>}
+    <button className={selected ? "secondary-action" : "primary-action"} type="button" disabled={busy} aria-pressed={selected} onClick={onSelect}>
+      {selected ? "Selected · clear selection" : "Select for my plan"}
+    </button>
+    {openUrl ? <button className="primary-action" type="button" disabled={busy} onClick={() => onOpen({ id: item.id, url: openUrl })}>{home.listingUrl ? `Open listing on ${publisher}` : `View on ${publisher}`}</button> : <button type="button" disabled>Synthetic planning only</button>}
+  </article>;
 }
 
 function RankNote({ areaName, inArea, total }: { areaName: string; inArea: number; total: number }) {
@@ -633,9 +767,9 @@ function isInternalSource(source: { id: string; url: string }) { return source.i
 function nextTaskLabel(hub: PersonHub) { return hub.tasks.find((task) => task.state === "blocked")?.title ?? hub.tasks.find((task) => task.state === "not_started")?.title ?? "Review latest step"; }
 function nextTaskDetail(hub: PersonHub) { return hub.tasks.find((task) => task.state === "blocked")?.nextAction ?? hub.tasks.find((task) => task.state === "not_started")?.nextAction ?? "Open the roadmap for source, owner and next action."; }
 
-function parsePersonal(form: FormData, preferredArea: string): PersonalValues | string { const incomeMin = parseRequiredMoney(form.get("incomeMin"), "Monthly income (AED)"); if (typeof incomeMin === "string") return incomeMin; const incomeMax = parseOptionalMoney(form.get("incomeMax")); if (typeof incomeMax === "string") return incomeMax; if (incomeMax !== null && incomeMax < incomeMin) return "Upper income range must be greater than or equal to the minimum."; return { displayName: String(form.get("displayName") ?? ""), workType: String(form.get("workType") ?? "employee"), household: String(form.get("household") ?? "single"), incomeMin, incomeMax, preferredAreaIds: preferredArea ? [preferredArea] : [] }; }
+function parsePersonal(form: FormData, preferredArea: string): PersonalValues | string { const incomeMin = parseRequiredMoney(form.get("incomeMin"), "Monthly income (AED)"); if (typeof incomeMin === "string") return incomeMin; const incomeMax = parseOptionalMoney(form.get("incomeMax")); if (typeof incomeMax === "string") return incomeMax; if (incomeMax !== null && incomeMax < incomeMin) return "Upper income range must be greater than or equal to the minimum."; return { displayName: String(form.get("displayName") ?? ""), workType: String(form.get("workType") ?? "employee"), household: String(form.get("household") ?? "single"), incomeMin, incomeMax, preferredAreaIds: preferredArea ? [preferredArea] : [], planningContext: { nationality: String(form.get("nationality") ?? "").trim(), purposeOfMove: String(form.get("purposeOfMove") ?? ""), employmentStatus: String(form.get("employmentStatus") ?? ""), sponsor: String(form.get("sponsor") ?? ""), alreadyInUae: String(form.get("alreadyInUae") ?? ""), documentsAvailable: form.getAll("documentsAvailable").filter((item): item is string => typeof item === "string"), completedSteps: form.getAll("completedSteps").filter((item): item is string => typeof item === "string") } }; }
 function parseProgram(form: FormData, hasUaeEntity: boolean): ProgramValues | string { const teamSize = parseRequiredWholeNumber(form.get("teamSize"), "Team size"); if (typeof teamSize === "string") return teamSize; const annualAllowanceAed = parseRequiredMoney(form.get("annualAllowanceAed"), "Annual housing allowance"); if (typeof annualAllowanceAed === "string") return annualAllowanceAed; const moveDate = String(form.get("moveDate") ?? ""); if (!moveDate) return "Move date is required."; return { organizationName: String(form.get("organizationName") ?? ""), hasUaeEntity, jurisdiction: String(form.get("jurisdiction") ?? "adgm"), officeAreaId: toAreaId(String(form.get("officeArea") || "Al Maryah Island")), teamSize, moveDate, annualAllowanceAed }; }
-function profileBody(values: PersonalValues) { return { displayName: values.displayName.trim() || "Private mover", workType: values.workType, adults: values.household === "single" ? 1 : 2, children: values.household === "family" ? 1 : 0, minMonthlyAed: values.incomeMin, maxMonthlyAed: values.incomeMax ?? values.incomeMin, preferredAreaIds: values.preferredAreaIds }; }
+function profileBody(values: PersonalValues) { return { displayName: values.displayName.trim() || "Private mover", workType: values.workType, adults: values.household === "single" ? 1 : 2, children: values.household === "family" ? 1 : 0, minMonthlyAed: values.incomeMin, maxMonthlyAed: values.incomeMax ?? values.incomeMin, preferredAreaIds: values.preferredAreaIds, planningContext: values.planningContext }; }
 function parseRequiredMoney(value: FormDataEntryValue | null, label: string) { const text = String(value ?? "").replace(/,/g, "").trim(); const parsed = Number(text); if (!text || !Number.isFinite(parsed) || parsed < 0) return `${label} must be a finite number. Zero is allowed when it is intentional.`; return parsed; }
 function parseOptionalMoney(value: FormDataEntryValue | null) { const text = String(value ?? "").replace(/,/g, "").trim(); if (!text) return null; const parsed = Number(text); if (!Number.isFinite(parsed) || parsed < 0) return "Upper income range must be a finite number when provided."; return parsed; }
 function parseRequiredWholeNumber(value: FormDataEntryValue | null, label: string) { const parsed = Number(String(value ?? "").trim()); if (!Number.isInteger(parsed) || parsed <= 0) return `${label} must be a whole number greater than zero.`; return parsed; }

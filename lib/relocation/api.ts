@@ -213,6 +213,7 @@ export async function updatePrivateProfile(request: Request, body: Record<string
       minMonthlyAed: body.minMonthlyAed ?? existing.income.minMonthlyAed,
       maxMonthlyAed: body.maxMonthlyAed ?? existing.income.maxMonthlyAed,
       preferredAreaIds: body.preferredAreaIds ?? existing.preferredAreaIds,
+      planningContext: body.planningContext ?? existing.planningContext,
     };
     const validated = profileFromInput(mergedInput, existing.createdAt);
     const profile: PersonProfile = {
@@ -222,6 +223,7 @@ export async function updatePrivateProfile(request: Request, body: Record<string
       household: validated.household,
       income: validated.income,
       preferredAreaIds: validated.preferredAreaIds,
+      planningContext: validated.planningContext,
       updatedAt,
     };
     const program = activeCase.programId ? current.programs.find((item) => item.id === activeCase.programId) ?? null : null;
@@ -431,6 +433,16 @@ function profileFromInput(body: ProfileInput, createdAt: string): PersonProfile 
   const minMonthlyAed = requiredMoney(body.minMonthlyAed, "minMonthlyAed", 0);
   const maxMonthlyAed = typeof body.maxMonthlyAed === "number" ? requiredMoney(body.maxMonthlyAed, "maxMonthlyAed", minMonthlyAed) : minMonthlyAed;
   if (maxMonthlyAed < minMonthlyAed) throw new Error("maxMonthlyAed must be greater than or equal to minMonthlyAed.");
+  const rawContext = body.planningContext && typeof body.planningContext === "object" ? body.planningContext as Record<string, unknown> : {};
+  const planningContext = {
+    nationality: boundedText(rawContext.nationality, 80),
+    purposeOfMove: boundedText(rawContext.purposeOfMove, 40),
+    employmentStatus: boundedText(rawContext.employmentStatus, 40),
+    sponsor: boundedText(rawContext.sponsor, 40),
+    alreadyInUae: boundedText(rawContext.alreadyInUae, 20),
+    documentsAvailable: boundedStringList(rawContext.documentsAvailable),
+    completedSteps: boundedStringList(rawContext.completedSteps),
+  };
   return {
     id: `person-${crypto.randomUUID()}`,
     displayName: optionalString(body.displayName, "Private mover"),
@@ -438,11 +450,20 @@ function profileFromInput(body: ProfileInput, createdAt: string): PersonProfile 
     household: { adults, children },
     income: { minMonthlyAed, maxMonthlyAed },
     preferredAreaIds: Array.isArray(body.preferredAreaIds) ? body.preferredAreaIds.filter((item): item is string => typeof item === "string" && isKnownAreaId(item)) : [],
+    planningContext,
     createdAt,
     updatedAt: createdAt,
     synthetic: false,
     privateEvidence: { incomeDocuments: [], identityEvidence: [], bankResults: [] },
   };
+}
+
+function boundedText(value: unknown, maxLength: number) {
+  return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
+}
+
+function boundedStringList(value: unknown) {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string").map((item) => item.trim().slice(0, 60)).filter(Boolean).slice(0, 20) : [];
 }
 
 function personalHousingPolicy(body: Record<string, unknown>) {

@@ -10,9 +10,9 @@ The first market is Abu Dhabi. The first build connects one personal journey wit
 
 The website is a connected application: a focused landing page, source-linked area and service information pages, a short onboarding flow, a private move workspace, and a separate company workspace. Each page supports a decision or action. The application works from a fresh browser and empty program without loading demo data automatically.
 
-Ask only what work the person does, who is moving with them, and their income. They may enter income manually or let the existing document reader help. Ask further questions only when they would change a recommendation.
+Keep the first step to work, household, and income. The route choice already distinguishes an individual, an invited employee, and a company move. Offer a collapsed, skippable **Improve my setup route** section for nationality/passport country, move purpose, employment status, sponsor, current UAE location, available document categories, and steps already completed. These details are private planning context, not eligibility decisions; unknown answers are valid. Record document availability without requesting uploads. Ask for uploads or sensitive evidence only later, when useful and user-initiated.
 
-The first screen returns a small set of suitable areas and homes, a realistic move and housing budget, nearby places to work, a setup path, and direct action buttons. When a person selects a property, Yala AD updates the required cash and finance fit for that specific choice. Their profile and live journey timeline carry across the experience.
+The first screen returns a small set of suitable areas and homes, a realistic move and housing budget, nearby places to work, a setup path, and direct action buttons. Selecting a rental persists the choice and updates its rent-budget and allowance fit in the finance view. Initial cash and mortgage approval remain unknown until provider evidence is available. Their profile and live journey timeline carry across the experience.
 
 ## Product modules that work together
 

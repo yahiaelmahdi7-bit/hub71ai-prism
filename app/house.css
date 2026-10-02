@@ -393,6 +393,13 @@ input:focus-visible, select:focus-visible, textarea:focus-visible,
 input[type="checkbox"], input[type="radio"] { width: auto; min-height: 0; height: auto; accent-color: var(--accent); box-shadow: none; }
 .intake-form label, .invite-panel label { color: var(--text-1); font-size: 13px; font-weight: 600; }
 .intake-form label span { color: var(--text-3); font-weight: 500; }
+.intake-context { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg-1); }
+.intake-context summary { color: var(--text-0); cursor: pointer; font-size: 14px; font-weight: 700; }
+.intake-context summary span, .intake-context legend span { color: var(--text-3); font-size: 12px; font-weight: 500; }
+.intake-context fieldset { display: grid; gap: 8px; margin: 0; padding: 10px 0 0; border: 0; border-top: 1px solid var(--line); }
+.intake-context legend { padding: 0 8px 0 0; color: var(--text-1); font-size: 13px; font-weight: 700; }
+.intake-form label.check-option { display: flex; align-items: center; gap: 9px; font-weight: 500; }
+.intake-form input[type="checkbox"] { width: 17px; min-height: 17px; height: 17px; padding: 0; }
 .form-note { color: var(--text-2); font-size: 13px; }
 
 /* tables */
@@ -612,6 +619,16 @@ td { padding: 12px 16px; border-top: 1px solid var(--line); }
 }
 .evidence-panel dt { color: var(--text-3); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .evidence-panel dd { margin: 0; color: var(--text-1); }
+.selected-property-summary {
+  display: grid;
+  gap: 7px;
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+}
+.selected-property-summary span { color: var(--text-2); }
 .roadmap-form { margin-top: 18px; }
 @media (max-width: 1024px) {
   .workspace-section.split,

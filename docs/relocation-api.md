@@ -29,6 +29,7 @@ Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype sessi
 | `/api/relocation/profiles` | `POST` | none | Same as `create_profile`. |
 | `/api/relocation/profiles/me` | `GET` | person bearer | Private person hub. |
 | `/api/relocation/profiles/me` | `PATCH` | person bearer | Update the caller's reusable profile fields and recalculate the active case recommendations; keeps profile/case ids and timeline. |
+| `/api/relocation/properties/selection` | `POST` | person bearer | Select or clear an affordable, policy-fitting recommended rental with `{ caseId, listingId }`; persists the case selection and returns the updated private hub. Send `listingId: null` to clear. |
 | `/api/relocation/programs` | `GET` | HR bearer | Programs owned by the HR session's organization. |
 | `/api/relocation/programs` | `POST` | none | Same as `create_program`. |
 | `/api/relocation/programs/:programId/hr` | `GET` | HR bearer | HR-safe program view. |
@@ -49,6 +50,7 @@ Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype sessi
 - Manual submitted/booked reports require a user or HR reference and are labeled `user_report` or `hr_report` with server time. HR can update only shared program tasks.
 - Client routes cannot create provider-confirmed status. Provider decisions require a future approved integration.
 - Private hub budgets expose affordability filters and mark initial cash/payment terms as unknown until a provider confirms deposit, commission, cheque schedule and handover terms.
+- A selected rental adds its annual/monthly asking rent, current budget and allowance fit, and rent-to-income share to the private hub. The share is unavailable when stated income is zero; selection never estimates initial cash or mortgage approval.
 
 ## Minimal create payloads
 

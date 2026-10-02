@@ -314,6 +314,27 @@ try {
     assert(employeeHub.recommendations.some((item) => item.type === 'home' && item.home.contactable && !item.home.synthetic), 'Employee needs at least one real contactable listing');
     return openAction(employee, '#homes', (page) => page.getByRole('button', { name: /^(Open listing|View) on / }).first());
   });
+  await check('Selecting an affordable home updates private rent context and can be cleared', async () => {
+    requireValue(employeeHub, 'Accepted employee needed');
+    await visit(employee, '/move#homes');
+    await employee.getByRole('button', { name: 'Select for my plan', exact: true }).first().click();
+    await visible(employee.getByRole('status').filter({ hasText: 'Home selected' }));
+    await visible(employee.locator('.selected-property-summary').getByText(/^Selected:/));
+    await employee.reload({ waitUntil: 'networkidle' });
+    await visible(employee.getByRole('heading', { name: 'Fictional browser QA employee', exact: true }));
+    await visible(employee.locator('.selected-property-summary').getByText(/^Selected:/));
+    const selected = await hub(employee);
+    assert(selected.selectedProperty, 'Selected home must be available in the private profile view');
+    assert.equal(selected.selectedProperty.listingId, selected.case.selectedListingId);
+    await shot(employee, 'property-selection-desktop');
+    await employee.setViewportSize({ width: 390, height: 900 });
+    await shot(employee, 'property-selection-mobile');
+    await employee.setViewportSize({ width: 1440, height: 1000 });
+    await employee.getByRole('button', { name: 'Selected · clear selection', exact: true }).first().click();
+    await visible(employee.getByRole('status').filter({ hasText: 'Selected home cleared' }));
+    assert.equal((await hub(employee)).selectedProperty, null, 'Clearing the selection must restore the unselected rent view');
+    return await shot(employee, 'property-selection-cleared-desktop');
+  });
   await check('Official-service navigation records opened only and preserves the private tab', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
     return openAction(employee, '#setup', (page) => page.locator('#setup .action-row button:not([disabled])').first());
@@ -483,7 +504,7 @@ try {
     `SLOW (>20 s): ${slow.length ? slow.map((result) => result.name).join('; ') : 'None.'}`,
     `JavaScript exceptions: ${errors.length}. Unexpected failed requests: ${failedRequests.length}.`,
     '',
-    `Reproduce: \`BANKABLE_TEST_URL=${origin} node tests/e2e/relocation-browser.mjs\` with the matching local production server running. The script closes every browser context and exits non-zero if a check fails.`,
+    `Reproduce: \`BANKABLE_TEST_URL=${origin} node tests/e2e/relocation-browser.mjs\` with the Next.js local app server running. The script closes every browser context and exits non-zero if a check fails.`,
     '',
     'Production identity, provider webhooks, document extraction and hosted-storage deployment are outside this browser gate.',
   ];

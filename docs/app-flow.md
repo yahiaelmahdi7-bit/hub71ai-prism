@@ -60,7 +60,7 @@ A fresh browser has no demo records selected. A new company starts with no emplo
 | Screen | Minimum input or content | Main action |
 | --- | --- | --- |
 | 1. Welcome | Choose **My move**, **Join my company's move**, or **Move my team** | Start the right route |
-| 2. Personal start | Work type, household, income or income range; optional invite pre-fills company policy | Create private profile |
+| 2. Personal start | Work type, household, income or income range; optional route details for nationality, move purpose, employment status, sponsor, UAE location, documents, and completed steps | Create private profile |
 | 3. Move hub | One priority action, realistic move budget, 3 area/home matches, nearby work options, setup and money cards | Open a useful next action |
 | 4. Home detail | Source and fetch date, asking rent, estimated initial cash, commute, affordability, finance factors | Open original listing or agent contact |
 | 5. My journey | Housing, work, setup, insurance, and money milestones with provenance | Continue, confirm manually, or resolve blocker |
@@ -68,7 +68,7 @@ A fresh browser has no demo records selected. A new company starts with no emplo
 | 7. Team command center | Employee invites, milestone counts, policy-fit housing, move budget, and blockers; no private banking data | Invite, assign, or follow up |
 | 8. Company setup path | Mainland / ADGM / KEZAD route, required evidence, official links, clear handoff status | Open official service or record reference |
 
-Keep progressive disclosure: ask a question only when it changes a recommendation or the next official step. Document upload remains optional inside **Evidence**, not the entry screen.
+Keep progressive disclosure: ask a question only when it changes a recommendation or the next official step. The first screen asks the existing work, household, and income questions; **Join** versus **My move** versus **Move my team** already captures individual/company context. An optional, collapsed **Improve my setup route** section stores nationality/passport country, move purpose, employment status, sponsor, whether the person is already in the UAE, available-document categories, and already-completed steps. These can be skipped and edited later. Household selection captures whether dependents are moving; exact family details can be refined later. An invite supplies the company context, so do not ask the employee to repeat it. The intake records document availability only; uploads and sharing stay optional inside **Evidence** and require deliberate user action.
 
 ## Shared rules and boundaries
 
