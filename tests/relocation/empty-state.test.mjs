@@ -95,8 +95,19 @@ test("fresh program invite creates the first employee private hub and survives r
     }),
     { params: Promise.resolve({ programId: programBody.program.id }) },
   )).json();
+  assert.equal(hrBody.view.aggregate.invited, 1);
   assert.equal(hrBody.view.aggregate.cases, 1);
   assert.equal(hrBody.view.aggregate.accepted, 1);
+
+  await invitesRoute.POST(jsonRequest("http://bankable.test/api/relocation/invites", { employeeLabel: "Second employee" }, programBody.hrSessionToken));
+  const afterSecondInvite = await (await hrRoute.GET(
+    new Request(`http://bankable.test/api/relocation/programs/${programBody.program.id}/hr`, {
+      headers: { authorization: `Bearer ${programBody.hrSessionToken}` },
+    }),
+    { params: Promise.resolve({ programId: programBody.program.id }) },
+  )).json();
+  assert.equal(afterSecondInvite.view.aggregate.invited, 2);
+  assert.equal(afterSecondInvite.view.aggregate.accepted, 1);
 });
 
 test("low-income private profile keeps setup, workspace and finance actions with no-match reasons", async () => {
@@ -119,6 +130,26 @@ test("low-income private profile keeps setup, workspace and finance actions with
   assert.ok(hub.view.recommendations.some((item) => item.type === "workspace"));
   assert.ok(hub.view.recommendations.some((item) => item.type === "official_service"));
   assert.ok(hub.view.recommendations.some((item) => item.type === "finance_readiness"));
+});
+
+test("zero-income profile and edit return honest no-match instead of rejection", async () => {
+  const created = await profilesRoute.POST(jsonRequest("http://bankable.test/api/relocation/profiles", {
+    workType: "freelancer",
+    adults: 1,
+    children: 0,
+    minMonthlyAed: 0,
+  }));
+  const createdBody = await created.json();
+  assert.equal(created.status, 200);
+
+  const patched = await meRoute.PATCH(jsonRequest("http://bankable.test/api/relocation/profiles/me", {
+    minMonthlyAed: 0,
+  }, createdBody.sessionToken));
+  const patchedBody = await patched.json();
+  assert.equal(patched.status, 200);
+  assert.equal(patchedBody.view.profile.income.minMonthlyAed, 0);
+  assert.equal(patchedBody.view.recommendations.some((item) => item.type === "home"), false);
+  assert.ok(patchedBody.view.housingSearch.assumptions.some((text) => text.includes("No homes remained under AED 0")));
 });
 
 test("demo bootstrap appends without invalidating saved fresh sessions", async () => {
@@ -529,6 +560,45 @@ test("official service opens map to service category and keep banking private fr
   assert.equal(employee.milestones.find((item) => item.category === "residence").state, "opened");
   assert.equal(employee.milestones.find((item) => item.category === "insurance").state, "opened");
   assert.equal(employee.milestones.some((item) => item.category === "finance"), false);
+});
+
+test("hub canonicalizes stale stored recommendations with current sources, images and finance provenance", async () => {
+  const createdBody = await (await profilesRoute.POST(jsonRequest("http://bankable.test/api/relocation/profiles", {
+    workType: "employee",
+    adults: 1,
+    children: 0,
+    minMonthlyAed: 8000,
+  }))).json();
+  const initial = await (await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
+    headers: { authorization: `Bearer ${createdBody.sessionToken}` },
+  }))).json();
+  const caseId = initial.view.case.id;
+  const lowBudgetHome = initial.view.recommendations.find((item) => item.type === "home" && item.home.id === "snapshot-dubizzle-mbz-studio-105317-xsihcq");
+  assert.ok(lowBudgetHome?.home.imageUrl);
+
+  await relocationStore.update((current) => ({
+    ...current,
+    recommendations: {
+      ...current.recommendations,
+      [caseId]: current.recommendations[caseId].map((item) => item.id === lowBudgetHome.id
+        ? {
+            ...item,
+            sources: [{ id: "legacy-blank", title: "", publisher: "", url: "", kind: "property_portal", checkedAt: "", confidence: "low", verification: "search_only", supportedClaims: [], limitations: [] }],
+            home: { ...item.home, imageUrl: undefined, imageAlt: undefined, imageSourceUrl: undefined },
+          }
+        : item),
+    },
+  }));
+
+  const refreshed = await (await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
+    headers: { authorization: `Bearer ${createdBody.sessionToken}` },
+  }))).json();
+  const fixedHome = refreshed.view.recommendations.find((item) => item.id === lowBudgetHome.id);
+  const finance = refreshed.view.recommendations.find((item) => item.type === "finance_readiness");
+  assert.ok(fixedHome.home.imageUrl?.startsWith("https://dbz-images.dubizzle.com/"));
+  assert.ok(fixedHome.sources[0].title);
+  assert.equal(finance.sources[0].checkedAt, "2026-10-02T10:40:06+04:00");
+  assert.equal(finance.sources[0].publisher, "Central Bank of the UAE");
 });
 
 test("consent expiry and revoke keep active consent list honest", async () => {

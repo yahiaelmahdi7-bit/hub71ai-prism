@@ -2,9 +2,9 @@
   "version": "property-snapshot-2026-10-02",
   "checkedAt": "2026-10-02T10:50:00+04:00",
   "limitations": [
-    "Manual snapshot of public Property Finder pages opened for the hackathon demo.",
+    "Manual snapshot of public Property Finder and Dubizzle pages opened for the hackathon demo.",
     "Asking rents are not completed leases and availability is unconfirmed.",
-    "No contact numbers are copied into Bankable; contact actions must open the original listing page.",
+    "No contact numbers are copied into Yala AD; contact actions must open the original listing page.",
     "This is not a production-cleared portal integration or complete market inventory."
   ],
   "sources": [
@@ -44,7 +44,7 @@
         "amountAed": 75000,
         "period": "yearly",
         "annualizedAed": 75000,
-        "note": "Page title says 6500/Month, but the opened page body states AED 75,000 yearly and 12 cheques; Bankable uses the observed yearly rent."
+        "note": "Page title says 6500/Month, but the opened page body states AED 75,000 yearly and 12 cheques; Yala AD uses the observed yearly rent."
       },
       "verification": "page_opened",
       "supportedClaims": [
@@ -80,7 +80,7 @@
         "Shams Abu Dhabi, Al Reem Island, Abu Dhabi"
       ],
       "limitations": [
-        "Search result excerpt only; not eligible for Bankable contact action."
+        "Search result excerpt only; not eligible for Yala AD contact action."
       ]
     },
     {
@@ -105,7 +105,7 @@
         "Meera 2, Shams Abu Dhabi, Al Reem Island, Abu Dhabi"
       ],
       "limitations": [
-        "Search result excerpt only; not eligible for Bankable contact action."
+        "Search result excerpt only; not eligible for Yala AD contact action."
       ]
     },
     {
@@ -119,7 +119,7 @@
         "amountAed": 80000,
         "period": "yearly",
         "annualizedAed": 80000,
-        "note": "Observed directly on opened listing page."
+        "note": "Observed directly on opened listing page; later recheck showed the page as no longer available."
       },
       "verification": "page_opened",
       "supportedClaims": [
@@ -130,6 +130,7 @@
         "Al Maryah Vista, Al Maryah Island, Abu Dhabi"
       ],
       "limitations": [
+        "Rechecked opened page says this apartment is no longer available; keep as non-contactable dated market evidence only.",
         "Availability must be confirmed with the portal or agent."
       ]
     },
@@ -155,7 +156,7 @@
         "Al Maryah Island, Abu Dhabi"
       ],
       "limitations": [
-        "Search result excerpt only; not eligible for Bankable contact action."
+        "Search result excerpt only; not eligible for Yala AD contact action."
       ]
     },
     {
@@ -180,7 +181,7 @@
         "Views B, Yas Golf Collection, Yas Island, Abu Dhabi"
       ],
       "limitations": [
-        "Search result excerpt only; not eligible for Bankable contact action."
+        "Search result excerpt only; not eligible for Yala AD contact action."
       ]
     },
     {
@@ -257,6 +258,30 @@
       "limitations": [
         "Availability must be confirmed with the portal or agent."
       ]
+    },
+    {
+      "id": "dubizzle-mbz-studio-105317-xsihcq",
+      "title": "Amazing Studio with Parking in Mohamed Bin Zayed City",
+      "publisher": "Dubizzle Abu Dhabi",
+      "url": "https://abudhabi.dubizzle.com/property-for-rent/residential/apartmentflat/2026/3/15/excellent-studio-in-zone-19-near-shabiy-3-284718/",
+      "kind": "property_portal",
+      "checkedAt": "2026-10-02T11:54:46+04:00",
+      "verification": "page_opened",
+      "supportedClaims": [
+        "Opened individual listing page showed AED 24,000 yearly rent.",
+        "Opened page showed Studio, 1 bath, 658 sqft in Mohamed Bin Zayed City, Abu Dhabi.",
+        "Opened page showed Updated 24th September 2026 and reference ID 105317-XsIHCQ."
+      ],
+      "limitations": [
+        "Availability, final rent, payment schedule and provider response must be confirmed on the portal or with the agent.",
+        "No contact number is copied into Yala AD; actions open the original listing page only."
+      ],
+      "observedPrice": {
+        "amountAed": 24000,
+        "period": "yearly",
+        "annualizedAed": 24000,
+        "note": "Observed directly on opened Dubizzle listing page."
+      }
     }
   ],
   "homes": [
@@ -272,7 +297,10 @@
       "bathrooms": 1,
       "sizeSqft": 550,
       "source": "propertyfinder",
-      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-khalifa-city-150462347.html"
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-khalifa-city-150462347.html",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/84JXP3FYNVNZG11TP5EZZS4TM0/eb5501d0-e6d2-49a3-b06a-0ee18493cbb6/668x452.jpg?v=c03f3f5937aeda7605b09191e5f4db56",
+      "imageAlt": "Property Finder listing image for Big Studio Close To Al Raha Mall",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-khalifa-city-150462347.html"
     },
     {
       "id": "snapshot-pf-khalifa-1br-143750243",
@@ -289,7 +317,10 @@
       "listingUrl": null,
       "contactable": false,
       "availability": "unconfirmed",
-      "normalizationNote": "Opened listing page says no longer available; preserved as non-contactable dated market evidence."
+      "normalizationNote": "Opened listing page says no longer available; preserved as non-contactable dated market evidence.",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/5KJFXWFE3J2RQQR9XMMVX7QE1C/9220ba6b-8955-46ae-b241-18f8b5c84d94/668x452.jpg?v=a916e55270d5c9b6523fa15492dcaa56",
+      "imageAlt": "Property Finder listing image for 6500/Month | Fully Furnished OneBR | Ready to Move",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-khalifa-city-khalifa-city-a-143750243.html"
     },
     {
       "id": "snapshot-pf-al-reem-2br-110500789",
@@ -306,7 +337,10 @@
       "listingUrl": null,
       "contactable": false,
       "availability": "unconfirmed",
-      "normalizationNote": "Search-only observation, not an opened individual listing page."
+      "normalizationNote": "Search-only observation, not an opened individual listing page.",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/R1AED492XC9KDFJCGQRZT7HKAC/80f640d3-e53c-43d7-859b-aa2732dc98dc/668x452.jpg?v=302dcd1cacd5a54ed0b8b43da26c568a",
+      "imageAlt": "Property Finder listing image for 2BR Apartment | Pool & Gym | Prime Al Reem Island",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-reem-island-shams-abu-dhabi-110500789.html"
     },
     {
       "id": "snapshot-pf-al-reem-1br-search-20261002",
@@ -337,7 +371,13 @@
       "bathrooms": 1,
       "sizeSqft": 522,
       "source": "propertyfinder",
-      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-maryah-island-al-maryah-vista-143733993.html"
+      "listingUrl": null,
+      "contactable": false,
+      "availability": "unconfirmed",
+      "normalizationNote": "Original page recheck said no longer available, so this remains dated market evidence and cannot be contacted from Yala AD.",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/G72T91QWFAVMNQZECK7Z2YK9HM/77f7dd29-6656-4992-80f0-2a9180c3e20d/668x452.jpg?v=3e1307a4c62754996ffce3ac2b91302c",
+      "imageAlt": "Property Finder listing image for the Al Maryah Vista one-bedroom apartment",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-maryah-island-al-maryah-vista-143733993.html"
     },
     {
       "id": "snapshot-pf-al-maryah-1br-144622199",
@@ -354,7 +394,10 @@
       "listingUrl": null,
       "contactable": false,
       "availability": "unconfirmed",
-      "normalizationNote": "Search-only observation, not an opened individual listing page."
+      "normalizationNote": "Search-only observation, not an opened individual listing page.",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/VHQPACCBKBFCWFAKYFXWVGTN4M/9a7bf23d-7958-4842-8bb9-ce8959bab11a/668x452.jpg?v=90ab324f386fa5c97a4492c394557967",
+      "imageAlt": "Property Finder listing image for High Floor | Fully Furnished | Ready to Move In",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-maryah-island-144622199.html"
     },
     {
       "id": "snapshot-pf-yas-1br-search-20261002",
@@ -385,7 +428,10 @@
       "bathrooms": 3,
       "sizeSqft": 1195,
       "source": "propertyfinder",
-      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-raha-beach-p-2657-150052731.html"
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-raha-beach-p-2657-150052731.html",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/GP4RERX0YBV7RZHK8R5Y4Q8D94/4bb2de4f-f745-4d1d-9dd3-cba53316e831/668x452.jpg?v=9d718442e04f6f379092089c5eb6bd83",
+      "imageAlt": "Property Finder listing image for Located in the heart of Al Raha",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-raha-beach-p-2657-150052731.html"
     },
     {
       "id": "snapshot-pf-saadiyat-studio-149077723",
@@ -399,7 +445,10 @@
       "bathrooms": 1,
       "sizeSqft": 462,
       "source": "propertyfinder",
-      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-code-149077723.html"
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-code-149077723.html",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/355C82D571552X3TTCS6YT3GHM/7a9650dc-4170-499b-a185-4ca5332065b0/668x452.jpg?v=34a239d31e16cf9602dea7624b78ee22",
+      "imageAlt": "Property Finder listing image for Modern Studio | Saadiyat Island | Ready to Move In",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-code-149077723.html"
     },
     {
       "id": "snapshot-pf-saadiyat-1br-150034266",
@@ -413,7 +462,30 @@
       "bathrooms": 2,
       "sizeSqft": 861,
       "source": "propertyfinder",
-      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-beach-saadiyat-beach-residences-150034266.html"
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-beach-saadiyat-beach-residences-150034266.html",
+      "imageUrl": "https://static.shared.propertyfinder.ae/media/images/listing/1N4Q6NR2CV2MDHRKJAC32PA7QG/71d45346-404c-44bc-b87d-2248a9d7408a/668x452.jpg?v=4914c39b3fd2f3b238810ed619b6485c",
+      "imageAlt": "Property Finder listing image for Family Living | Ready to Move | Sea View",
+      "imageSourceUrl": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-beach-saadiyat-beach-residences-150034266.html"
+    },
+    {
+      "id": "snapshot-dubizzle-mbz-studio-105317-xsihcq",
+      "sourceId": "dubizzle-mbz-studio-105317-xsihcq",
+      "title": "Amazing Studio with Parking in Mohamed Bin Zayed City",
+      "area": "Mohamed Bin Zayed City",
+      "areaId": "mohamed-bin-zayed-city",
+      "location": "Mohamed Bin Zayed City, Abu Dhabi, UAE",
+      "annualRentAed": 24000,
+      "bedrooms": 0,
+      "bathrooms": 1,
+      "sizeSqft": 658,
+      "source": "dubizzle",
+      "listingUrl": "https://abudhabi.dubizzle.com/property-for-rent/residential/apartmentflat/2026/3/15/excellent-studio-in-zone-19-near-shabiy-3-284718/",
+      "contactable": true,
+      "availability": "unconfirmed",
+      "normalizationNote": "Opened Dubizzle listing page showed yearly AED 24,000; listing availability remains unconfirmed.",
+      "imageUrl": "https://dbz-images.dubizzle.com/images/2026/09/22/d0871235-bd61-4e2b-be60-52d8eb2e5b12/f974579cfe19488b8b18bca1ec65bd54-.jpg?impolicy=dpv",
+      "imageAlt": "Dubizzle listing image for the Mohamed Bin Zayed City studio apartment",
+      "imageSourceUrl": "https://abudhabi.dubizzle.com/property-for-rent/residential/apartmentflat/2026/3/15/excellent-studio-in-zone-19-near-shabiy-3-284718/"
     }
   ]
 }

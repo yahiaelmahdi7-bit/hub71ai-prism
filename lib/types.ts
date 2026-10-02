@@ -213,6 +213,9 @@ export type ConsentGrant = {
 export type RentalHome = {
   id: string;
   title: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  imageSourceUrl?: string;
   area: string;
   areaId: string;
   annualRentAed: number;

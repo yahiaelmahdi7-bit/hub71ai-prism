@@ -87,8 +87,8 @@ function validateInputs(
   profile: Pick<PersonProfile, "household" | "income" | "preferredAreaIds">,
   policy: HousingPolicy,
 ) {
-  if (!Number.isFinite(profile.income.minMonthlyAed) || profile.income.minMonthlyAed <= 0) {
-    throw new RangeError("profile.income.minMonthlyAed must be greater than zero.");
+  if (!Number.isFinite(profile.income.minMonthlyAed) || profile.income.minMonthlyAed < 0) {
+    throw new RangeError("profile.income.minMonthlyAed must be zero or greater.");
   }
   if (!Number.isFinite(policy.annualAllowanceAed) || policy.annualAllowanceAed < 0) {
     throw new RangeError("policy.annualAllowanceAed must be zero or greater.");

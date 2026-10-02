@@ -62,14 +62,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
-  width: 2rem;
+  display: block;
+  width: auto;
   height: 2rem;
-  border-radius: 9px;
-  background: var(--navy);
-  color: var(--ivory);
-  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 nav { display: flex; align-items: center; gap: 1rem; }
@@ -742,4 +737,230 @@ button:disabled, .primary-action:disabled, .action-row button:disabled, .home-ca
 @media (max-width: 720px) {
   .screen-head { flex-direction: column; }
   .subnav { display: grid; grid-template-columns: 1fr 1fr; }
+}
+
+/* Photo-led relocation guide refresh */
+.fictional-banner {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  max-width: 82rem;
+  margin: 1rem auto 0;
+  padding: .8rem clamp(1rem, 4vw, 1.2rem);
+  border: 1px solid #d0b66d;
+  border-radius: var(--radius);
+  background: #fff5d9;
+  color: #5d4310;
+  line-height: 1.45;
+}
+.fictional-banner strong { white-space: nowrap; color: #3d2b09; }
+.area-hero h1 { max-width: 18ch; }
+.area-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 1rem clamp(1rem, 4vw, 3rem) 4rem;
+}
+.area-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 253, 250, .96);
+  color: var(--navy);
+  text-decoration: none;
+  box-shadow: 0 18px 55px rgba(16, 37, 63, .07);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.area-card:hover { transform: translateY(-4px); box-shadow: 0 24px 65px rgba(16, 37, 63, .12); }
+.area-card figure, .area-detail-hero figure, .housing-public-hero figure, .home-photo {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  background: #d8d3c8;
+}
+.area-card { grid-template-rows: auto 1fr; }
+.area-card figure { aspect-ratio: 4 / 3; }
+.area-card img, .area-detail-hero img, .housing-public-hero img, .home-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.area-card figcaption, .area-detail-hero figcaption, .housing-public-hero figcaption {
+  position: absolute;
+  left: .8rem;
+  right: .8rem;
+  bottom: .7rem;
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 700;
+  text-shadow: 0 1px 8px rgba(0,0,0,.55);
+}
+/* Cards carry a one-line credit chip; the full caption lives on hover and on the area page. */
+.area-card figcaption {
+  right: auto;
+  max-width: calc(100% - 1.6rem);
+  padding: .3rem .6rem;
+  border-radius: 999px;
+  background: rgba(16, 37, 63, .55);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  text-shadow: none;
+}
+.area-card > div { display: grid; gap: .65rem; padding: 1rem; }
+.area-card h2 { margin: 0; font-size: 1.35rem; font-weight: 680; letter-spacing: -.035em; }
+.area-card p, .area-card li { color: var(--navy-2); line-height: 1.5; }
+.area-card p { margin: 0; }
+.area-card ul { display: grid; gap: .35rem; margin: 0; padding-left: 1rem; font-size: .86rem; }
+.area-detail-hero, .housing-public-hero {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(22rem, 1.05fr);
+  gap: clamp(1.2rem, 4vw, 3rem);
+  align-items: center;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 3rem) 2rem;
+}
+.area-detail-hero figure, .housing-public-hero figure {
+  min-height: clamp(280px, 42vw, 520px);
+  border-radius: 24px;
+  box-shadow: 0 28px 80px rgba(16, 37, 63, .14);
+}
+/* min-height is not a definite height, so height:100% would fall back to the photo's own ratio and leave a band. Pin the photo to all four edges instead. */
+.area-detail-hero img, .housing-public-hero img { position: absolute; inset: 0; }
+.area-detail-hero figure::after, .housing-public-hero figure::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  background: linear-gradient(to top, rgba(16, 37, 63, .62), transparent);
+  pointer-events: none;
+}
+.area-detail-hero figcaption, .housing-public-hero figcaption { z-index: 1; }
+.area-detail-hero h1, .housing-public-hero h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: clamp(3rem, 5.6vw, 5rem);
+  font-weight: 590;
+  letter-spacing: -.055em;
+  line-height: .98;
+}
+.area-guide-layout {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 1rem clamp(1rem, 4vw, 3rem);
+}
+.area-guide-layout .plain-panel { margin: 0; }
+.photo-home { padding: 0; overflow: hidden; }
+.photo-home > :not(.home-photo) { margin-left: 1rem; margin-right: 1rem; }
+.photo-home > :last-child { margin-bottom: 1rem; }
+.home-photo { min-height: 190px; border-bottom: 1px solid var(--line); }
+.photo-empty {
+  display: grid;
+  place-items: center;
+  min-height: 190px;
+  background: linear-gradient(135deg, #d8d2c4, #f5efe4);
+  color: #625946;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.source-links em {
+  color: #746a59;
+  font-style: normal;
+  font-weight: 800;
+}
+.eligibility-note { color: var(--amber) !important; font-weight: 750; }
+@media (max-width: 1180px) {
+  .area-card-grid, .area-guide-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .fictional-banner { align-items: flex-start; flex-direction: column; }
+  .area-card-grid, .area-guide-layout, .area-detail-hero, .housing-public-hero { grid-template-columns: 1fr; }
+  .area-detail-hero figure { order: -1; }
+  .area-detail-hero h1, .housing-public-hero h1 { font-size: clamp(2.5rem, 12vw, 3.4rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .area-card { transition: none; }
+}
+
+/* Workspace: a single chosen area reads as one wide card instead of a narrow column. */
+.area-mini-grid.is-single { grid-template-columns: 1fr; }
+.area-mini-grid.is-single .area-mini-card { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto auto auto 1fr; column-gap: 32px; row-gap: 12px; }
+.area-mini-grid.is-single .area-mini-card > figure { grid-column: 1; grid-row: 1 / span 4; min-height: 300px; margin: 0; }
+.area-mini-grid.is-single .area-mini-card img { position: absolute; inset: 0; height: 100%; }
+.area-mini-grid.is-single .area-mini-card > :not(figure) { grid-column: 2; max-width: 64ch; margin-left: 0; margin-right: 32px; }
+.area-mini-grid.is-single .area-mini-card > span { margin-top: 28px; font-size: 22px; letter-spacing: -.02em; }
+.area-mini-grid.is-single .area-mini-card p { font-size: 16px; line-height: 1.6; }
+.area-mini-grid.is-single .area-mini-card ul { gap: 8px; line-height: 1.55; }
+.area-mini-grid.is-single .area-mini-card > a { align-self: start; margin-bottom: 28px; }
+@media (max-width: 760px) {
+  .area-mini-grid.is-single .area-mini-card { grid-template-columns: 1fr; grid-template-rows: none; }
+  .area-mini-grid.is-single .area-mini-card > figure { grid-row: auto; min-height: 200px; }
+  .area-mini-grid.is-single .area-mini-card > :not(figure) { grid-column: 1; margin: 0 18px; }
+  .area-mini-grid.is-single .area-mini-card > span { margin-top: 6px; }
+  .area-mini-grid.is-single .area-mini-card > a { margin-bottom: 18px; }
+}
+/* Nearest-first ranking: say why far options appear, and how far they are. */
+.rank-note { margin: -4px 0 14px; color: var(--text-2); font-size: 14px; line-height: 1.5; }
+.action-row .distance-chip { justify-self: start; margin: 2px 0 4px; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 12px; font-weight: 700; }
+/* Listing photos fill the frame (min-height alone cannot drive height:100%); area stand-ins carry a label. */
+.home-photo img { position: absolute; inset: 0; }
+.photo-chip { position: absolute; left: 10px; bottom: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(16, 37, 63, .62); color: #fff; font-size: 11px; font-weight: 700; backdrop-filter: blur(6px); }
+
+/* Workspace: several areas read as a light horizontal rail; details sit behind an info toggle. */
+.workspace-section .area-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 300px); gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; align-items: start; padding: 4px 4px 14px; scrollbar-width: thin; }
+.area-rail .area-mini-card { scroll-snap-align: start; gap: 8px; }
+.area-rail .area-mini-card figure { min-height: 0; margin-bottom: 10px; }
+.area-rail .area-mini-card img { height: 150px; }
+.area-rail .area-mini-card p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 14px; }
+.workspace-section .area-mini-card figcaption { right: auto; max-width: calc(100% - 20px); padding: 3px 9px; border-radius: 999px; background: rgba(16, 37, 63, .55); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: none; font-size: 11px; }
+.area-rail .area-info summary { display: inline-flex; align-items: center; gap: 6px; list-style: none; cursor: pointer; color: var(--accent-ink); font-size: 13px; font-weight: 700; }
+.area-rail .area-info summary::-webkit-details-marker { display: none; }
+.area-rail .area-info summary::before { content: "i"; display: inline-grid; place-items: center; width: 16px; height: 16px; border: 1.5px solid currentColor; border-radius: 50%; font: italic 700 11px/1 Georgia, serif; }
+.area-rail .area-info[open] summary { margin-bottom: 6px; }
+.area-rail .area-info ul { font-size: 13px; }
+/* Photo home cards: full-bleed photo; the button stretches between the side margins instead of 100% + margins. */
+.home-card.photo-home { padding: 0; }
+.home-card.photo-home > :is(a, button) { width: auto; }
+
+/* Workspace rows and side panels: one line of facts, detail behind an info toggle. */
+.action-row { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 6px 16px; padding: 14px 0; }
+.action-row > button { margin-top: 2px; }
+.action-row .action-main { display: grid; gap: 5px; min-width: 0; }
+.action-row .action-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: var(--text-3); font-size: 12.5px; line-height: 1.4; }
+.action-row .action-meta b { font-weight: 700; white-space: nowrap; }
+.action-row .action-meta i { font-style: normal; }
+.action-row .action-meta .distance-chip { margin: 0; padding: 2px 9px; }
+.action-row .eligibility-chip { padding: 2px 9px; border-radius: 999px; background: color-mix(in srgb, var(--amber) 14%, transparent); color: var(--amber); font-size: 12px; }
+.row-info summary, .area-rail .area-info summary { display: inline-flex; align-items: center; gap: 6px; list-style: none; cursor: pointer; color: var(--accent-ink); font-size: 13px; font-weight: 700; }
+.row-info summary::-webkit-details-marker { display: none; }
+.row-info summary::before { content: "i"; display: inline-grid; place-items: center; width: 16px; height: 16px; border: 1.5px solid currentColor; border-radius: 50%; font: italic 700 11px/1 Georgia, serif; }
+.row-info[open] summary { margin-bottom: 6px; }
+.row-info p { margin: 0 0 6px; color: var(--text-2); font-size: 13px; line-height: 1.5; }
+.row-info .check-list { margin: 0 0 8px; font-size: 13.5px; }
+.action-row .row-info .source-links, .row-info .source-links { display: block; font-size: 12px; }
+.action-row .row-info .source-links span { display: inline; }
+.panel-lead { margin: -4px 0 10px; color: var(--text-2); font-size: 14px; line-height: 1.5; }
+.plain-panel > .form-note { margin: 10px 0 0; color: var(--text-3); font-size: 12.5px; }
+.metric-grid.compact.stat-list { gap: 8px; margin-bottom: 10px; }
+.stat-list .metric { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label value" "detail value"; align-items: center; gap: 2px 12px; padding: 12px 16px; }
+.stat-list .metric span { grid-area: label; }
+.stat-list .metric strong { grid-area: value; font-size: 20px; text-align: right; }
+.stat-list .metric small { grid-area: detail; font-size: 12.5px; }
+.rank-note span[title] { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
+@media (max-width: 720px) {
+  .action-row { grid-template-columns: 1fr; }
+  .action-row > button { justify-self: start; }
 }

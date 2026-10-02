@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { ParallaxHero } from "./ParallaxHero";
 import { AmbientVideo } from "./AmbientVideo";
 import { ProviderShowcase } from "./ProviderShowcase";
@@ -21,14 +22,14 @@ export default function LandingPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <Link className={styles.brand} href="/" aria-label="Bankable home"><span className={styles.brandMark}>B</span>Bankable</Link>
+        <Link className={styles.brand} href="/" aria-label="Yala AD home"><span className={styles.brandMark}><BrandMark /></span>Yala AD</Link>
         <nav className={styles.nav} aria-label="Primary navigation"><a href="#paths">Start</a><a href="#providers">Providers</a><a href="#explore">Explore</a><a href="#teams">For teams</a></nav>
         <Link className={styles.headerCta} href="/start">Get started <span aria-hidden="true">↗</span></Link>
       </header>
 
       <ParallaxHero>
         <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>Bankable / Abu Dhabi</p>
+          <p className={styles.eyebrow}>Yala AD / Abu Dhabi</p>
           <h1 id="hero-title">Your move to Abu Dhabi, <em>made clear.</em></h1>
           <p className={styles.intro}>Find a home. Understand the costs. Follow the setup. Keep every next step in view.</p>
           <div className={styles.heroActions}><a className={styles.primary} href="#paths">Choose your path <span aria-hidden="true">→</span></a><Link className={styles.secondary} href="/company/dashboard">See the team view <span aria-hidden="true">↗</span></Link></div>
@@ -53,7 +54,7 @@ export default function LandingPage() {
       </section>
 
       <section className={styles.teams} id="teams" aria-labelledby="teams-title"><div><p className={styles.eyebrow}>For employers</p><h2 id="teams-title">A team move should still feel personal.</h2></div><div><p>Set the policy once, invite your people, and see permitted progress without opening their private finances or identity evidence.</p><Link href="/company">Start a team move <span aria-hidden="true">↗</span></Link></div></section>
-      <footer className={styles.footer}><span>Bankable · Abu Dhabi</span><span>Real actions, clear status, sources beside the facts.</span><Link href="/start">Get started ↑</Link></footer>
+      <footer className={styles.footer}><span>Yala AD · Abu Dhabi</span><span>Real actions, clear status, sources beside the facts.</span><Link href="/start">Get started ↑</Link></footer>
     </main>
   );
 }

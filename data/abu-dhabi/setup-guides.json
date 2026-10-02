@@ -1,0 +1,236 @@
+{
+  "version": "2026-10-02.abudhabi-setup-guides.v1",
+  "checkedAt": "2026-10-02T12:04:44+04:00",
+  "sourceCatalog": "data/abu-dhabi/catalog.json",
+  "profiles": [
+    {
+      "jurisdiction": "mainland",
+      "title": "Mainland setup through ADDED / TAMM",
+      "overview": "Use this path when the company is setting up or operating as an Abu Dhabi mainland entity rather than in ADGM or KEZAD.",
+      "whoHandlesIt": "Founder, company admin, PRO or legal adviser opens ADDED/TAMM services; Yala AD records preparation tasks and official references only after the provider step happens.",
+      "relatedServiceIds": [
+        "company-mainland-added",
+        "employee-work-bundle"
+      ],
+      "officialChannel": {
+        "label": "Open ADDED licensing requirements",
+        "url": "https://www.added.gov.ae/en/set-up/establish-your-business/licensing-requirements",
+        "sourceIds": [
+          "added-licensing"
+        ]
+      },
+      "preparationSteps": [
+        {
+          "kind": "official_requirement",
+          "text": "Choose the licence or permit category and confirm the activity with ADDED/TAMM.",
+          "sourceIds": [
+            "added-licensing"
+          ]
+        },
+        {
+          "kind": "official_requirement",
+          "text": "Use the relevant ADDED services such as trade-name reservation and economic-licence issue where applicable.",
+          "sourceIds": [
+            "added-licensing"
+          ]
+        },
+        {
+          "kind": "guided_planning_step",
+          "text": "Before opening the provider flow, collect the proposed activity, trade name options, office or premises assumption and the person who will own the official submission.",
+          "sourceIds": [
+            "added-licensing"
+          ]
+        },
+        {
+          "kind": "guided_planning_step",
+          "text": "For employees of a mainland/MoHRE-registered establishment, keep work-permit and residence actions separate from licence setup.",
+          "sourceIds": [
+            "uae-work-permits",
+            "uae-working-residence"
+          ]
+        }
+      ],
+      "providerResources": [
+        {
+          "label": "ADDED licensing requirements",
+          "url": "https://www.added.gov.ae/en/set-up/establish-your-business/licensing-requirements",
+          "sourceIds": [
+            "added-licensing"
+          ]
+        },
+        {
+          "label": "UAE work permits overview",
+          "url": "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits",
+          "sourceIds": [
+            "uae-work-permits"
+          ]
+        }
+      ],
+      "unknowns": {
+        "fees": "Unknown in Yala AD; confirm current fees in ADDED/TAMM for the selected activity and service.",
+        "timing": "Unknown in Yala AD; do not show approval or issue timing without provider evidence."
+      },
+      "limitations": [
+        "Do not reuse this as the ADGM or KEZAD checklist.",
+        "Opening the provider page is only an opened handoff, not a submission or approval."
+      ],
+      "sourceIds": [
+        "added-licensing",
+        "uae-work-permits",
+        "uae-working-residence"
+      ]
+    },
+    {
+      "jurisdiction": "adgm",
+      "title": "ADGM registration and post-registration services",
+      "overview": "Use this path when the company is forming or operating in Abu Dhabi Global Market.",
+      "whoHandlesIt": "Founder, company secretary, legal adviser or HR uses ADGM channels such as the Online Registry and ACCESSADGM; Bankable tracks owner, next action and provider references.",
+      "relatedServiceIds": [
+        "company-adgm-registration",
+        "adgm-employee-visa-services"
+      ],
+      "officialChannel": {
+        "label": "Open ADGM registration and incorporation",
+        "url": "https://www.adgm.com/registration-authority/registration-and-incorporation",
+        "sourceIds": [
+          "adgm-registration"
+        ]
+      },
+      "preparationSteps": [
+        {
+          "kind": "official_requirement",
+          "text": "Prepare business plan and documentation for ADGM Registration Authority review before application submission.",
+          "sourceIds": [
+            "adgm-registration"
+          ]
+        },
+        {
+          "kind": "official_requirement",
+          "text": "Submit incorporation through the ADGM Online Registry Solution when ready.",
+          "sourceIds": [
+            "adgm-registration"
+          ]
+        },
+        {
+          "kind": "official_requirement",
+          "text": "For visa-related services after registration, ADGM entities use ACCESSADGM and may need an Establishment Card and E-Channels account.",
+          "sourceIds": [
+            "adgm-visa-government-services"
+          ]
+        },
+        {
+          "kind": "guided_planning_step",
+          "text": "Separate incorporation readiness from employee visa readiness so HR can invite employees without seeing private bank or identity evidence until consent is granted.",
+          "sourceIds": [
+            "adgm-registration",
+            "adgm-visa-government-services"
+          ]
+        }
+      ],
+      "providerResources": [
+        {
+          "label": "ADGM registration and incorporation",
+          "url": "https://www.adgm.com/registration-authority/registration-and-incorporation",
+          "sourceIds": [
+            "adgm-registration"
+          ]
+        },
+        {
+          "label": "ADGM visa and government services",
+          "url": "https://www.adgm.com/operating-in-adgm/post-registration-services/visa-and-government-services",
+          "sourceIds": [
+            "adgm-visa-government-services"
+          ]
+        }
+      ],
+      "unknowns": {
+        "fees": "Unknown in Yala AD; confirm current ADGM registry and government-service fees in the official channel.",
+        "timing": "Unknown in Yala AD; ADGM/provider responses determine actual status and timing."
+      },
+      "limitations": [
+        "Do not claim automatic ADGM status sync.",
+        "Do not show private employee documents to HR without specific consent."
+      ],
+      "sourceIds": [
+        "adgm-registration",
+        "adgm-visa-government-services"
+      ]
+    },
+    {
+      "jurisdiction": "kezad",
+      "title": "KEZAD free zone setup and employment residence services",
+      "overview": "Use this path when the company is selecting a KEZAD free zone or facility package instead of mainland ADDED or ADGM.",
+      "whoHandlesIt": "Founder, company admin, PRO or KEZAD-facing adviser chooses the package and workspace route; HR handles later employee residence actions through KEZAD or competent-authority channels.",
+      "relatedServiceIds": [
+        "company-kezad-setup",
+        "kezad-employee-residence-services"
+      ],
+      "officialChannel": {
+        "label": "Open KEZAD business setup solutions",
+        "url": "https://www.kezadgroup.com/business-facilities/free-zone-business-setup-solutions/",
+        "sourceIds": [
+          "kezad-setup"
+        ]
+      },
+      "preparationSteps": [
+        {
+          "kind": "official_requirement",
+          "text": "Choose the KEZAD package and whether the route uses a shared workstation, dedicated office or other facility option.",
+          "sourceIds": [
+            "kezad-setup"
+          ]
+        },
+        {
+          "kind": "official_requirement",
+          "text": "Submit documents and payments through KEZAD channels; licence issue remains with KEZAD.",
+          "sourceIds": [
+            "kezad-setup"
+          ]
+        },
+        {
+          "kind": "official_requirement",
+          "text": "For employees, confirm KEZAD services such as Establishment Card and Employment Residence where applicable.",
+          "sourceIds": [
+            "kezad-tariffs"
+          ]
+        },
+        {
+          "kind": "guided_planning_step",
+          "text": "Before inviting employees, record package assumption, visa provision assumption, office/workspace location and the person who will receive provider responses.",
+          "sourceIds": [
+            "kezad-setup",
+            "kezad-tariffs"
+          ]
+        }
+      ],
+      "providerResources": [
+        {
+          "label": "KEZAD business setup solutions",
+          "url": "https://www.kezadgroup.com/business-facilities/free-zone-business-setup-solutions/",
+          "sourceIds": [
+            "kezad-setup"
+          ]
+        },
+        {
+          "label": "KEZAD tariffs and permitting services",
+          "url": "https://www.kezadgroup.com/business-facilities/tariffs/",
+          "sourceIds": [
+            "kezad-tariffs"
+          ]
+        }
+      ],
+      "unknowns": {
+        "fees": "Unknown in Yala AD; package prices, tariff items and visa provisions must be confirmed with KEZAD.",
+        "timing": "Unknown in Yala AD; KEZAD and competent authorities decide issue and approval timing."
+      },
+      "limitations": [
+        "Published package or tariff evidence does not prove eligibility for a specific company or employee.",
+        "Opening KEZAD pages is only an opened handoff."
+      ],
+      "sourceIds": [
+        "kezad-setup",
+        "kezad-tariffs"
+      ]
+    }
+  ]
+}

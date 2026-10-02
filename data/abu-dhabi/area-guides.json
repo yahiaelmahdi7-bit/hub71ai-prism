@@ -1,0 +1,893 @@
+{
+  "version": "2026-10-02.abudhabi-area-guides.v1",
+  "checkedAt": "2026-10-02T11:58:20+04:00",
+  "sources": [
+    {
+      "id": "vad-al-reem-island",
+      "title": "Al Reem Island",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/islands/al-reem-island",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "Al Reem Island is a natural island in the heart of Abu Dhabi.",
+        "The page names Gate Towers, Shams Boutik, Al Fay Park, Reem Beach, Reem Mall and Snow Abu Dhabi as local landmarks or activities.",
+        "The page says Al Reem is linked to the city by bridges and near Al Maryah Island, Saadiyat Island and the Corniche."
+      ],
+      "limitations": [
+        "Use for area character and orientation; home availability, rent and building details need separate listing evidence."
+      ]
+    },
+    {
+      "id": "vad-al-maryah-island",
+      "title": "Al Maryah Island",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/islands/al-maryah-island",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page describes Al Maryah Island as a district within Abu Dhabi City.",
+        "It names waterfront paths, hotels, restaurants, The Galleria and Maryah Island Edge Park.",
+        "It says Al Maryah is accessible by multiple bridges, the free Experience Abu Dhabi shuttle and bus routes."
+      ],
+      "limitations": [
+        "Transport routes and event programming can change; confirm with the provider before relying on them."
+      ]
+    },
+    {
+      "id": "vad-masdar-city",
+      "title": "Masdar City",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/things-to-do/culture/landmarks-and-architecture/masdar-city",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page says Masdar City was initiated in 2008 as Abu Dhabi’s vision of a city of the future.",
+        "The listed location is Khalifa City A, Abu Dhabi.",
+        "The page names My City Centre Masdar Mall, Masdar City Running and Cycling Track and Masdar City Central Park."
+      ],
+      "limitations": [
+        "Sustainability and attraction facts do not prove housing availability or commute fit for a household."
+      ]
+    },
+    {
+      "id": "vad-yas-island",
+      "title": "Yas Island",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/islands/yas-island",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page names Yas Marina Circuit, Ferrari World Abu Dhabi, Yas Waterworld, Warner Bros. World Abu Dhabi, SeaWorld Abu Dhabi, Etihad Arena and Yas Mall.",
+        "The page says Yas Island is 30 minutes from central Abu Dhabi and 15 minutes from Zayed International Airport.",
+        "The page says the free Yas Express shuttle stops at major hotels and attractions across the island."
+      ],
+      "limitations": [
+        "Ticket prices, shuttle schedules and attraction opening status remain with each operator."
+      ]
+    },
+    {
+      "id": "vad-al-bandar",
+      "title": "Al Bandar",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/islands/al-bandar",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page describes Al Bandar as a marina community on Abu Dhabi’s northern waterfront.",
+        "It says Al Bandar sits within the larger Al Raha Beach development and overlooks Al Raha Creek.",
+        "It names a promenade, marina, restaurants and cafés."
+      ],
+      "limitations": [
+        "Use Al Bandar as Al Raha Beach evidence; exact fit varies by sub-community and building."
+      ]
+    },
+    {
+      "id": "vad-al-bandar-marina",
+      "title": "Al Bandar Marina",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/marinas-waterfronts/al-bandar-marina",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page says Al Bandar Marina is in the centre of the Al Raha Beach development.",
+        "It says the marina offers more than 130 berths up to 24 metres.",
+        "It names apartments, duplexes, loft-style residences and larger family apartments in Al Bandar."
+      ],
+      "limitations": [
+        "Marina capacity and amenities do not imply home availability or booking status."
+      ]
+    },
+    {
+      "id": "dmt-khalifa-pocket-parks",
+      "title": "Khalifa City pocket parks announcement",
+      "publisher": "Abu Dhabi City Municipality / DMT",
+      "url": "https://www.dmt.gov.ae/en/adm/Media-Centre/News/29Nov2022",
+      "kind": "government",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "Abu Dhabi City Municipality announced five pocket parks in Khalifa City.",
+        "The page names Ranim Garden, Mashtal Plaza, Himma Park, Sadim Park and Tilal Park.",
+        "The page says the parks include family and children recreation, exercise equipment and sports areas."
+      ],
+      "limitations": [
+        "The page is a 2022 announcement; current park condition and opening hours need provider or map confirmation."
+      ]
+    },
+    {
+      "id": "vad-khalidiyah-mall",
+      "title": "Khalidiyah Mall",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/things-to-do/shopping/khalidiyah-mall",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page says Khalidiyah Mall is a few minutes from Corniche Beach.",
+        "It says the mall has more than 160 shops, cafés, restaurants and a food court.",
+        "It names an amusement centre, 3D cinema and bowling alley."
+      ],
+      "limitations": [
+        "Mall tenant mix, opening hours and parking details can change; confirm with the mall."
+      ]
+    },
+    {
+      "id": "vad-abu-dhabi-regions",
+      "title": "Abu Dhabi Areas and Regions",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/regions/",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page lists Abu Dhabi city, Al Ain and Al Dhafra as the three main areas of Abu Dhabi.",
+        "It says Abu Dhabi city combines culture, history, heritage, nature, beaches, luxury, wildlife and shopping.",
+        "Its stay-area list includes Khalidiya, Al Reem Island, Al Raha, Al Maryah Island and Saadiyat Island."
+      ],
+      "limitations": [
+        "This is broad orientation; it is not a relocation ranking or housing recommendation."
+      ]
+    },
+    {
+      "id": "dmt-al-nahyan-contact",
+      "title": "DMT contact page",
+      "publisher": "Department of Municipalities and Transport",
+      "url": "https://www.dmt.gov.ae/en/drm/ContactUs",
+      "kind": "government",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page lists the Department of Municipalities and Transport headquarters at Al Mamoura Building, 45 Ahl Al Azm St, Al Nahyan, Abu Dhabi.",
+        "It lists DMT headquarters opening hours and contact details."
+      ],
+      "limitations": [
+        "This validates a civic-service anchor in Al Nahyan only; building-level residential character needs separate evidence."
+      ]
+    },
+    {
+      "id": "alwahda-al-nahyan-stadium",
+      "title": "Al Wahda Football Company / Al Nahyan Stadium",
+      "publisher": "Al Wahda SC",
+      "url": "https://alwahda-sc.com/fcc/",
+      "kind": "operator",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "Al Wahda SC says Al Nahyan Stadium is in Abu Dhabi and is the headquarters of Al Wahda Sports and Cultural Club.",
+        "The page says Al Nahyan Stadium opened on 25 January 1995.",
+        "The page says the stadium hosted the AFC Asian Cup in 2019."
+      ],
+      "limitations": [
+        "Match schedules, access and ticketing belong to the stadium and event operators."
+      ]
+    },
+    {
+      "id": "vad-saadiyat-cultural-district",
+      "title": "Saadiyat Cultural District Abu Dhabi",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/things-to-do/culture/landmarks-and-architecture/saadiyat-cultural-district",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page describes Saadiyat Cultural District as a cultural destination in Saadiyat Island.",
+        "It names Louvre Abu Dhabi, Zayed National Museum, Natural History Museum Abu Dhabi, teamLab Phenomena Abu Dhabi, Manarat Al Saadiyat and Guggenheim Abu Dhabi.",
+        "It says Saadiyat Cultural District is a dedicated cultural precinct within Saadiyat Island."
+      ],
+      "limitations": [
+        "Museum programming, ticket offers and opening dates should be checked with each venue."
+      ]
+    },
+    {
+      "id": "vad-saadiyat-beach",
+      "title": "Saadiyat Beach",
+      "publisher": "Experience Abu Dhabi",
+      "url": "https://visitabudhabi.ae/en/where-to-go/beaches/saadiyat-beach",
+      "kind": "official_tourism",
+      "checkedAt": "2026-10-02T11:58:20+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page locates Saadiyat Beach on Saadiyat Island, Abu Dhabi.",
+        "It says local authorities preserve the natural environment with dune protection and restrictions on development.",
+        "It says critically endangered Hawksbill turtles use the beach as a nesting ground."
+      ],
+      "limitations": [
+        "Beach access, day-pass prices and environmental restrictions must be confirmed with the beach operator."
+      ]
+    },
+    {
+      "id": "dmt-mbz-parks",
+      "title": "The Department of Municipalities and Transport Opens 33 Parks in Mohamed Bin Zayed City",
+      "publisher": "Department of Municipalities and Transport",
+      "url": "https://www.dmt.gov.ae/en/Media-Centre/News/THE-DMT-OPENS-33-PARKS-IN-MOHAMED-BIN-ZAYED-CITY",
+      "kind": "government",
+      "checkedAt": "2026-10-02T12:04:44+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "DMT announced 33 new parks in Mohamed Bin Zayed City.",
+        "The parks include picnic areas, shaded seating, children’s play areas, fitness zones, jogging tracks and sports courts.",
+        "DMT says the parks support recreation, connection and community engagement."
+      ],
+      "limitations": [
+        "Use for area facilities only; rent, availability and commute claims need separate evidence."
+      ]
+    },
+    {
+      "id": "admo-mbz-value-housing",
+      "title": "Aldar and DMT to deliver 9,000 rental units in Abu Dhabi as part of Value Housing Programme",
+      "publisher": "Abu Dhabi Media Office",
+      "url": "https://www.mediaoffice.abudhabi/en/infrastructure/aldar-and-department-of-municipalities-and-transport-to-deliver-9000-rental-units-in-abu-dhabi-as-part-of-value-housing-programme/",
+      "kind": "government_media",
+      "checkedAt": "2026-10-02T12:04:44+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "The page names Mohamed Bin Zayed City as one of two integrated community locations in the DMT and Aldar programme.",
+        "It describes the MBZ City project as mixed-use residential with single occupancy accommodation, multi-tenant apartments, amenities and ancillary retail.",
+        "The developments are due for completion in 2029."
+      ],
+      "limitations": [
+        "Future development context; do not treat as current rental availability."
+      ]
+    },
+    {
+      "id": "dubizzle-mbz-studio-105317-xsihcq",
+      "title": "Amazing Studio with Parking in Mohamed Bin Zayed City",
+      "publisher": "Dubizzle Abu Dhabi",
+      "url": "https://abudhabi.dubizzle.com/property-for-rent/residential/apartmentflat/2026/3/15/excellent-studio-in-zone-19-near-shabiy-3-284718/",
+      "kind": "property_portal",
+      "checkedAt": "2026-10-02T11:54:46+04:00",
+      "verification": "page_opened",
+      "supportedFacts": [
+        "Opened listing page showed AED 24,000 yearly rent.",
+        "Opened listing page showed Studio, 1 bath, 658 sqft in Mohamed Bin Zayed City, Abu Dhabi.",
+        "Opened listing page showed Updated 24th September 2026 and reference ID 105317-XsIHCQ."
+      ],
+      "limitations": [
+        "Availability and final terms must be confirmed on the original listing/provider channel."
+      ]
+    }
+  ],
+  "guides": {
+    "al-reem-island": {
+      "areaId": "al-reem-island",
+      "name": "Al Reem Island",
+      "catalogArea": true,
+      "mood": "Waterfront apartments, parks, malls and quick city links",
+      "shortBlurb": "A polished island option for apartment living, everyday errands and waterfront downtime close to Abu Dhabi’s core.",
+      "factualHighlights": [
+        {
+          "text": "Natural island in the heart of Abu Dhabi with Gate Towers and high-rise skyline landmarks.",
+          "sourceIds": [
+            "vad-al-reem-island"
+          ]
+        },
+        {
+          "text": "Official tourism page names Shams Boutik, Al Fay Park, Reem Beach, Reem Mall and Snow Abu Dhabi as local stops.",
+          "sourceIds": [
+            "vad-al-reem-island"
+          ]
+        },
+        {
+          "text": "Linked by bridges and positioned near Al Maryah Island, Saadiyat Island and the Corniche.",
+          "sourceIds": [
+            "vad-al-reem-island"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Fits people who want tower-apartment choices plus parks and mall errands nearby.",
+          "sourceIds": [
+            "vad-al-reem-island"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "For shuttle use, plan around nearby The Galleria stop and local taxi/walk options.",
+          "sourceIds": [
+            "vad-al-reem-island"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/al-reem-island.jpg",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Al_reem_island.jpg",
+        "originalFileUrl": "https://upload.wikimedia.org/wikipedia/commons/6/66/Al_reem_island.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "photographer": "Sa7er90",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "commonsTitle": "File:Al reem island.jpg",
+        "width": 1920,
+        "height": 1280,
+        "caption": "Al Reem Island towers at sunset, with mangroves and a water channel in the foreground.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T12:22:25+04:00"
+      },
+      "sourceIds": [
+        "vad-al-reem-island"
+      ]
+    },
+    "khalifa-city": {
+      "areaId": "khalifa-city",
+      "name": "Khalifa City",
+      "catalogArea": true,
+      "mood": "Family routines, pocket parks and Masdar nearby",
+      "shortBlurb": "A practical family-planning area where parks, schools, driving routines and airport-side work patterns may matter.",
+      "factualHighlights": [
+        {
+          "text": "Abu Dhabi City Municipality announced five pocket parks in Khalifa City: Ranim Garden, Mashtal Plaza, Himma Park, Sadim Park and Tilal Park.",
+          "sourceIds": [
+            "dmt-khalifa-pocket-parks"
+          ]
+        },
+        {
+          "text": "The pocket-parks announcement names family recreation, exercise equipment, sports areas, shade, seating and accessible pathways.",
+          "sourceIds": [
+            "dmt-khalifa-pocket-parks"
+          ]
+        },
+        {
+          "text": "Experience Abu Dhabi lists Masdar City’s location as Khalifa City A.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Works best when the household wants quieter routines and is comfortable confirming school, car and office patterns building by building.",
+          "sourceIds": [
+            "dmt-khalifa-pocket-parks"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Masdar City adds a nearby sustainability and café/mall destination for weekend or after-work plans.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/khalifa-city.jpg",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Masdar_City_in_March_2022_01.jpg",
+        "originalFileUrl": "https://upload.wikimedia.org/wikipedia/commons/9/96/Masdar_City_in_March_2022_01.jpg",
+        "photographer": "Renek78",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "commonsTitle": "File:Masdar City in March 2022 01.jpg",
+        "width": 4000,
+        "height": 2250,
+        "caption": "Masdar City in Khalifa City A, used for Khalifa City planning because the official tourism page locates Masdar City there.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T11:58:20+04:00"
+      },
+      "sourceIds": [
+        "dmt-khalifa-pocket-parks",
+        "vad-masdar-city"
+      ]
+    },
+    "al-maryah-island": {
+      "areaId": "al-maryah-island",
+      "name": "Al Maryah Island",
+      "catalogArea": true,
+      "mood": "ADGM-side business, waterfront evenings and The Galleria",
+      "shortBlurb": "A sleek business-and-leisure island for ADGM-side workdays, waterfront walks and easy dinner plans after office hours.",
+      "factualHighlights": [
+        {
+          "text": "Experience Abu Dhabi describes Al Maryah Island as a district within Abu Dhabi City.",
+          "sourceIds": [
+            "vad-al-maryah-island"
+          ]
+        },
+        {
+          "text": "Official page names waterfront paths, hotels, restaurants, The Galleria and Maryah Island Edge Park.",
+          "sourceIds": [
+            "vad-al-maryah-island"
+          ]
+        },
+        {
+          "text": "The page says access is possible by bridges, Experience Abu Dhabi shuttle route C and bus routes.",
+          "sourceIds": [
+            "vad-al-maryah-island"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Strong fit when the office, coworking or setup route points toward ADGM or Al Maryah.",
+          "sourceIds": [
+            "vad-al-maryah-island"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Good for exploratory stays because restaurant, mall and waterfront options are concentrated close together.",
+          "sourceIds": [
+            "vad-al-maryah-island"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/al-maryah-island.jpg",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Galleria_Al_Maryah_Island,.jpg",
+        "originalFileUrl": "https://upload.wikimedia.org/wikipedia/commons/0/04/The_Galleria_Al_Maryah_Island%2C.jpg",
+        "photographer": "Tetraeder",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "commonsTitle": "File:The Galleria Al Maryah Island,.jpg",
+        "width": 720,
+        "height": 960,
+        "caption": "The Galleria on Al Maryah Island, licensed via Wikimedia Commons.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T11:58:20+04:00"
+      },
+      "sourceIds": [
+        "vad-al-maryah-island"
+      ]
+    },
+    "masdar-city": {
+      "areaId": "masdar-city",
+      "name": "Masdar City",
+      "catalogArea": true,
+      "mood": "Sustainability, campus energy and useful daily stops",
+      "shortBlurb": "A sustainability-led choice with distinctive architecture, cafés, mall errands and a calm campus feel.",
+      "factualHighlights": [
+        {
+          "text": "Experience Abu Dhabi says Masdar City was initiated in 2008 as Abu Dhabi’s vision of a city of the future.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ]
+        },
+        {
+          "text": "The page describes ancient Arabic architectural techniques, a central wind tunnel and solar power created onsite.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ]
+        },
+        {
+          "text": "The page names My City Centre Masdar Mall, the Running and Cycling Track and Masdar City Central Park.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "A natural match for people who value sustainability, research/campus surroundings and quieter daily routines.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Useful to pair with airport-side or Khalifa City A planning once the real office and home options are known.",
+          "sourceIds": [
+            "vad-masdar-city"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/masdar-city.jpg",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Masdar_City_Image.jpg",
+        "originalFileUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Masdar_City_Image.jpg",
+        "photographer": "NNegm",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "commonsTitle": "File:Masdar City Image.jpg",
+        "width": 3840,
+        "height": 4030,
+        "caption": "Masdar City campus buildings and Central Park, licensed via Wikimedia Commons.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T11:58:20+04:00"
+      },
+      "sourceIds": [
+        "vad-masdar-city"
+      ]
+    },
+    "yas-island": {
+      "areaId": "yas-island",
+      "name": "Yas Island",
+      "catalogArea": true,
+      "mood": "Theme parks, events, hotels and big-weekend energy",
+      "shortBlurb": "A high-energy option for families and employees who want theme parks, events, hotels and waterfront entertainment close by.",
+      "factualHighlights": [
+        {
+          "text": "Official tourism page names Yas Marina Circuit, Ferrari World Abu Dhabi, Yas Waterworld, Warner Bros. World Abu Dhabi, SeaWorld Abu Dhabi, Etihad Arena and Yas Mall.",
+          "sourceIds": [
+            "vad-yas-island"
+          ]
+        },
+        {
+          "text": "The page says Yas Island is 30 minutes from central Abu Dhabi and 15 minutes from Zayed International Airport.",
+          "sourceIds": [
+            "vad-yas-island"
+          ]
+        },
+        {
+          "text": "The page says the free Yas Express shuttle stops at major hotels and attractions across the island.",
+          "sourceIds": [
+            "vad-yas-island"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Great for families and entertainment-heavy weekends; check tickets and venue calendars early.",
+          "sourceIds": [
+            "vad-yas-island"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Works well for arrival weeks or hotel stays before a permanent home is selected.",
+          "sourceIds": [
+            "vad-yas-island"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/yas-island.jpg",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yas_Bay_Waterfront,_Yas_Island,_Abu_Dhabi.jpg",
+        "originalFileUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Yas_Bay_Waterfront%2C_Yas_Island%2C_Abu_Dhabi.jpg",
+        "photographer": "Oleg Yunakov",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "commonsTitle": "File:Yas Bay Waterfront, Yas Island, Abu Dhabi.jpg",
+        "width": 5712,
+        "height": 4284,
+        "caption": "Yas Bay Waterfront on Yas Island, licensed via Wikimedia Commons.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T11:58:20+04:00"
+      },
+      "sourceIds": [
+        "vad-yas-island"
+      ]
+    },
+    "al-raha-beach": {
+      "areaId": "al-raha-beach",
+      "name": "Al Raha Beach",
+      "catalogArea": true,
+      "mood": "Marina-side living between city, airport and Yas",
+      "shortBlurb": "A coastal, marina-led planning area for people who want quieter waterfront routines while staying connected to Yas and the city.",
+      "factualHighlights": [
+        {
+          "text": "Experience Abu Dhabi describes Al Bandar as a peaceful marina community on Abu Dhabi’s northern waterfront within Al Raha Beach.",
+          "sourceIds": [
+            "vad-al-bandar"
+          ]
+        },
+        {
+          "text": "Official Al Bandar Marina page says it sits in the centre of the Al Raha Beach development and offers more than 130 berths.",
+          "sourceIds": [
+            "vad-al-bandar-marina"
+          ]
+        },
+        {
+          "text": "The Al Bandar page names promenade restaurants, cafés, marina activity and Al Raha Creek views.",
+          "sourceIds": [
+            "vad-al-bandar"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Good for households that like waterfront routines, marina walks and calmer evenings.",
+          "sourceIds": [
+            "vad-al-bandar",
+            "vad-al-bandar-marina"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Check each sub-community separately, since Al Raha Beach includes more than Al Bandar.",
+          "sourceIds": [
+            "vad-al-bandar"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/al-raha-beach.jpg",
+        "sourceUrl": "https://www.relaam.com/neighborhoods/al-raha-beach",
+        "photographer": "Relaam",
+        "license": "© Relaam",
+        "width": 1100,
+        "height": 825,
+        "caption": "Al Raha Beach apartment buildings lit up along the waterfront at night.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T13:10:00+04:00"
+      },
+      "sourceIds": [
+        "vad-al-bandar",
+        "vad-al-bandar-marina"
+      ]
+    },
+    "al-khalidiyah": {
+      "areaId": "al-khalidiyah",
+      "name": "Al Khalidiyah",
+      "catalogArea": true,
+      "mood": "Central errands, mall convenience and Corniche access",
+      "shortBlurb": "A practical central-city choice for errands, shopping and Corniche-side downtime within an established urban routine.",
+      "factualHighlights": [
+        {
+          "text": "Experience Abu Dhabi says Khalidiyah Mall is a few minutes from Corniche Beach.",
+          "sourceIds": [
+            "vad-khalidiyah-mall"
+          ]
+        },
+        {
+          "text": "The mall page says it has more than 160 shops, cafés, restaurants and a large food court.",
+          "sourceIds": [
+            "vad-khalidiyah-mall"
+          ]
+        },
+        {
+          "text": "Experience Abu Dhabi’s regions page includes Khalidiya in its list of Abu Dhabi stay areas.",
+          "sourceIds": [
+            "vad-abu-dhabi-regions"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Useful for people who want central errands, mall access and nearby Corniche plans.",
+          "sourceIds": [
+            "vad-khalidiyah-mall"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Best assessed listing by listing, especially for parking, building age and street noise.",
+          "sourceIds": [
+            "vad-khalidiyah-mall"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/al-khalidiyah.jpg",
+        "sourceUrl": "https://www.relaam.com/neighborhoods/al-khalidiyah",
+        "photographer": "Relaam",
+        "license": "© Relaam",
+        "width": 1100,
+        "height": 825,
+        "caption": "Apartment and office towers in Al Khalidiyah behind a landscaped walkway.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T13:10:00+04:00"
+      },
+      "sourceIds": [
+        "vad-khalidiyah-mall",
+        "vad-abu-dhabi-regions"
+      ]
+    },
+    "al-nahyan": {
+      "areaId": "al-nahyan",
+      "name": "Al Nahyan",
+      "catalogArea": true,
+      "mood": "Central civic services and stadium-side city routines",
+      "shortBlurb": "A central-city planning area with civic-service anchors and stadium-side activity nearby.",
+      "factualHighlights": [
+        {
+          "text": "DMT lists its headquarters at Al Mamoura Building, 45 Ahl Al Azm St, Al Nahyan, Abu Dhabi.",
+          "sourceIds": [
+            "dmt-al-nahyan-contact"
+          ]
+        },
+        {
+          "text": "Al Wahda SC says Al Nahyan Stadium is in Abu Dhabi and is the headquarters of Al Wahda Sports and Cultural Club.",
+          "sourceIds": [
+            "alwahda-al-nahyan-stadium"
+          ]
+        },
+        {
+          "text": "Al Wahda SC says the stadium opened on 25 January 1995 and hosted the AFC Asian Cup in 2019.",
+          "sourceIds": [
+            "alwahda-al-nahyan-stadium"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Works as a central services and stadium-side anchor for people who like older-city routines.",
+          "sourceIds": [
+            "dmt-al-nahyan-contact",
+            "alwahda-al-nahyan-stadium"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "For event days or government errands, check operator schedules before planning the trip.",
+          "sourceIds": [
+            "alwahda-al-nahyan-stadium",
+            "dmt-al-nahyan-contact"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/al-nahyan.jpg",
+        "sourceUrl": "https://www.relaam.com/neighborhoods/al-nahyan",
+        "photographer": "Relaam",
+        "license": "© Relaam",
+        "width": 1800,
+        "height": 854,
+        "caption": "A tree-lined road through Al Nahyan with office and apartment towers behind it.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T13:10:00+04:00"
+      },
+      "sourceIds": [
+        "dmt-al-nahyan-contact",
+        "alwahda-al-nahyan-stadium"
+      ]
+    },
+    "saadiyat-island": {
+      "areaId": "saadiyat-island",
+      "name": "Saadiyat Island",
+      "catalogArea": false,
+      "mood": "Culture district, beaches and special-occasion weekends",
+      "shortBlurb": "A culture-and-coast option for museums, beach time and slower weekends. Add it when museum, beach and conservation context match the household’s priorities.",
+      "factualHighlights": [
+        {
+          "text": "Experience Abu Dhabi describes Saadiyat Cultural District as a cultural destination in Saadiyat Island.",
+          "sourceIds": [
+            "vad-saadiyat-cultural-district"
+          ]
+        },
+        {
+          "text": "The cultural district page names Louvre Abu Dhabi, Zayed National Museum, Natural History Museum Abu Dhabi, teamLab Phenomena Abu Dhabi, Manarat Al Saadiyat and Guggenheim Abu Dhabi.",
+          "sourceIds": [
+            "vad-saadiyat-cultural-district"
+          ]
+        },
+        {
+          "text": "Saadiyat Beach page says the beach has dune protection, development restrictions and Hawksbill turtle nesting protection.",
+          "sourceIds": [
+            "vad-saadiyat-beach"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "text": "Great for culture-led weekends, beach access and visitors who want museums close together.",
+          "sourceIds": [
+            "vad-saadiyat-cultural-district",
+            "vad-saadiyat-beach"
+          ],
+          "kind": "planning_suggestion"
+        },
+        {
+          "text": "Check museum tickets, beach rules and conservation restrictions with the operator before making plans.",
+          "sourceIds": [
+            "vad-saadiyat-cultural-district",
+            "vad-saadiyat-beach"
+          ],
+          "kind": "planning_suggestion"
+        }
+      ],
+      "image": {
+        "localPath": "/areas/saadiyat-island.jpg",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saadiyat_Beach.jpg",
+        "originalFileUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Saadiyat_Beach.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "photographer": "Adman Payne",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "commonsTitle": "File:Saadiyat Beach.jpg",
+        "width": 1920,
+        "height": 1440,
+        "caption": "Evening at the public beach on Saadiyat Island.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T12:22:25+04:00"
+      },
+      "sourceIds": [
+        "vad-saadiyat-cultural-district",
+        "vad-saadiyat-beach"
+      ]
+    },
+    "mohamed-bin-zayed-city": {
+      "areaId": "mohamed-bin-zayed-city",
+      "name": "Mohamed Bin Zayed City",
+      "catalogArea": true,
+      "mood": "Practical, value-minded and park-oriented, with current listing evidence for a low-rent studio option.",
+      "shortBlurb": "A practical residential area for budget-sensitive movers who want a real low-rent studio lead plus official park and future value-housing context.",
+      "factualHighlights": [
+        {
+          "text": "DMT announced 33 new parks in Mohamed Bin Zayed City as part of its liveability strategy.",
+          "sourceIds": [
+            "dmt-mbz-parks"
+          ]
+        },
+        {
+          "text": "The DMT parks page names picnic areas, shaded seating, children’s play areas, fitness zones, jogging tracks and sports courts.",
+          "sourceIds": [
+            "dmt-mbz-parks"
+          ]
+        },
+        {
+          "text": "Abu Dhabi Media Office reported a DMT and Aldar mixed-use residential community planned in MBZ City, due for completion in 2029.",
+          "sourceIds": [
+            "admo-mbz-value-housing"
+          ]
+        },
+        {
+          "text": "The opened Dubizzle listing source validates one current MBZ City studio snapshot at AED 24,000 yearly rent, with availability still unconfirmed.",
+          "sourceIds": [
+            "dubizzle-mbz-studio-105317-xsihcq"
+          ]
+        }
+      ],
+      "practicalTips": [
+        {
+          "kind": "planning_suggestion",
+          "text": "Use the AED 24,000 studio as a specific listing lead, not as proof that all MBZ homes are available at that price.",
+          "sourceIds": [
+            "dubizzle-mbz-studio-105317-xsihcq"
+          ]
+        },
+        {
+          "kind": "planning_suggestion",
+          "text": "For an AED 8,000 monthly income mover, MBZ is useful to browse early because the current snapshot includes a lower annual rent than the central island examples.",
+          "sourceIds": [
+            "dubizzle-mbz-studio-105317-xsihcq"
+          ]
+        },
+        {
+          "kind": "planning_suggestion",
+          "text": "Check the exact listing location, payment schedule, agent response and daily travel pattern before treating it as a fit.",
+          "sourceIds": [
+            "dubizzle-mbz-studio-105317-xsihcq",
+            "dmt-mbz-parks"
+          ]
+        }
+      ],
+      "image": {
+        "localPath": "/areas/mohamed-bin-zayed-city.jpg",
+        "sourceUrl": "https://www.relaam.com/neighborhoods/mbz-city",
+        "photographer": "Relaam",
+        "license": "© Relaam",
+        "width": 1100,
+        "height": 825,
+        "caption": "A palm-lined boulevard running through Mohamed Bin Zayed City.",
+        "exactAreaPhoto": true,
+        "downloadedAt": "2026-10-02T13:10:00+04:00"
+      },
+      "sourceIds": [
+        "dmt-mbz-parks",
+        "admo-mbz-value-housing",
+        "dubizzle-mbz-studio-105317-xsihcq"
+      ]
+    }
+  }
+}

@@ -17,6 +17,10 @@ assert.ok(catalog.services.some((service) => service.id === "company-kezad-setup
 assert.ok(catalog.services.some((service) => service.id === "freelancer-added-licence"), "missing ADDED freelancer licence route");
 assert.ok(catalog.services.some((service) => service.id === "personal-bank-current-account"), "missing bank account readiness/opening route");
 assert.ok(catalog.sources.some((source) => source.id === "adrec-rental-index"), "missing ADREC rental index guide source");
+assert.ok(catalog.sources.some((source) => source.id === "dmt-mbz-parks"), "missing Mohamed Bin Zayed City parks source");
+assert.ok(catalog.sources.some((source) => source.id === "dubizzle-mbz-studio-105317-xsihcq"), "missing Mohamed Bin Zayed City listing source");
+assert.ok(catalog.areas.some((area) => area.id === "mohamed-bin-zayed-city"), "missing Mohamed Bin Zayed City catalog area");
+assert.ok(!catalog.areas.some((area) => area.id === "saadiyat-island"), "Saadiyat should remain guide-only until catalog promotion is intentional");
 assert.ok(catalog.financialFactors.some((factor) => factor.id === "current-account-documents"), "missing bank-account readiness factor");
 
 const workBundle = catalog.services.find((service) => service.id === "employee-work-bundle");

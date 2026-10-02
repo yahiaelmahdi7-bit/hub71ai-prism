@@ -36,6 +36,9 @@ type SnapshotHome = {
   contactable?: boolean;
   availability?: "unconfirmed" | "illustrative";
   normalizationNote?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  imageSourceUrl?: string;
 };
 
 export type RentalCatalog = {
@@ -122,6 +125,9 @@ function normalizeSnapshotHome(home: SnapshotHome): RentalHome {
     sourceKind: "snapshot",
     contactable: Boolean(home.listingUrl) && home.contactable !== false && source?.verification === "page_opened",
     availability: home.availability ?? "unconfirmed",
+    imageUrl: validListingImage(home.imageUrl),
+    imageAlt: home.imageUrl ? home.imageAlt ?? `${home.title} listing image` : undefined,
+    imageSourceUrl: home.imageUrl ? home.imageSourceUrl ?? source?.url ?? home.listingUrl ?? undefined : undefined,
   };
 }
 
@@ -159,6 +165,20 @@ function assertAbuDhabiHome(home: SnapshotHome) {
   if (source?.verification !== "page_opened" && home.listingUrl !== null) {
     throw new Error(`Snapshot home ${home.id} cannot expose a listing URL unless its source is an opened page.`);
   }
+  if (home.imageUrl && !home.imageSourceUrl) {
+    throw new Error(`Snapshot home ${home.id} imageSourceUrl is required when imageUrl is present.`);
+  }
+  if (home.imageUrl && !source?.url) {
+    throw new Error(`Snapshot home ${home.id} image must be tied to a source URL.`);
+  }
+}
+
+function validListingImage(value: string | undefined) {
+  if (!value) return undefined;
+  if (!value.startsWith("https://static.shared.propertyfinder.ae/") && !value.startsWith("https://dbz-images.dubizzle.com/")) {
+    throw new Error(`Listing image must come from the original opened portal media host: ${value}`);
+  }
+  return value;
 }
 
 function roundTo(value: number, step: number) {

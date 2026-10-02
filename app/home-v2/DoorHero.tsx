@@ -4,30 +4,6 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import styles from "./home.module.css";
 
-function DoorGroup({ reflection = false }: { reflection?: boolean }) {
-  return (
-    <div className={reflection ? `${styles.door} ${styles.reflection}` : styles.door} aria-hidden={reflection || undefined}>
-      <div className={styles.spill} />
-      <div className={styles.opening}>
-        <Image
-          className={styles.city}
-          src="/abu-dhabi-waterfront.jpg"
-          alt=""
-          width={1200}
-          height={800}
-          preload={!reflection}
-          sizes="(max-width: 760px) 140vw, 45vw"
-        />
-      </div>
-      <div className={styles.leaf}>
-        <span className={styles.panel} />
-        <span className={styles.panel} />
-        <span className={styles.knob} />
-      </div>
-    </div>
-  );
-}
-
 export function DoorHero() {
   const trackRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -41,7 +17,11 @@ export function DoorHero() {
     if (reduced) return;
     const fine = window.matchMedia("(pointer: fine)").matches;
 
+    // Scroll and pointer set targets; each frame eases the drawn values toward them (time-based, so
+    // wheel notches glide instead of stepping). `e` is the tile-opening curve: slow start, fast middle, soft landing.
     let frame = 0;
+    let last = 0;
+    let target = 0;
     let p = 0;
     let mx = 0;
     let my = 0;
@@ -51,17 +31,25 @@ export function DoorHero() {
     const measure = () => {
       const rect = track.getBoundingClientRect();
       const span = rect.height - window.innerHeight;
-      p = span > 0 ? Math.min(1, Math.max(0, -rect.top / span)) : 0;
+      target = span > 0 ? Math.min(1, Math.max(0, -rect.top / span)) : 0;
     };
 
-    const render = () => {
+    const render = (now: number) => {
       frame = 0;
-      mx += (tx - mx) * 0.08;
-      my += (ty - my) * 0.08;
+      const dt = last ? Math.min(64, now - last) : 16.67;
+      last = now;
+      const k = 1 - Math.pow(0.86, dt / 16.67);
+      p += (target - p) * k;
+      mx += (tx - mx) * k * 0.6;
+      my += (ty - my) * k * 0.6;
+      const t = Math.min(1, Math.max(0, (p - 0.06) / 0.76));
+      const e = t * t * (3 - 2 * t);
       stage.style.setProperty("--p", p.toFixed(4));
+      stage.style.setProperty("--e", e.toFixed(4));
       stage.style.setProperty("--mx", mx.toFixed(4));
       stage.style.setProperty("--my", my.toFixed(4));
-      if (Math.abs(tx - mx) > 0.001 || Math.abs(ty - my) > 0.001) schedule();
+      if (Math.abs(target - p) > 0.0004 || Math.abs(tx - mx) > 0.001 || Math.abs(ty - my) > 0.001) schedule();
+      else last = 0;
     };
 
     const schedule = () => {
@@ -78,7 +66,9 @@ export function DoorHero() {
       schedule();
     };
 
-    onScroll();
+    measure();
+    p = target;
+    schedule();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
     if (fine) window.addEventListener("pointermove", onPointer, { passive: true });
@@ -97,12 +87,10 @@ export function DoorHero() {
         <div className={styles.sun} />
         <div className={styles.sea} />
         <div className={styles.dusk} />
-        <div className={styles.doorWrap}>
-          <DoorGroup />
-          <DoorGroup reflection />
-        </div>
-        <div className={styles.through} aria-hidden="true">
-          <Image src="/abu-dhabi-waterfront.jpg" alt="" width={1200} height={800} sizes="100vw" />
+        <div className={styles.glow} aria-hidden="true" />
+        <div className={styles.windowShadow} aria-hidden="true" />
+        <div className={styles.window} aria-hidden="true">
+          <Image src="/hero-abu-dhabi-aerial.jpg" alt="" fill preload sizes="100vw" />
         </div>
 
         <div className={styles.headline}>
@@ -115,14 +103,21 @@ export function DoorHero() {
         </div>
 
         <div className={styles.caption} aria-hidden="true">
-          <span>Abu Dhabi</span>
-          <strong>One plan for the whole move.</strong>
+          <strong>
+            <span>Abu Dhabi,</span>
+            <span>one plan for</span>
+            <span>the whole move</span>
+          </strong>
         </div>
 
         <div className={styles.hint} aria-hidden="true">
           <span>Scroll to step through</span>
           <i />
         </div>
+
+        <a className={styles.credit} href="https://www.relaam.com/neighborhoods" target="_blank" rel="noreferrer">
+          Photo: Relaam
+        </a>
       </div>
     </section>
   );

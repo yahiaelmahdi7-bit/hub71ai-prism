@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { buildRecommendations, createEstablishedCompanyDemo, hrProgramView, personHub } from "./data.ts";
+import { buildRecommendations, canonicalizeRecommendations, createEstablishedCompanyDemo, hrProgramView, personHub } from "./data.ts";
 import { getRentalCatalog } from "../properties/catalog.ts";
 import { SqliteRelocationStore, defaultStorePath } from "./store.ts";
 import { grantConsent, hashToken, randomToken, recordExternalOpen, reportManualStatus, revokeConsent } from "./status.ts";
@@ -26,11 +26,19 @@ export function json(payload: unknown, status = 200) {
 }
 
 export function jsonError(error: unknown, status: number) {
-  return json({ error: error instanceof Error ? error.message : "Unknown relocation API error." }, status);
+  const responseStatus = error instanceof PrototypeSessionsDisabledError ? 503 : status;
+  return json({ error: error instanceof Error ? error.message : "Unknown relocation API error." }, responseStatus);
 }
 
 export function bootstrapAllowed() {
   return process.env.NODE_ENV !== "production";
+}
+
+class PrototypeSessionsDisabledError extends Error {
+  constructor() {
+    super("Prototype relocation sessions are disabled in production. Configure production identity and durable storage before enabling these routes.");
+    this.name = "PrototypeSessionsDisabledError";
+  }
 }
 
 export async function seedDemoWithCapabilities() {
@@ -98,10 +106,11 @@ export async function seedDemoWithCapabilities() {
 }
 
 export async function readSeeded() {
-  return relocationStore.read(false);
+  return canonicalizeRecommendations(await relocationStore.read(false));
 }
 
 export async function requireActor(request: Request): Promise<{ data: RelocationStoreData; actor: CapabilityActor }> {
+  if (!bootstrapAllowed()) throw new PrototypeSessionsDisabledError();
   const token = bearerToken(request);
   if (!token) throw new Error("Bearer session token is required.");
   const data = await readSeeded();
@@ -261,6 +270,7 @@ export async function createInvite(request: Request, body: Record<string, unknow
 }
 
 export async function acceptInvite(inviteId: string, body: Record<string, unknown>) {
+  if (!bootstrapAllowed()) throw new PrototypeSessionsDisabledError();
   const token = requiredString(body.token, "token");
   const createdAt = new Date().toISOString();
   let response: ReturnType<typeof createProfileResponse> | null = null;
@@ -324,8 +334,34 @@ export async function acceptInvite(inviteId: string, body: Record<string, unknow
 export async function openExternal(request: Request, body: Record<string, unknown>) {
   const { actor } = await requireActor(request);
   return relocationStore.update((current) =>
-    recordExternalOpen(current, { caseId: requiredString(body.caseId, "caseId"), targetId: requiredString(body.targetId, "targetId") }, actor),
+    recordExternalOpen(
+      canonicalizeRecommendations(current),
+      { caseId: requiredString(body.caseId, "caseId"), targetId: requiredString(body.targetId, "targetId") },
+      actor,
+    ),
   );
+}
+
+export async function selectProperty(request: Request, body: Record<string, unknown>) {
+  const { actor } = await requireActor(request);
+  if (actor.kind !== "person") throw new Error("Person session is required to select a property.");
+  const caseId = requiredString(body.caseId, "caseId");
+  const listingId = body.listingId === null ? null : requiredString(body.listingId, "listingId");
+  const data = await relocationStore.update((current) => {
+    const relocationCase = activeCaseFor(current, actor);
+    if (relocationCase.id !== caseId) throw new Error("Property selection must target your active move.");
+    if (listingId) {
+      const recommendations = canonicalizeRecommendations(current).recommendations[caseId] ?? [];
+      const selected = recommendations.find((item) => item.type === "home" && item.home.id === listingId);
+      if (!selected || selected.type !== "home") throw new Error("Choose a home from your current recommendations.");
+      if (!selected.affordable || !selected.policyFit) throw new Error("Choose a home that passes your current income and housing allowance filters.");
+    }
+    return {
+      ...current,
+      cases: current.cases.map((item) => item.id === caseId ? { ...item, selectedListingId: listingId } : item),
+    };
+  });
+  return { view: requirePersonHub(data, { ...actor, activeCaseId: caseId }) };
 }
 
 export async function reportStatus(request: Request, body: Record<string, unknown>) {
@@ -442,7 +478,7 @@ function personalCase(
 }
 
 function personalTasks(caseId: string, updatedAt: string, sharedWithEmployer: boolean): RelocationTask[] {
-  const source = { kind: "system" as const, actorId: "bankable", label: "Bankable" };
+  const source = { kind: "system" as const, actorId: "bankable", label: "Yala AD" };
   return [
     {
       id: `task-housing-${caseId}`,
@@ -521,7 +557,7 @@ function personalTasks(caseId: string, updatedAt: string, sharedWithEmployer: bo
       source,
       updatedAt,
       owner: sharedWithEmployer ? "organization" : "person",
-      nextAction: "Provider or broker confirms policy status; Bankable records only evidence-backed updates.",
+      nextAction: "Provider or broker confirms policy status; Yala AD records only evidence-backed updates.",
       blocker: null,
     },
     {
@@ -563,6 +599,7 @@ function inviteAcceptanceTask(invite: PendingInvite, caseId: string, personId: s
 }
 
 function createSession(actor: CapabilityActor): { token: string; session: CapabilitySession } {
+  if (!bootstrapAllowed()) throw new PrototypeSessionsDisabledError();
   const token = randomToken();
   const createdAt = new Date().toISOString();
   return {

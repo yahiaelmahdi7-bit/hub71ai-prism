@@ -67,10 +67,15 @@ async function fresh() {
 }
 async function visit(page, path) {
   const response = await page.goto(new URL(path, base).toString(), { waitUntil: 'networkidle', timeout: 30000 });
-  assert.equal(response?.status(), 200, `${path} must return 200`);
+  if (response) assert.equal(response.status(), 200, `${path} must return 200`);
+  else assert.equal(new URL(page.url()).origin, origin, `${path} must remain in the local workspace`);
+  await page.locator('main').waitFor({ state: 'visible' });
+  if (path === '/company/dashboard') await page.getByRole('heading', { name: 'Restoring company dashboard' }).waitFor({ state: 'hidden' });
 }
 async function visible(locator) { await locator.waitFor({ state: 'visible' }); }
 async function shot(page, label) {
+  // Root owns the final visual gate; opt in explicitly to masked QA screenshots.
+  if (process.env.BANKABLE_QA_SCREENSHOTS !== '1') return undefined;
   const path = resolve(output, `${prefix}-${label}.png`);
   await page.locator('.invite-panel code').evaluateAll((nodes) => nodes.forEach((node) => { node.textContent = 'Private invite link hidden for QA screenshot'; }));
   await page.screenshot({ path, fullPage: true });
@@ -106,23 +111,24 @@ async function personalFields(page, { name = '', work = 'employee', household = 
   await page.getByLabel('Name', { exact: false }).fill(name);
   await page.getByLabel('Work type').selectOption(work);
   await page.getByLabel('Household').selectOption(household);
-  await page.getByLabel('Monthly income minimum').fill(income);
+  await page.locator('input[name="incomeMin"]').fill(income);
   await page.getByLabel('Monthly income upper range').fill(upper);
 }
 async function postClick(page, button, suffix, method = 'POST') {
   const responsePromise = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith(suffix) && response.request().method() === method);
   await button.click();
   const response = await responsePromise;
-  assert(response.ok(), `${method} ${suffix} must succeed; got ${response.status()}`);
-  return response.json();
+  const payload = await response.json();
+  assert(response.ok(), `${method} ${suffix} must succeed; got ${response.status()}${typeof payload.error === 'string' ? `: ${safeText(payload.error)}` : ''}`);
+  return payload;
 }
 async function assertNoOverflow(page) {
   const dims = await page.evaluate(() => ({ viewport: innerWidth, body: document.body.scrollWidth, document: document.documentElement.scrollWidth }));
   assert(Math.max(dims.body, dims.document) <= dims.viewport + 1, `Horizontal overflow: ${JSON.stringify(dims)}`);
 }
 async function reportStatus(page, taskId, state, { next = 'Follow up with the responsible provider.', reference = '', blocker = '' } = {}) {
-  await page.getByLabel('Task', { exact: true }).selectOption(taskId);
-  await page.getByLabel('Status', { exact: true }).selectOption(state);
+  await page.locator('.roadmap-form').getByRole('combobox').first().selectOption(taskId);
+  await page.locator('.roadmap-form').getByRole('combobox').nth(1).selectOption(state);
   await page.getByLabel('Next action', { exact: true }).fill(next);
   await page.getByLabel('Reference', { exact: false }).fill(reference);
   if (state === 'blocked') await page.getByLabel('Blocker', { exact: true }).fill(blocker);
@@ -130,7 +136,8 @@ async function reportStatus(page, taskId, state, { next = 'Follow up with the re
   await visible(page.getByRole('status').filter({ hasText: 'Status saved' }));
   return result;
 }
-async function openAction(page, route, locator) {
+async function openAction(page, hash, locator) {
+  const route = `/move${hash}`;
   await visit(page, route);
   const prior = externalVisits.length;
   const responsePromise = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith('/actions/opened') && response.request().method() === 'POST');
@@ -142,7 +149,7 @@ async function openAction(page, route, locator) {
   assert(result.latestEvent?.source && result.latestEvent.updatedAt && result.latestEvent.owner && result.latestEvent.nextAction, 'Opened event must retain complete provenance');
   await page.waitForTimeout(300);
   assert(externalVisits.length > prior, 'Actual provider navigation must occur');
-  const stayed = new URL(page.url()).origin === origin && new URL(page.url()).pathname === route;
+  const stayed = new URL(page.url()).origin === origin && new URL(page.url()).pathname === '/move' && new URL(page.url()).hash === hash;
   for (const popup of page.context().pages()) if (popup !== page) await popup.close();
   if (!stayed) await visit(page, route);
   assert(stayed, 'External action must keep the private workspace open in its original tab');
@@ -157,7 +164,7 @@ try {
     await personal.getByRole('link', { name: 'Get started', exact: false }).first().click();
     await personal.waitForURL('**/start');
     await visible(personal.getByRole('heading', { name: 'Start with the move you are making.' }));
-    assert.equal(await personal.locator('form').count(), 0, 'Journey choice must not duplicate every onboarding form');
+    assert.equal(await personal.locator('input[name="incomeMin"]').count(), 0, 'Journey choice must not duplicate personal intake');
     return await shot(personal, 'start-desktop');
   });
   await check('Public area directory and detail lead to personal planning', async () => {
@@ -172,7 +179,7 @@ try {
   await check('Mainland, ADGM and KEZAD information routes remain separate', async () => {
     for (const route of ['mainland', 'adgm', 'kezad']) {
       await visit(personal, `/setup/${route}`);
-      const url = await personal.getByRole('link', { name: 'Open official service', exact: true }).getAttribute('href');
+      const url = await personal.getByRole('link', { name: /^Open (official service|source page)$/ }).getAttribute('href');
       assert(url?.startsWith('https://'), 'Official service must have an external source URL');
     }
   });
@@ -196,7 +203,7 @@ try {
     await company.getByRole('button', { name: 'Create company dashboard', exact: true }).click();
     const response = await responsePromise;
     assert(response.status() >= 400 && response.status() < 500, 'Unknown office area must produce a recoverable validation error');
-    await visible(company.getByRole('alert'));
+    await visible(company.locator('main').getByRole('alert'));
     assert.equal(await company.getByLabel('Team size', { exact: true }).inputValue(), '5');
     assert.equal(await company.getByLabel('Annual housing allowance', { exact: true }).inputValue(), '105000');
     assert.equal(await company.getByLabel('Company name', { exact: false }).inputValue(), 'Fictional browser QA company');
@@ -229,7 +236,7 @@ try {
     assert.equal(parsed.pathname, '/join');
     assert(parsed.searchParams.get('inviteId') === invitation.inviteId, 'Copied link must carry the issued invite identifier');
     assert(parsed.searchParams.get('token') === invitation.token, 'Copied link must carry the issued private access code');
-    assert((await company.locator('main').innerText()).includes('Bankable does not send or confirm delivery'));
+    assert((await company.locator('.invite-panel').innerText()).includes('does not send or confirm delivery'));
     return 'Private access link copied; its token is excluded from artifacts.';
   });
   await check('Employee accepts the full invite in a separate browser session', async () => {
@@ -245,7 +252,7 @@ try {
     employeeHub = await hub(employee);
     assert.equal(employeeHub.case.programId, hrSession.programId);
     assert(employeeHub.recommendations.some((item) => item.type === 'official_service'), 'New employee must have a real setup path');
-    assert.equal(employeeHub.timeline.length, 0, 'New journey must not invent completed actions');
+    assert(employeeHub.timeline.every((event) => event.state === 'saved' && event.source.kind === 'user_report'), 'Only the genuine invite acceptance may appear in the initial employee timeline');
   });
   await check('Employee refresh restores the same private profile', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
@@ -256,12 +263,12 @@ try {
     assert.equal((await saved(employee)).hrToken, null, 'Employee must not acquire the HR capability');
     return await shot(employee, 'employee-overview-desktop');
   });
-  await check('Timeline link opens its focused route with an honest empty state', async () => {
+  await check('Timeline route shows the roadmap with genuine initial events only', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
-    await employee.getByRole('link', { name: 'Timeline', exact: true }).click();
-    await employee.waitForURL('**/move/timeline');
-    await visible(employee.getByRole('heading', { name: 'No events yet', exact: true }));
-    assert.equal(await employee.getByRole('heading', { name: 'Homes after affordability and allowance filters', exact: true }).count(), 0);
+    await visit(employee, '/move#timeline');
+    await visible(employee.getByRole('heading', { name: 'Move roadmap', exact: true }));
+    assert.equal((await hub(employee)).timeline.length, 1, 'Timeline should begin with the actual invite acceptance only');
+    await visible(employee.locator('#timeline').getByRole('heading', { name: 'No event for this step yet', exact: true }));
   });
   await check('Report a blocker with provenance; HR receives only shared progress', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
@@ -298,21 +305,40 @@ try {
     assert.equal(event.state, 'reported_booked');
     assert.equal(event.source.kind, 'user_report');
     assert.equal(event.source.reference, 'FICTIONAL-QA-BOOKING-001');
-    await visible(employee.getByText('reported booked · person', { exact: true }));
+    const timelineText = await employee.locator('#timeline').innerText();
+    assert.match(timelineText, /reported booked/i, `Roadmap should render its newly reported housing event: ${timelineText}`);
     return await shot(employee, 'employee-timeline-desktop');
   });
   await check('An affordable real home opens its original listing and preserves the workspace tab', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
     assert(employeeHub.recommendations.some((item) => item.type === 'home' && item.home.contactable && !item.home.synthetic), 'Employee needs at least one real contactable listing');
-    return openAction(employee, '/move/homes', (page) => page.getByRole('button', { name: 'Open listing and record opened', exact: true }).first());
+    return openAction(employee, '#homes', (page) => page.getByRole('button', { name: /^(Open listing|View) on / }).first());
   });
   await check('Official-service navigation records opened only and preserves the private tab', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
-    return openAction(employee, '/move/setup', (page) => page.locator('.action-row button').filter({ hasText: /Open|Start|Explore|Check/ }).first());
+    return openAction(employee, '#setup', (page) => page.locator('#setup .action-row button:not([disabled])').first());
   });
   await check('Workspace navigation records opened only and preserves the private tab', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
-    return openAction(employee, '/move/workspaces', (page) => page.locator('.action-row button').first());
+    return openAction(employee, '#workspaces', (page) => page.locator('#workspaces .action-row button:not([disabled])').first());
+  });
+  await check('A browser-blocked popup explains recovery without inventing an opened event', async () => {
+    requireValue(employeeHub, 'Accepted employee needed');
+    await visit(employee, '/move#workspaces');
+    const before = (await hub(employee)).timeline.length;
+    let attempts = 0;
+    const listener = (request) => { if (new URL(request.url()).pathname.endsWith('/actions/opened') && request.method() === 'POST') attempts += 1; };
+    employee.on('request', listener);
+    await employee.evaluate(() => { window.__qaOriginalOpen = window.open; window.open = () => null; });
+    try {
+      await employee.locator('#workspaces .action-row button:not([disabled])').first().click();
+      await visible(employee.locator('main').getByRole('alert'));
+      assert.equal(attempts, 0, 'A blocked new tab must not be recorded as opened');
+      assert.equal((await hub(employee)).timeline.length, before);
+    } finally {
+      employee.off('request', listener);
+      await employee.evaluate(() => { window.open = window.__qaOriginalOpen; delete window.__qaOriginalOpen; });
+    }
   });
   await check('Final employee/HR progress persists without private financial data', async () => {
     requireValue(employeeHub, 'Accepted employee needed');
@@ -330,9 +356,11 @@ try {
     await visit(personal, '/move');
     await personalFields(personal, { name: 'Fictional low-income browser QA', work: 'freelancer', income: '1000' });
     await personal.route('**/api/relocation/profiles', async (route) => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Service temporarily unavailable. Please try again.' }) }), { times: 1 });
+    const failedResponse = personal.waitForResponse((response) => new URL(response.url()).pathname === '/api/relocation/profiles' && response.request().method() === 'POST');
     await personal.getByRole('button', { name: 'Create private hub', exact: true }).click();
-    await visible(personal.getByRole('alert'));
-    assert.equal(await personal.getByLabel('Monthly income minimum').inputValue(), '1000');
+    assert.equal((await failedResponse).status(), 503);
+    await visible(personal.locator('main').getByRole('alert'));
+    assert.equal(await personal.locator('input[name="incomeMin"]').inputValue(), '1000');
     assert.equal(await personal.getByLabel('Name', { exact: false }).inputValue(), 'Fictional low-income browser QA');
     assert.equal(await personal.getByLabel('Work type').inputValue(), 'freelancer');
   });
@@ -344,22 +372,20 @@ try {
     originalPersonalCase = view.case.id;
     assert.equal(view.recommendations.filter((item) => item.type === 'home').length, 0);
     assert(view.recommendations.some((item) => item.type === 'official_service'));
-    await personal.getByRole('link', { name: 'Homes', exact: true }).click();
-    await personal.waitForURL('**/move/homes');
+    await visit(personal, '/move#homes');
     await visible(personal.getByRole('heading', { name: 'No affordable source-linked homes yet', exact: true }));
     assert.equal(await personal.getByRole('link', { name: 'Edit my plan', exact: true }).last().getAttribute('href'), '/move/profile');
-    assert.equal(await personal.getByRole('button', { name: 'Open listing and record opened', exact: true }).count(), 0);
+    assert.equal(await personal.getByRole('button', { name: /^(Open listing|View) on / }).count(), 0);
     return await shot(personal, 'housing-empty-desktop');
   });
   await check('Editing income to zero keeps the same profile and complete useful setup plan', async () => {
     requireValue(originalPersonalId, 'Created personal profile needed');
-    await visit(personal, '/move/timeline');
-    await visible(personal.getByRole('heading', { name: 'No events yet', exact: true }));
+    await visit(personal, '/move#timeline');
+    await visible(personal.getByRole('heading', { name: 'No event for this step yet', exact: true }));
     const before = await hub(personal);
     await reportStatus(personal, before.tasks[0].id, 'saved');
-    await personal.getByRole('link', { name: 'Edit my plan', exact: true }).click();
-    await personal.waitForURL('**/move/profile');
-    await personal.getByLabel('Monthly income minimum').fill('0');
+    await visit(personal, '/move/profile');
+    await personal.locator('input[name="incomeMin"]').fill('0');
     await postClick(personal, personal.getByRole('button', { name: 'Save plan inputs', exact: true }), '/profiles/me', 'PATCH');
     await personal.waitForURL('**/move');
     const after = await hub(personal);
@@ -379,7 +405,7 @@ try {
     assert.equal(await saved(demo), null);
     await postClick(demo, demo.getByRole('button', { name: 'Explore fictional five-person demo', exact: true }), '/bootstrap');
     await demo.waitForURL('**/company/dashboard');
-    await visible(demo.getByRole('heading', { name: /.*Fictional|.*fictional|.*Demo|.*demo/ }).first());
+    await visible(demo.getByRole('button', { name: 'Fictional demo loaded', exact: true }));
     const state = await saved(demo);
     assert.equal(state.employeeTokens.length, 5);
     await demo.getByRole('link', { name: 'My move', exact: true }).click();
@@ -389,12 +415,10 @@ try {
       await demo.getByRole('combobox', { name: 'Choose private profile', exact: true }).selectOption(entry.personId);
       await visible(demo.getByRole('heading', { name: entry.displayName, exact: true }));
       assert((await demo.locator('.metric').allTextContents()).some((value) => value.includes('Rent budget')));
-      await demo.getByRole('link', { name: 'Setup', exact: true }).click();
-      await demo.waitForURL('**/move/setup');
+      await visit(demo, '/move#setup');
       await visible(demo.getByRole('heading', { name: entry.displayName, exact: true }));
-      assert(await demo.locator('.action-row').count() > 0, 'Each selected demo employee needs setup actions');
-      await demo.getByRole('link', { name: 'Overview', exact: true }).click();
-      await demo.waitForURL('**/move');
+      assert(await demo.locator('#setup .action-row').count() > 0, 'Each selected demo employee needs setup actions');
+      await visit(demo, '/move');
     }
     const token = state.hrToken;
     const response = await demo.context().request.get(`${base}/api/relocation/programs/${state.programId}/hr`, { headers: { authorization: `Bearer ${token}` } });
@@ -406,7 +430,7 @@ try {
   });
   for (const width of [1440, 390]) {
     await check(`Desktop/mobile focused routes have no overflow at ${width}px`, async () => {
-      for (const [page, paths] of [[personal, ['/', '/start', '/areas', '/move', '/move/profile', '/move/timeline']], [company, ['/company/dashboard']], [employee, ['/move/homes', '/move/setup', '/move/workspaces', '/move/finance']]]) {
+      for (const [page, paths] of [[personal, ['/', '/start', '/areas', '/move', '/move/profile', '/move#timeline']], [company, ['/company/dashboard']], [employee, ['/move#homes', '/move#setup', '/move#workspaces', '/move#budget']]]) {
         requireValue(page, 'Journey page needed');
         await page.setViewportSize({ width, height: 900 });
         for (const path of paths) {
@@ -416,7 +440,7 @@ try {
         }
       }
       if (width === 390) {
-        await visit(personal, '/move/timeline');
+        await visit(personal, '/move#timeline');
         await shot(personal, 'timeline-mobile');
         await visit(company, '/company/dashboard');
         await shot(company, 'company-mobile');
@@ -459,7 +483,7 @@ try {
     `SLOW (>20 s): ${slow.length ? slow.map((result) => result.name).join('; ') : 'None.'}`,
     `JavaScript exceptions: ${errors.length}. Unexpected failed requests: ${failedRequests.length}.`,
     '',
-    'Reproduce: `node tests/e2e/relocation-browser.mjs` with the existing server running at port 3000. Set BANKABLE_TEST_URL only for another localhost port. The script closes every browser context and exits non-zero if a check fails.',
+    `Reproduce: \`BANKABLE_TEST_URL=${origin} node tests/e2e/relocation-browser.mjs\` with the matching local production server running. The script closes every browser context and exits non-zero if a check fails.`,
     '',
     'Production identity, provider webhooks, document extraction and hosted-storage deployment are outside this browser gate.',
   ];

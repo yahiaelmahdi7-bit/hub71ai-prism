@@ -82,6 +82,19 @@ test("matchHomes returns blockers when no homes match", () => {
   assert.ok(result.assumptions.some((assumption) => assumption.includes("No homes remained")));
 });
 
+test("AED 8000 monthly income can see the opened low-budget snapshot option", () => {
+  const catalog = getRentalCatalog();
+  const result = matchHomes(
+    { ...baseProfile, income: { minMonthlyAed: 8000, maxMonthlyAed: 8000 }, preferredAreaIds: [] },
+    { annualAllowanceAed: 100000, maxRentShareOfIncome: 0.33 },
+    catalog.snapshot,
+  );
+
+  assert.ok(result.matches.some((match) => match.home.id === "snapshot-dubizzle-mbz-studio-105317-xsihcq"));
+  assert.ok(result.matches.every((match) => match.home.annualRentAed <= result.annualBudgetAed));
+});
+
+
 test("matchHomes rejects invalid budget inputs", () => {
   assert.throws(
     () => matchHomes(baseProfile, { annualAllowanceAed: -1, maxRentShareOfIncome: 0.4 }, []),
@@ -94,10 +107,24 @@ test("matchHomes rejects invalid budget inputs", () => {
   assert.throws(
     () =>
       matchHomes(
-        { ...baseProfile, income: { minMonthlyAed: 0, maxMonthlyAed: 1000 } },
+        { ...baseProfile, income: { minMonthlyAed: -1, maxMonthlyAed: 1000 } },
         { annualAllowanceAed: 100000, maxRentShareOfIncome: 0.5 },
         [],
       ),
     /minMonthlyAed/,
   );
+});
+
+test("matchHomes accepts zero income and returns honest no-match blockers", () => {
+  const catalog = getRentalCatalog();
+  const result = matchHomes(
+    { ...baseProfile, income: { minMonthlyAed: 0, maxMonthlyAed: 0 } },
+    { annualAllowanceAed: 100000, maxRentShareOfIncome: 0.33 },
+    catalog.snapshot,
+  );
+
+  assert.equal(result.annualBudgetAed, 0);
+  assert.equal(result.matches.length, 0);
+  assert.ok(result.excluded.length > 0);
+  assert.ok(result.assumptions.some((assumption) => assumption.includes("No homes remained under AED 0")));
 });

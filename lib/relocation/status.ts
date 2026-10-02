@@ -157,7 +157,8 @@ function findAction(data: RelocationStoreData, caseId: string, targetId: string,
   if (recommendation.type === "home") {
     return {
       taskId: linkedTask?.id ?? targetId,
-      url: recommendation.home.listingUrl,
+      // Search-only observations fall back to the portal page they were seen on; synthetic examples never open anything.
+      url: recommendation.home.synthetic ? null : recommendation.home.listingUrl ?? recommendation.home.sourceUrl,
       owner: linkedTask?.owner ?? "person",
       nextAction: "Open original listing page. Availability, reply and booking remain unconfirmed until provider or user evidence exists.",
     };

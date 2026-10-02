@@ -1,14 +1,14 @@
-# Bankable — app flow and build blueprint
+# Yala AD — app flow and build blueprint
 
 ## Product promise
 
-Bankable is an Abu Dhabi relocation action hub for freelancers, individuals, and companies moving teams. It turns a small amount of information into a personal move plan, relevant homes and places to work, setup and financial-readiness actions, and one honest timeline. It coordinates official and commercial handoffs; it does not pretend to issue licences, visas, bookings, or bank approvals itself.
+Yala AD is an Abu Dhabi relocation action hub for freelancers, individuals, and companies moving teams. It turns a small amount of information into a personal move plan, relevant homes and places to work, setup and financial-readiness actions, and one honest timeline. It coordinates official and commercial handoffs; it does not pretend to issue licences, visas, bookings, or bank approvals itself.
 
 ## Whole-app flow
 
 ```mermaid
 flowchart TD
-    Start[Bankable home] --> Route{Who is moving?}
+    Start[Yala AD home] --> Route{Who is moving?}
 
     Route -->|On my own| PersonalStart[Personal start: work, household, income]
     Route -->|Joining my company's move| Invite[Open employee invite]
@@ -51,7 +51,7 @@ The company and individual routes share the same personal hub, recommendation en
 
 The landing page at `/` introduces the three journeys. `/start` chooses one, `/move` creates or resumes a private plan, `/company` creates a team program, and `/join` accepts an invitation into the same private journey. A company opens its separate workspace at `/company/dashboard`.
 
-Public `/areas` and `/setup` directories lead to focused detail pages with source links and a useful next action. The private workspace has distinct housing, workspace, setup, finance, profile and timeline pages. Onboarding forms do not repeat on every dashboard page. Direct visits, back navigation and refresh preserve the relevant browser session.
+Public `/areas` and `/setup` directories lead to focused detail pages with source links and a useful next action. The private move workspace combines areas, homes, workspaces, setup and finance in one page with in-place filters. Profile editing and the connected milestone timeline remain focused routes. Earlier category URLs lead into the matching workspace filter so saved links remain useful. Onboarding forms do not repeat on every dashboard page. Direct visits, back navigation and refresh preserve the relevant browser session and selected private profile.
 
 A fresh browser has no demo records selected. A new company starts with no employees and can create its first invite link. A private plan with no affordable homes still offers work and official setup actions, explains the housing gap and lets the person edit the same profile. Empty timelines show a first action. The fictional five-employee demonstration is an explicit choice.
 
@@ -80,7 +80,7 @@ Keep progressive disclosure: ask a question only when it changes a recommendatio
 
 ## Company integration map
 
-| Workstream | Bankable owns | External authority or provider owns | First build |
+| Workstream | Yala AD owns | External authority or provider owns | First build |
 | --- | --- | --- | --- |
 | Company establishment | Route selection, task list, evidence, handoff and reference tracking | [ADDED mainland setup](https://www.added.gov.ae/en/set-up/establish-your-business), [ADGM registration](https://www.adgm.com/registration-authority/registration-and-incorporation), or [KEZAD setup](https://www.kezadgroup.com/business-facilities/free-zone-business-setup-solutions/) | Official deep links; no claimed automatic filing |
 | Employee work/residence | Per-person checklist, owner, due date, reference, status provenance | [Work Bundle and ICP services](https://icp.gov.ae/en/services/shared-services/) | Human-confirmed status; provider sync only if access is granted |

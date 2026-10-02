@@ -1,5 +1,5 @@
-import { BankableRelocationApp } from "@/components/BankableRelocationApp";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <BankableRelocationApp screen="move-homes" />;
+export default function MoveHomesRedirect() {
+  redirect("/move#homes");
 }

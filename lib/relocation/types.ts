@@ -97,6 +97,17 @@ export type RelocationStoreData = {
 export type PublicPersonHub = {
   profile: Omit<PersonProfile, "privateEvidence">;
   case: RelocationCase;
+  selectedProperty: {
+    listingId: string;
+    title: string;
+    area: string;
+    annualRentAed: number;
+    monthlyRentAed: number;
+    withinBudget: boolean;
+    withinPolicyAllowance: boolean;
+    rentShareOfIncomePercent: number | null;
+    synthetic: boolean;
+  } | null;
   tasks: RelocationTask[];
   recommendations: Recommendation[];
   timeline: StatusEvent[];

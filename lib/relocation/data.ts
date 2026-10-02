@@ -24,7 +24,7 @@ const CREATED_AT = "2026-10-02T10:50:00+04:00";
 const BANKABLE_SOURCE = {
   kind: "system" as const,
   actorId: "bankable-demo-engine",
-  label: "Bankable deterministic demo engine",
+  label: "Yala AD deterministic demo engine",
 };
 
 type DemoEmployee = (typeof demoMove.employees)[number];
@@ -116,7 +116,21 @@ export function buildRecommendations(profile: PersonProfile, program: MoveProgra
   ];
 }
 
+export function canonicalizeRecommendations(data: RelocationStoreData): RelocationStoreData {
+  const recommendations = { ...data.recommendations };
+  for (const relocationCase of data.cases) {
+    const profile = data.people.find((person) => person.id === relocationCase.personId);
+    if (!profile) continue;
+    const program = relocationCase.programId
+      ? data.programs.find((item) => item.id === relocationCase.programId) ?? null
+      : null;
+    recommendations[relocationCase.id] = buildRecommendations(profile, program);
+  }
+  return { ...data, recommendations };
+}
+
 export function personHub(data: RelocationStoreData, personId: string, activeCaseId?: string): PublicPersonHub {
+  data = canonicalizeRecommendations(data);
   const profile = required(data.people.find((person) => person.id === personId), `Unknown person ${personId}`);
   const personCases = data.cases.filter((item) => item.personId === personId);
   const relocationCase = required(
@@ -125,12 +139,28 @@ export function personHub(data: RelocationStoreData, personId: string, activeCas
   );
   const recommendations = data.recommendations[relocationCase.id] ?? [];
   const housingSearch = housingSearchFor(profile, relocationCase.housingPolicy);
+  const selectedHome = relocationCase.selectedListingId
+    ? [...getRentalCatalog().snapshot, ...getRentalCatalog().synthetic].find((home) => home.id === relocationCase.selectedListingId) ?? null
+    : null;
   const { privateEvidence, ...publicProfile } = profile;
   void privateEvidence;
 
   return {
     profile: publicProfile,
     case: relocationCase,
+    selectedProperty: selectedHome ? {
+      listingId: selectedHome.id,
+      title: selectedHome.title,
+      area: selectedHome.area,
+      annualRentAed: selectedHome.annualRentAed,
+      monthlyRentAed: Math.round(selectedHome.annualRentAed / 12),
+      withinBudget: selectedHome.annualRentAed <= housingSearch.annualBudgetAed,
+      withinPolicyAllowance: selectedHome.annualRentAed <= relocationCase.housingPolicy.annualAllowanceAed,
+      rentShareOfIncomePercent: profile.income.minMonthlyAed > 0
+        ? Math.round((selectedHome.annualRentAed / (profile.income.minMonthlyAed * 12)) * 1000) / 10
+        : null,
+      synthetic: selectedHome.synthetic,
+    } : null,
     tasks: data.tasks.filter((task) => task.caseId === relocationCase.id),
     recommendations,
     timeline: data.events.filter((event) => event.caseId === relocationCase.id),
@@ -148,11 +178,17 @@ export function personHub(data: RelocationStoreData, personId: string, activeCas
 }
 
 export function hrProgramView(data: RelocationStoreData, programId: string, organizationId: string): HrProgramView {
+  data = canonicalizeRecommendations(data);
   const program = required(data.programs.find((item) => item.id === programId), `Unknown program ${programId}`);
   if (program.organizationId !== organizationId) throw new Error("Organization cannot view this program.");
   const organization = required(data.organizations.find((item) => item.id === organizationId), `Unknown organization ${organizationId}`);
   const cases = data.cases.filter((item) => item.programId === program.id && item.sharedWithEmployer);
-  const pendingInvites = (data.pendingInvites ?? []).filter((invite) => invite.programId === program.id && !invite.acceptedAt);
+  const issuedInvites = (data.pendingInvites ?? []).filter((invite) => invite.programId === program.id);
+  const acceptedInvitePersonIds = new Set(issuedInvites.flatMap((invite) => invite.acceptedPersonId ? [invite.acceptedPersonId] : []));
+  const legacyInviteEvents = cases.filter((relocationCase) =>
+    !acceptedInvitePersonIds.has(relocationCase.personId) &&
+    data.events.some((event) => event.caseId === relocationCase.id && event.taskId.startsWith("invite-") && event.state !== "not_started"),
+  ).length;
   const employees = cases.map((relocationCase) => {
     const person = required(data.people.find((item) => item.id === relocationCase.personId), `Missing profile ${relocationCase.personId}`);
     const events = data.events.filter((event) => event.caseId === relocationCase.id);
@@ -199,7 +235,7 @@ export function hrProgramView(data: RelocationStoreData, programId: string, orga
     program,
     organization,
     aggregate: {
-      invited: cases.length + pendingInvites.length,
+      invited: issuedInvites.length + legacyInviteEvents,
       accepted: employees.filter((employee) => employee.inviteAccepted).length,
       cases: cases.length,
       blocked: employees.filter((employee) => employee.blockers.length > 0).length,
@@ -228,7 +264,7 @@ export function housingSearchFor(
 }
 
 export function financeFactors(profile: PersonProfile, policy = { annualAllowanceAed: 0, maxRentShareOfIncome: 0.33 }) {
-  const blockedBy = ["No lender result or provider evidence has been shared with Bankable for this private plan."];
+  const blockedBy = ["No lender result or provider evidence has been shared with Yala AD for this private plan."];
   if ((profile.privateEvidence?.bankResults.length ?? 0) > 0) {
     blockedBy.push("Existing bank-result references stay private unless shared by recipient-specific consent.");
   }
@@ -239,7 +275,7 @@ export function financeFactors(profile: PersonProfile, policy = { annualAllowanc
       policy.annualAllowanceAed === Number.MAX_SAFE_INTEGER
         ? "No company housing allowance is attached; affordability uses the person's private income range and planning rent-share assumption."
         : `Housing allowance caps annual rent at AED ${policy.annualAllowanceAed.toLocaleString("en-US")}; affordability still uses the person's private income range.`,
-      "Only the lender can approve or pre-approve a product; Bankable shows readiness factors only.",
+      "Only the lender can approve or pre-approve a product; Yala AD shows readiness factors only.",
     ],
     blockedBy,
     noApprovalProbability: true as const,
@@ -306,7 +342,7 @@ function baseTasks(program: MoveProgram, caseId: string, updatedAt: string): Rel
       true,
       updatedAt,
     ),
-    task(caseId, "insurance", "Arrange Abu Dhabi health insurance", "organization", "uae-health-insurance", "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance", "Employer or broker confirms policy status; Bankable records only evidence-backed updates.", true, updatedAt),
+    task(caseId, "insurance", "Arrange Abu Dhabi health insurance", "organization", "uae-health-insurance", "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance", "Employer or broker confirms policy status; Yala AD records only evidence-backed updates.", true, updatedAt),
     task(caseId, "finance", "Review bank and mortgage readiness factors", "person", "cbuae-mortgage-ratios", "https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios", "Open lender application only when the person chooses to share specific information.", false, updatedAt),
   ];
 }
@@ -419,8 +455,8 @@ function serviceRecommendations(profile: PersonProfile, program: MoveProgram | n
       category: "setup" as const,
       resourceId: "confirm-employer-channel",
       reasons: [
-        "HR must confirm whether this move uses mainland, ADGM, or KEZAD before Bankable recommends a specific work-permit, residence, or setup channel.",
-        "Bankable should not present all jurisdiction branches as one generic legal checklist.",
+        "HR must confirm whether this move uses mainland, ADGM, or KEZAD before Yala AD recommends a specific work-permit, residence, or setup channel.",
+        "Yala AD should not present all jurisdiction branches as one generic legal checklist.",
       ],
       sources: [],
     });
@@ -440,15 +476,7 @@ function financeRecommendation(profile: PersonProfile, program: MoveProgram | nu
     category: "finance" as const,
     resourceId: "cbuae-mortgage-ratios",
     reasons: financeFactors(profile, program?.housingPolicy ?? { annualAllowanceAed: Number.MAX_SAFE_INTEGER, maxRentShareOfIncome: 0.33 }).factors,
-    sources: [
-      sourceRecord(
-        "cbuae-mortgage-ratios",
-        "Mortgage loan important ratios",
-        "Central Bank of the UAE",
-        "https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios",
-        "regulator",
-      ),
-    ],
+    sources: sourcesForIds(["cbuae-mortgage-ratios"]),
   };
 }
 
@@ -459,7 +487,7 @@ function sourceRecordsForHome(sources: SourceRecord[], home: { sourceUrl: string
     sourceRecord(
       "synthetic-property-calibration",
       "Synthetic rental calibration",
-      "Bankable demo",
+      "Yala AD demo",
       "data/property-calibration.json",
       "property_portal",
       home.checkedAt,
@@ -471,7 +499,18 @@ function sourceRecordsForHome(sources: SourceRecord[], home: { sourceUrl: string
 function sourcesForIds(sourceIds: string[]) {
   return sourceIds
     .map((sourceId) => referenceCatalog.sources.find((source) => source.id === sourceId))
-    .filter((source): source is SourceRecord => Boolean(source));
+    .filter((source): source is SourceRecord => Boolean(source))
+    .map(customerFacingSource);
+}
+
+function customerFacingSource(source: SourceRecord): SourceRecord {
+  return {
+    ...source,
+    title: source.title.replaceAll("Bankable", "Yala AD"),
+    publisher: source.publisher.replaceAll("Bankable", "Yala AD"),
+    supportedClaims: source.supportedClaims.map((claim) => claim.replaceAll("Bankable", "Yala AD")),
+    limitations: source.limitations.map((limitation) => limitation.replaceAll("Bankable", "Yala AD")),
+  };
 }
 
 function sourceRecord(

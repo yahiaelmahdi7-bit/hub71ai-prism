@@ -1,7 +1,8 @@
 .page { position: relative; min-width: 0; overflow: clip; background: #f8f6ef; color: #10253f; }
 .header { position: absolute; top: 0; left: 0; right: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 2rem; min-height: 82px; padding: 0 max(4vw, calc((100vw - 1320px) / 2)); border-bottom: 1px solid rgba(255,255,255,.3); color: #fff; }
 .brand { display: inline-flex; align-items: center; gap: .65rem; color: inherit; font-weight: 760; font-size: 1.08rem; text-decoration: none; }
-.brandMark { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.7); border-radius: 9px; color: #fff; font-size: 1rem; font-weight: 750; }
+.brandMark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #fffcf7; box-shadow: 0 6px 16px rgba(8, 30, 50, .22); }
+.brandMark img { display: block; width: auto; height: 25px; }
 .nav { display: flex; align-items: center; gap: clamp(1rem, 3vw, 3rem); }
 .nav a, .headerCta { color: #fff; font-size: .92rem; font-weight: 630; text-decoration: none; }
 .nav a:hover, .secondary:hover, .footer a:hover { color: #d9c39e; }
@@ -58,19 +59,19 @@
 .providerArt::before { content: ''; position: absolute; z-index: -1; inset: 4% -10% -12% -15%; background: radial-gradient(circle at 72% 30%, rgba(102, 181, 219, .49), transparent 43%), radial-gradient(circle at 54% 76%, rgba(85, 189, 160, .38), transparent 45%); filter: blur(15px); }
 .providerTile { position: absolute; display: flex; flex-direction: column; justify-content: space-between; width: 190px; height: 145px; padding: 1.05rem 1.15rem; border: 1px solid rgba(16, 37, 63, .06); border-radius: 21px; background: rgba(255,255,255,.96); box-shadow: 0 24px 48px rgba(16, 37, 63, .13); color: #10253f; text-decoration: none; transform: rotate(var(--tilt)); transition: transform .25s ease, box-shadow .25s ease; }
 .providerTile:hover { z-index: 5; transform: translateY(-8px) rotate(0deg); box-shadow: 0 32px 56px rgba(16, 37, 63, .2); }
-.providerMark { align-self: flex-start; color: #0d766d; font-size: 1.8rem; font-weight: 820; letter-spacing: -.08em; line-height: 1; }
+.providerLogo { display: block; align-self: flex-start; width: auto; max-width: 100%; height: 44px; object-fit: contain; object-position: left center; }
+.providerTamm .providerLogo { width: 40px; height: 40px; border-radius: 10px; }
+.providerProperty .providerLogo { height: 42px; }
+.providerAdgm .providerLogo, .providerKezad .providerLogo { height: 38px; }
+.providerLogoStack { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; }
+.providerLogoStack .providerLogo { height: 26px; }
 .providerName { font-size: .9rem; font-weight: 760; }
 .providerKind { display: flex; justify-content: space-between; gap: 1rem; color: #607086; font-size: .73rem; font-weight: 650; }
 .providerProperty { top: 31%; left: 0; --tilt: -12deg; }
-.providerProperty .providerMark { color: #db4f65; }
 .providerTamm { top: 6%; left: 30%; --tilt: 8deg; }
-.providerTamm .providerMark { color: #312b7a; }
 .providerAdgm { top: 22%; right: 2%; --tilt: 12deg; }
-.providerAdgm .providerMark { color: #134a7b; font-size: 1.42rem; letter-spacing: -.06em; }
 .providerAdib { top: 56%; left: 26%; --tilt: 9deg; }
-.providerAdib .providerMark { color: #654492; font-size: 1.45rem; letter-spacing: -.06em; }
 .providerKezad { top: 59%; right: 0; --tilt: -9deg; }
-.providerKezad .providerMark { color: #415b8c; font-size: 1.35rem; letter-spacing: -.05em; }
 .pillarGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .pillar { min-height: 230px; padding: 1.35rem 0; border-top: 1px solid #a9b9b4; color: inherit; text-decoration: none; transition: border-color .2s ease, transform .2s ease; }
 .pillar:hover { border-color: #0d766d; transform: translateY(-3px); }
@@ -116,7 +117,7 @@
   .providerTile { position: relative; inset: auto; width: auto; height: 112px; padding: .85rem; border-radius: 15px; transform: none; }
   .providerTile:hover { transform: translateY(-3px); }
   .providerTile:last-child { grid-column: 1 / -1; }
-  .providerMark { font-size: 1.35rem; }
+
   .providerName { font-size: .82rem; }
   .providerKind { font-size: .67rem; }
   .ambientFilm { height: 290px; margin-top: 2.5rem; border-radius: 12px; }

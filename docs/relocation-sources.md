@@ -43,6 +43,16 @@ This file summarizes the primary-source catalog used by the relocation hub. The 
 
 Area records are planning filters, not neighborhood endorsements. `al-maryah-island`, `yas-island`, and `masdar-city` have direct workspace or official location support in the catalog. `al-reem-island`, `khalifa-city`, `al-raha-beach`, `al-khalidiyah`, and `al-nahyan` currently use ADREC rental-index support as benchmark guidance only; any specific home, price, availability, commute, amenity, or lifestyle claim needs a separate dated listing or provider source beside the recommendation.
 
+## Company setup guide data
+
+The setup-page data lives in [`data/abu-dhabi/setup-guides.json`](../data/abu-dhabi/setup-guides.json). It references the same opened catalog sources and keeps mainland ADDED, ADGM and KEZAD separate. Each profile splits official requirements from guided planning steps and marks fees and timing as unknown in Yala AD unless the provider source supplies them.
+
+## Area guide and image sources
+
+The user-facing area-guide layer lives in [`data/abu-dhabi/area-guides.json`](../data/abu-dhabi/area-guides.json). It is separate from the canonical relocation catalog so that friendly area copy, practical planning suggestions and image metadata do not dilute service-rule provenance. Guide records split sourced facts into `factualHighlights` and non-binding relocation ideas into `practicalTips`.
+
+Area images are documented in [`docs/assets-sources.md`](./assets-sources.md). Exact neighborhood images set `image.exactAreaPhoto` to `true`; fallback context photos set it to `false` and use captions that do not claim the photo shows that neighborhood. Mohamed Bin Zayed City is now included as a catalog area because an opened Dubizzle listing uses that `areaId`; DMT and Abu Dhabi Media Office sources support area context, while the listing source supports only the observed studio.
+
 ## Boundaries
 
 - Government, licensing, visa, insurance, workspace booking and lender decisions belong to the actual provider.

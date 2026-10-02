@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { HouseNav } from "@/components/house/HouseNav";
+import { ProviderLogo } from "@/components/ProviderLogo";
 import { areaDirectory, setupDirectory } from "@/components/relocation-directories";
+import { AreasLive, BudgetLive, SetupLive, StepsLive } from "@/components/LivePieces";
 import { DoorHero } from "./DoorHero";
 import styles from "./home.module.css";
 
@@ -11,15 +13,16 @@ const paths = [
 ];
 
 const sources = [
-  { name: "Property Finder", kind: "Homes", href: "/homes" },
-  { name: "TAMM", kind: "Mainland services", href: "/setup/mainland" },
-  { name: "ADGM", kind: "Business setup", href: "/setup/adgm" },
-  { name: "KEZAD", kind: "Free zone setup", href: "/setup/kezad" },
+  { name: "Property Finder", kind: "Homes", href: "/homes", x: "2%", y: "34%", tilt: "-10deg" },
+  { name: "TAMM", kind: "Mainland services", href: "/setup/mainland", x: "34%", y: "8%", tilt: "7deg" },
+  { name: "ADGM", kind: "Business setup", href: "/setup/adgm", x: "64%", y: "26%", tilt: "11deg" },
+  { name: "KEZAD", kind: "Free zone setup", href: "/setup/kezad", x: "22%", y: "66%", tilt: "-8deg" },
+  { name: "ADIB", kind: "Banking", href: "/move/finance", x: "60%", y: "62%", tilt: "6deg" },
 ];
 
 const steps = ["Link opened", "Update reported", "Next action"];
 
-export const metadata = { title: "Bankable | Arrive in Abu Dhabi knowing what comes next" };
+export const metadata = { title: "Yala AD | Arrive in Abu Dhabi knowing what comes next" };
 
 export default function HomeV2() {
   const areas = areaDirectory.slice(0, 3);
@@ -55,12 +58,8 @@ export default function HomeV2() {
           </header>
           <div className={styles.bento}>
             <Link className={`house-tile ${styles.bentoTile} ${styles.wide}`} href="/areas">
-              <div className={`${styles.specimen} ${styles.chips}`} aria-hidden="true">
-                {areas.map((area, index) => (
-                  <span key={area.id} className={styles.chip} style={{ "--i": index } as React.CSSProperties}>
-                    <b />{area.name}
-                  </span>
-                ))}
+              <div className={styles.specimen} aria-hidden="true">
+                <AreasLive areas={areas.map((area) => ({ id: area.id, name: area.name, note: area.mood ?? area.bestFor[0] ?? "" }))} />
               </div>
               <div className={styles.copy}>
                 <h3>Find your place</h3>
@@ -69,11 +68,7 @@ export default function HomeV2() {
             </Link>
             <Link className={`house-tile ${styles.bentoTile} ${styles.narrow}`} href="/setup">
               <div className={styles.specimen} aria-hidden="true">
-                <div className={styles.segmented}>
-                  {setups.map((setup, index) => (
-                    <span key={setup.id} data-on={index === 0}>{setup.name}</span>
-                  ))}
-                </div>
+                <SetupLive setups={setups.map((setup) => ({ id: setup.id, label: setup.name.split(" ")[0], authority: setup.authority }))} />
               </div>
               <div className={styles.copy}>
                 <h3>Set up your life</h3>
@@ -82,10 +77,7 @@ export default function HomeV2() {
             </Link>
             <Link className={`house-tile ${styles.bentoTile} ${styles.narrow}`} href="/homes">
               <div className={styles.specimen} aria-hidden="true">
-                <div className={styles.budget}>
-                  <div className={styles.track2}><span /></div>
-                  <div className={styles.labels}><span>Fits your budget</span><span>Allowance cap</span></div>
-                </div>
+                <BudgetLive />
               </div>
               <div className={styles.copy}>
                 <h3>Know your numbers</h3>
@@ -94,11 +86,7 @@ export default function HomeV2() {
             </Link>
             <Link className={`house-tile ${styles.bentoTile} ${styles.wide}`} href="/move">
               <div className={styles.specimen} aria-hidden="true">
-                <ol className={styles.timeline}>
-                  {steps.map((step, index) => (
-                    <li key={step} data-hollow={index === steps.length - 1}><i />{step}</li>
-                  ))}
-                </ol>
+                <StepsLive steps={steps} />
               </div>
               <div className={styles.copy}>
                 <h3>Follow every step</h3>
@@ -109,20 +97,26 @@ export default function HomeV2() {
         </section>
 
         <section className={`house-container ${styles.section}`} aria-labelledby="sources-title">
-          <header className={styles.head}>
-            <h2 id="sources-title">Where each step leads</h2>
-            <p>Bankable links you to these sources. Each provider handles its own steps; none of them is a partner.</p>
-          </header>
-          <ul className={styles.sources}>
-            {sources.map((source) => (
-              <li key={source.name}>
-                <Link href={source.href}>
-                  <strong>{source.name}</strong>
-                  <span className="house-meta">{source.kind}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className={styles.doors}>
+            <div className={styles.doorsCopy}>
+              <p className="house-eyebrow">Find the right door</p>
+              <h2 id="sources-title">Your move meets the services that matter.</h2>
+              <p>Housing sources and official setup routes, from one clear starting point.</p>
+              <Link className="house-pill house-pill--accent" href="/start">Explore the routes <span aria-hidden="true">↗</span></Link>
+              <small className="house-meta">Yala AD links you to these sources. Each provider handles its own steps; none of them is a partner.</small>
+            </div>
+            <ul className={styles.doorsArt}>
+              {sources.map((source) => (
+                <li key={source.name} style={{ "--x": source.x, "--y": source.y, "--tilt": source.tilt } as React.CSSProperties}>
+                  <Link href={source.href} aria-label={`${source.name}: ${source.kind}`}>
+                    <ProviderLogo name={source.name} className={styles.sourceLogo} />
+                    {source.name === "TAMM" ? <strong className={styles.sourceName}>TAMM</strong> : null}
+                    <span>{source.kind} <span aria-hidden="true">↗</span></span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         <section className={`house-container ${styles.section}`} aria-labelledby="teams-title">
@@ -138,7 +132,7 @@ export default function HomeV2() {
 
       <footer className={styles.footer}>
         <div className={`house-container ${styles.footerRow}`}>
-          <strong>Bankable · Abu Dhabi</strong>
+          <strong>Yala AD · Abu Dhabi</strong>
           <span className="house-meta">Sources sit beside the facts. Demo data is labeled fictional.</span>
           <Link href="/start">Get started</Link>
         </div>

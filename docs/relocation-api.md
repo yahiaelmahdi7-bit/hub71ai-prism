@@ -4,9 +4,9 @@ The prototype backend uses SQLite at `BANKABLE_DB_PATH`, defaulting to `.bankabl
 
 ## Capability sessions
 
-Authenticated routes use `Authorization: Bearer <sessionToken>`. Dev demo tokens are returned only by local bootstrap and are stored hashed. The API ignores `x-bankable-actor-*` headers.
+Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype session tokens are returned only by local onboarding/bootstrap and are stored hashed. The API ignores `x-bankable-actor-*` headers. Session issuance, invite acceptance and all session-authenticated relocation routes fail closed when `NODE_ENV=production`; the current SQLite store and capability sessions are not production identity or hosted persistence.
 
-`POST /api/relocation/bootstrap` is disabled when `NODE_ENV=production`. In development it seeds the established-company demo if missing and returns fresh capability tokens:
+`POST /api/relocation/bootstrap` is disabled when `NODE_ENV=production`. In development it seeds the established-company demo if missing and returns fresh capability tokens. Profile/program creation and invite acceptance also issue prototype sessions and are disabled in production until production identity and durable storage are configured:
 
 ```json
 {

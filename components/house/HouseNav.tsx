@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -38,8 +39,8 @@ export function HouseNav() {
   return (
     <header className="house-nav" data-scrolled={scrolled ? "true" : "false"}>
       <Link className="house-nav__brand house-bubble" href="/">
-        <span className="house-nav__mark" aria-hidden="true">B</span>
-        <span>Bankable</span>
+        <BrandMark className="house-nav__mark" />
+        <span>Yala AD</span>
       </Link>
       <nav className="house-nav__links house-bubble" aria-label="Primary">
         {links.map((link) => (
