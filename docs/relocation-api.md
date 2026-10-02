@@ -4,9 +4,9 @@ The prototype backend uses SQLite at `BANKABLE_DB_PATH`, defaulting to `.bankabl
 
 ## Capability sessions
 
-Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype session tokens are stored hashed. The API ignores `x-bankable-actor-*` headers. In production, set `YALA_LIVE_DEMO=true` only for the short-lived hackathon demonstration: this enables bootstrap for the fictional five-person fixture and accepts only its `demoOnly` sessions. It does not enable ordinary profile/program session issuance or invite acceptance. Remove the flag after the demo. Do not enter real personal data: the SQLite store and capability sessions are not production identity or durable hosted persistence.
+Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype session tokens are stored hashed. The API ignores `x-bankable-actor-*` headers. In production, set `YALA_LIVE_DEMO=true` only for the short-lived hackathon demonstration: this enables the fictional five-person fixture plus judge-entered demo-scoped profiles, company programs, and invite acceptance. All such sessions are marked `demoOnly` and are rejected when the flag is unset. Remove the flag after the demo. Do not enter sensitive personal data: the SQLite store and capability sessions are not production identity or durable hosted persistence.
 
-`POST /api/relocation/bootstrap` is disabled by default in production and returns 403 unless `YALA_LIVE_DEMO=true`. In development, or when that production-only demo switch is enabled, it seeds/reuses the established-company fixture and returns fresh demo capability tokens. Profile/program creation and invite acceptance remain disabled in production until production identity and durable storage are configured:
+`POST /api/relocation/bootstrap` is disabled by default in production and returns 403 unless `YALA_LIVE_DEMO=true`. In development, or when that production-only demo switch is enabled, it seeds/reuses the established-company fixture and returns demo capability tokens plus HR/person views in one response, avoiding a burst of follow-up reads. Individual profile and company program creation also return the initial personalized view with their demo-scoped session token.
 
 ```json
 {
@@ -24,17 +24,17 @@ Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype sessi
 | `/api/relocation/bootstrap` | `POST` | dev; production only with `YALA_LIVE_DEMO=true` | Seed or reuse fictional demo and return demo-only HR/person capability tokens. |
 | `/api/relocation` | `GET ?op=me` | person bearer | Return the caller's private hub. |
 | `/api/relocation` | `GET ?op=hr&programId=...` | HR bearer | Return HR aggregate projection for that program. |
-| `/api/relocation` | `POST operation=create_profile` | none; dev only | Create private profile/case and return a person session. |
-| `/api/relocation` | `POST operation=create_program` | none; dev only | Create company program and return an HR session. |
-| `/api/relocation/profiles` | `POST` | none; dev only | Same as `create_profile`. |
+| `/api/relocation` | `POST operation=create_profile` | none; dev or `YALA_LIVE_DEMO=true` | Create private profile/case, calculate recommendations from submitted inputs, and return the initial person view. |
+| `/api/relocation` | `POST operation=create_program` | none; dev or `YALA_LIVE_DEMO=true` | Create company program and return the initial HR view. |
+| `/api/relocation/profiles` | `POST` | none; dev or `YALA_LIVE_DEMO=true` | Same as `create_profile`. |
 | `/api/relocation/profiles/me` | `GET` | person bearer | Private person hub. |
 | `/api/relocation/profiles/me` | `PATCH` | person bearer | Update the caller's reusable profile fields and recalculate the active case recommendations; keeps profile/case ids and timeline. |
 | `/api/relocation/properties/selection` | `POST` | person bearer | Select or clear an affordable, policy-fitting recommended rental with `{ caseId, listingId }`; persists the case selection and returns the updated private hub. Send `listingId: null` to clear. |
 | `/api/relocation/programs` | `GET` | HR bearer | Programs owned by the HR session's organization. |
-| `/api/relocation/programs` | `POST` | none | Same as `create_program`. |
+| `/api/relocation/programs` | `POST` | none; dev or `YALA_LIVE_DEMO=true` | Same as `create_program`. |
 | `/api/relocation/programs/:programId/hr` | `GET` | HR bearer | HR-safe program view. |
 | `/api/relocation/invites` | `POST` | HR bearer | Create a one-time program invite without accessing a private profile; optional `{ employeeLabel, expiresAt }`, returns `{ inviteId, token, expiresAt }`. |
-| `/api/relocation/invites/:inviteId/accept` | `POST` | invite token body; dev only | Accept invite once with `{ token, profile }` or `{ token, existingSessionToken }`; creates or attaches the employee's private case and returns a person session. |
+| `/api/relocation/invites/:inviteId/accept` | `POST` | invite token body; dev or a demo-scoped invite in `YALA_LIVE_DEMO` | Accept invite once with `{ token, profile }` or `{ token, existingSessionToken }`; creates or attaches the employee's private case and returns a person view/session. |
 | `/api/relocation/actions/opened` | `POST` | person or HR bearer | Record server-known task/recommendation target as `opened`; request body is `{ caseId, targetId }`. |
 | `/api/relocation/actions/status` | `POST` | person or HR bearer | Manual progress report for permitted tasks only: `{ caseId, taskId, state, reference?, blocker?, nextAction? }`. Allows `saved`, `resolved` (stored as `saved`), `reported_submitted`, `reported_booked`, `blocked`; rejects `confirmed`. |
 | `/api/relocation/consents` | `GET` | person bearer | List caller's consent grants. |

@@ -32,7 +32,7 @@ type HomeRecommendation = Extract<Recommendation, { type: "home" }>;
 type ActionRecommendation = Exclude<Recommendation, { type: "home" }>;
 type EmployeeToken = DemoCapabilities["employees"][number];
 type Notice = { tone: "neutral" | "success" | "error"; text: string } | null;
-type SavedSession = { hrToken: string | null; programId: string | null; employeeTokens: EmployeeToken[]; selectedId: string };
+type SavedSession = { hrToken: string | null; programId: string | null; employeeTokens: EmployeeToken[]; selectedId: string; people?: PersonHub[]; hrView?: HrView | null; demoMode?: boolean };
 type PlanningContext = { nationality: string; purposeOfMove: string; employmentStatus: string; sponsor: string; alreadyInUae: string; documentsAvailable: string[]; completedSteps: string[] };
 type PersonalValues = { displayName: string; workType: string; household: string; incomeMin: number; incomeMax: number | null; preferredAreaIds: string[]; planningContext: PlanningContext };
 type ProgramValues = { organizationName: string; hasUaeEntity: boolean; jurisdiction: string; officeAreaId: string; teamSize: number; moveDate: string; annualAllowanceAed: number };
@@ -97,11 +97,18 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
       setProgramId(saved.programId);
       setEmployeeTokens(saved.employeeTokens);
       setSelectedId(saved.selectedId);
+      if (saved.people) setPeople(saved.people);
+      if (saved.hrView) setHrView(saved.hrView);
+      setDemoMode(Boolean(saved.demoMode));
       try {
         await refreshFromTokens(saved.programId, saved.hrToken, saved.employeeTokens, saved.selectedId);
       } catch (error) {
-        clearSavedSession();
-        if (mounted) setNotice({ tone: "error", text: `${error instanceof Error ? error.message : "Could not restore session."} Create or join again to continue.` });
+        if (mounted && !saved.people?.length && !saved.hrView) {
+          clearSavedSession();
+          setNotice({ tone: "error", text: `${error instanceof Error ? error.message : "Could not restore session."} Create or join again to continue.` });
+        } else if (mounted) {
+          setNotice({ tone: "neutral", text: "Showing the personalized workspace saved in this browser. Live status could not be refreshed; re-create the workspace if you need to submit a new update." });
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -147,6 +154,7 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
   async function seedDemo() {
     setBusy(true);
     setNotice(null);
+    clearSavedSession();
     try {
       const seeded = await apiPost<DemoCapabilities>("/api/relocation/bootstrap");
       setDemoMode(true);
@@ -154,8 +162,9 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
       setProgramId(seeded.programId);
       setEmployeeTokens(seeded.employees);
       setSelectedId(seeded.employees[0]?.personId ?? "");
-      saveSession({ hrToken: seeded.hrSessionToken, programId: seeded.programId, employeeTokens: seeded.employees, selectedId: seeded.employees[0]?.personId ?? "" });
-      await refreshFromTokens(seeded.programId, seeded.hrSessionToken, seeded.employees, seeded.employees[0]?.personId ?? "");
+      setPeople(seeded.views);
+      setHrView(seeded.hrView);
+      saveSession({ hrToken: seeded.hrSessionToken, programId: seeded.programId, employeeTokens: seeded.employees, selectedId: seeded.employees[0]?.personId ?? "", people: seeded.views, hrView: seeded.hrView, demoMode: true });
       setNotice({ tone: "success", text: "Fictional five-person demo loaded. It sends nothing externally." });
       router.push("/company/dashboard");
     } catch (error) {
@@ -170,12 +179,16 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
     setNotice(null);
     try {
       const created = await apiPost<ProfileCreatePayload>("/api/relocation/profiles", profileBody(values));
-      const hub = await apiGet<PersonHubPayload>("/api/relocation/profiles/me", created.sessionToken);
-      const token = { personId: hub.view.profile.id, displayName: hub.view.profile.displayName, sessionToken: created.sessionToken };
-      setPeople([hub.view]);
+      const hub = created.view ?? (await apiGet<PersonHubPayload>("/api/relocation/profiles/me", created.sessionToken)).view;
+      const token = { personId: hub.profile.id, displayName: hub.profile.displayName, sessionToken: created.sessionToken };
+      setHrToken(null);
+      setProgramId(null);
+      setHrView(null);
+      setDemoMode(false);
+      setPeople([hub]);
       setEmployeeTokens([token]);
-      setSelectedId(hub.view.profile.id);
-      saveSession({ employeeTokens: [token], selectedId: hub.view.profile.id });
+      setSelectedId(hub.profile.id);
+      saveSession({ hrToken: null, programId: null, hrView: null, employeeTokens: [token], selectedId: hub.profile.id, people: [hub], demoMode: false });
       setNotice({ tone: "success", text: "Private move hub created." });
       router.push("/move");
     } catch (error) {
@@ -220,9 +233,9 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
       });
       setHrToken(created.hrSessionToken);
       setProgramId(created.program.id);
-      saveSession({ hrToken: created.hrSessionToken, programId: created.program.id });
-      const fresh = await apiGet<HrViewPayload>(`/api/relocation/programs/${created.program.id}/hr`, created.hrSessionToken);
-      setHrView(fresh.view);
+      if (!created.view) throw new Error("Company program response is missing its initial dashboard.");
+      setHrView(created.view);
+      saveSession({ hrToken: created.hrSessionToken, programId: created.program.id, hrView: created.view, demoMode: false });
       setNotice({ tone: "success", text: "Company move program created. Create an invite link from the dashboard." });
       router.push("/company/dashboard");
     } catch (error) {
@@ -256,13 +269,14 @@ export function BankableRelocationApp({ screen }: { screen: RelocationScreen }) 
     setNotice(null);
     try {
       const accepted = await apiPost<ProfileCreatePayload>(`/api/relocation/invites/${inviteId}/accept`, { token, profile: profileBody(values) });
-      const hub = await apiGet<PersonHubPayload>("/api/relocation/profiles/me", accepted.sessionToken);
-      const nextToken = { personId: hub.view.profile.id, displayName: hub.view.profile.displayName, sessionToken: accepted.sessionToken };
+      const hub = accepted.view ?? (await apiGet<PersonHubPayload>("/api/relocation/profiles/me", accepted.sessionToken)).view;
+      const nextToken = { personId: hub.profile.id, displayName: hub.profile.displayName, sessionToken: accepted.sessionToken };
       const nextTokens = upsertToken(employeeTokens, nextToken);
-      setPeople((current) => upsertHub(current, hub.view));
+      const nextPeople = upsertHub(people, hub);
+      setPeople(nextPeople);
       setEmployeeTokens(nextTokens);
-      setSelectedId(hub.view.profile.id);
-      saveSession({ employeeTokens: nextTokens, selectedId: hub.view.profile.id });
+      setSelectedId(hub.profile.id);
+      saveSession({ employeeTokens: nextTokens, selectedId: hub.profile.id, people: nextPeople });
       setNotice({ tone: "success", text: "Invite accepted. Your private move hub is ready." });
       router.push("/move");
     } catch (error) {
@@ -404,7 +418,7 @@ function StartScreen({ busy, onDemo }: { busy: boolean; onDemo: () => void }) {
 }
 
 function MoveOnboarding({ busy, preferredArea, onCreate }: { busy: boolean; preferredArea: string; onCreate: (values: PersonalValues) => Promise<void> }) {
-  return <section className="screen-card"><p className="kicker">My move</p><h1>Create your private Abu Dhabi move hub.</h1><PersonalForm busy={busy} preferredArea={preferredArea} submitLabel="Create private hub" onSubmit={onCreate} /><p className="form-note">Planning assumptions can be adjusted later. Blank income cannot be filtered; zero is accepted when intentional and will produce an honest no-match plan.</p></section>;
+  return <section className="screen-card"><p className="kicker">My move</p><h1>Create your private Abu Dhabi move hub.</h1><p className="lead">Your income, household and work setup shape a tailored housing shortlist and next-step roadmap.</p><PersonalForm busy={busy} preferredArea={preferredArea} submitLabel="Create private hub" onSubmit={onCreate} /><p className="form-note">Planning assumptions can be adjusted later. Blank income cannot be filtered; zero is accepted when intentional and will produce an honest no-match plan. Property options come from the included dated dataset; verify availability with the source before acting. This hackathon preview is not a secure place for passport, bank or other sensitive documents.</p></section>;
 }
 
 function JoinScreen({ busy, issuedInvite, preferredArea, hasExistingProfile, onAccept, onAcceptExisting }: { busy: boolean; issuedInvite: InviteCreatePayload | null; preferredArea: string; hasExistingProfile: boolean; onAccept: (inviteId: string, token: string, values: PersonalValues) => Promise<void>; onAcceptExisting: (inviteId: string, token: string) => Promise<void> }) {

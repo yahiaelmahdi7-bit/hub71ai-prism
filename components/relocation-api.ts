@@ -22,13 +22,15 @@ export type { Recommendation, StatusEvent };
 export type DemoCapabilities = {
   programId: string;
   hrSessionToken: string;
+  hrView: HrView;
   employees: { personId: string; displayName: string; sessionToken: string }[];
+  views: PersonHub[];
 };
 
 export type PersonHubPayload = { view: PersonHub };
 export type HrViewPayload = { view: HrView };
-export type ProfileCreatePayload = { sessionToken: string; profile: PersonHub["profile"]; case: PersonHub["case"] };
-export type ProgramCreatePayload = { hrSessionToken: string; program: HrView["program"] };
+export type ProfileCreatePayload = { sessionToken: string; profile: PersonHub["profile"]; case: PersonHub["case"]; view?: PersonHub };
+export type ProgramCreatePayload = { hrSessionToken: string; program: HrView["program"]; view?: HrView };
 export type InviteCreatePayload = { inviteId: string; token: string; expiresAt?: string };
 export type OpenedActionPayload = { ok: true; latestEvent?: StatusEvent };
 export type ManualStatusPayload = { latestEvent?: StatusEvent };

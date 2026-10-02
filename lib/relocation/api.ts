@@ -41,7 +41,7 @@ function prototypeSessionsAllowed() {
 class PrototypeSessionsDisabledError extends Error {
   constructor() {
     super(process.env.NODE_ENV === "production" && process.env.YALA_LIVE_DEMO === "true"
-      ? "Only the seeded fictional demo is enabled in production. Real profile and company sessions require production identity and durable storage."
+      ? "This hackathon deployment accepts demo-scoped profiles and company programs only. Do not enter sensitive identity or financial documents."
       : "Prototype relocation sessions are disabled in production. Configure production identity and durable storage before enabling these routes.");
     this.name = "PrototypeSessionsDisabledError";
   }
@@ -52,7 +52,7 @@ export async function seedDemoWithCapabilities() {
   const demo = createEstablishedCompanyDemo();
   const programId = "program-falcon-october-2026";
   const organizationId = "org-falcon-analytics";
-  let response: { programId: string; hrSessionToken: string; employees: { personId: string; displayName: string; sessionToken: string }[] } | null = null;
+  let response: { programId: string; hrSessionToken: string; hrView: ReturnType<typeof hrProgramView>; employees: { personId: string; displayName: string; sessionToken: string }[]; views: ReturnType<typeof personHub>[] } | null = null;
 
   await relocationStore.update((current) => {
     const hasDemo = current.programs.some((program) => program.id === demo.programs[0]?.id);
@@ -92,20 +92,20 @@ export async function seedDemoWithCapabilities() {
       return { person, token, session };
     });
 
+    const nextData = { ...data, sessions: [...data.sessions, hrSession, ...employeeTokens.map((item) => item.session)] };
     response = {
       programId: program.id,
       hrSessionToken,
+      hrView: hrProgramView(nextData, program.id, organization.id),
       employees: employeeTokens.map(({ person, token }) => ({
         personId: person.id,
         displayName: person.displayName,
         sessionToken: token,
       })),
+      views: employeeTokens.map(({ person, session }) => personHub(nextData, person.id, session.actor.kind === "person" ? session.actor.activeCaseId : undefined)),
     };
 
-    return {
-      ...data,
-      sessions: [...data.sessions, hrSession, ...employeeTokens.map((item) => item.session)],
-    };
+    return nextData;
   }, false);
 
   if (!response) throw new Error("Demo bootstrap failed.");
@@ -179,14 +179,19 @@ export async function createProgram(body: Record<string, unknown>) {
     label: `${organization.name} HR`,
     organizationId,
     programId,
-  });
-  await relocationStore.update((current) => ({
-    ...current,
-    organizations: [...current.organizations, organization],
-    programs: [...current.programs, program],
-    sessions: [...current.sessions, session],
-  }), false);
-  return { hrSessionToken: token, program };
+  }, !prototypeSessionsAllowed());
+  let nextData: RelocationStoreData | null = null;
+  await relocationStore.update((current) => {
+    nextData = {
+      ...current,
+      organizations: [...current.organizations, organization],
+      programs: [...current.programs, program],
+      sessions: [...current.sessions, session],
+    };
+    return nextData;
+  }, false);
+  if (!nextData) throw new Error("Company program creation failed.");
+  return { hrSessionToken: token, program, view: hrProgramView(nextData, programId, organizationId) };
 }
 
 export async function createPrivateProfile(body: Record<string, unknown>) {
@@ -194,16 +199,21 @@ export async function createPrivateProfile(body: Record<string, unknown>) {
   const profile = profileFromInput(body, createdAt);
   const relocationCase = personalCase(profile.id, null, personalHousingPolicy(body), false, createdAt);
   const tasks = personalTasks(relocationCase.id, createdAt, false);
-  const { token, session } = createSession({ kind: "person", id: `session-${profile.id}-${crypto.randomUUID()}`, label: profile.displayName, personId: profile.id, activeCaseId: relocationCase.id });
-  await relocationStore.update((current) => ({
-    ...current,
-    people: [...current.people, profile],
-    cases: [...current.cases, relocationCase],
-    tasks: [...current.tasks, ...tasks],
-    recommendations: { ...current.recommendations, [relocationCase.id]: buildRecommendations(profile, null) },
-    sessions: [...current.sessions, session],
-  }), false);
-  return createProfileResponse(profile, relocationCase, token);
+  const { token, session } = createSession({ kind: "person", id: `session-${profile.id}-${crypto.randomUUID()}`, label: profile.displayName, personId: profile.id, activeCaseId: relocationCase.id }, !prototypeSessionsAllowed());
+  let nextData: RelocationStoreData | null = null;
+  await relocationStore.update((current) => {
+    nextData = {
+      ...current,
+      people: [...current.people, profile],
+      cases: [...current.cases, relocationCase],
+      tasks: [...current.tasks, ...tasks],
+      recommendations: { ...current.recommendations, [relocationCase.id]: buildRecommendations(profile, null) },
+      sessions: [...current.sessions, session],
+    };
+    return nextData;
+  }, false);
+  if (!nextData) throw new Error("Private profile creation failed.");
+  return { ...createProfileResponse(profile, relocationCase, token), view: requirePersonHub(nextData, session.actor) };
 }
 
 export async function updatePrivateProfile(request: Request, body: Record<string, unknown>) {
@@ -273,6 +283,7 @@ export async function createInvite(request: Request, body: Record<string, unknow
     expiresAt,
     acceptedAt: null,
     acceptedPersonId: null,
+    ...(!prototypeSessionsAllowed() ? { demoOnly: true as const } : {}),
   };
   await relocationStore.update((current) => {
     requiredProgram(current, actor.programId);
@@ -282,14 +293,15 @@ export async function createInvite(request: Request, body: Record<string, unknow
 }
 
 export async function acceptInvite(inviteId: string, body: Record<string, unknown>) {
-  if (!prototypeSessionsAllowed()) throw new PrototypeSessionsDisabledError();
+  if (!prototypeSessionsAllowed() && !liveDemoBootstrapAllowed()) throw new PrototypeSessionsDisabledError();
   const token = requiredString(body.token, "token");
   const createdAt = new Date().toISOString();
-  let response: ReturnType<typeof createProfileResponse> | null = null;
+  let response: (ReturnType<typeof createProfileResponse> & { view: ReturnType<typeof requirePersonHub> }) | null = null;
 
   await relocationStore.update((current) => {
     const invite = (current.pendingInvites ?? []).find((item) => item.id === inviteId);
     if (!invite) throw new Error(`Unknown invite ${inviteId}.`);
+    if (!prototypeSessionsAllowed() && invite.demoOnly !== true) throw new PrototypeSessionsDisabledError();
     if (invite.acceptedAt) throw new Error("Invite has already been accepted.");
     if (Date.parse(invite.expiresAt) <= Date.now()) throw new Error("Invite has expired.");
     if (invite.tokenHash !== hashToken(token)) throw new Error("Invite token is invalid.");
@@ -305,7 +317,7 @@ export async function acceptInvite(inviteId: string, body: Record<string, unknow
       label: profile.displayName,
       personId: profile.id,
       activeCaseId: relocationCase.id,
-    });
+    }, !prototypeSessionsAllowed());
     const acceptEvent = {
       id: `event-${relocationCase.id}-${invite.id}`,
       caseId: relocationCase.id,
@@ -318,9 +330,7 @@ export async function acceptInvite(inviteId: string, body: Record<string, unknow
       blocker: null,
     };
 
-    response = createProfileResponse(profile, relocationCase, sessionToken);
-
-    return {
+    const next: RelocationStoreData = {
       ...current,
       people: current.people.some((item) => item.id === profile.id) ? current.people : [...current.people, profile],
       cases: existingCase ? current.cases : [...current.cases, relocationCase],
@@ -337,6 +347,11 @@ export async function acceptInvite(inviteId: string, body: Record<string, unknow
         : [...current.sessions, session],
       pendingInvites: (current.pendingInvites ?? []).map((item) => item.id === invite.id ? { ...item, acceptedAt: createdAt, acceptedPersonId: profile.id } : item),
     };
+    response = {
+      ...createProfileResponse(profile, relocationCase, sessionToken),
+      view: requirePersonHub(next, { ...session.actor, kind: "person", personId: profile.id, activeCaseId: relocationCase.id }),
+    };
+    return next;
   });
 
   if (!response) throw new Error("Invite acceptance failed.");
@@ -427,6 +442,7 @@ function profileForAcceptedInvite(data: RelocationStoreData, body: Record<string
   if (typeof body.existingSessionToken === "string" && body.existingSessionToken.trim()) {
     const session = data.sessions.find((item) => item.tokenHash === hashToken(body.existingSessionToken as string));
     if (!session || session.actor.kind !== "person") throw new Error("Existing person session token is invalid.");
+    if (!prototypeSessionsAllowed() && session.demoOnly !== true) throw new PrototypeSessionsDisabledError();
     if (Date.parse(session.expiresAt) <= Date.now()) throw new Error("Existing person session token has expired.");
     const profile = requiredPerson(data, session.actor.personId);
     return { profile, existingSession: { token: body.existingSessionToken as string, session } };

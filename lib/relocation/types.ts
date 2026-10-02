@@ -80,6 +80,7 @@ export type PendingInvite = {
   expiresAt: string;
   acceptedAt: string | null;
   acceptedPersonId: string | null;
+  demoOnly?: true;
 };
 
 export type RelocationStoreData = {

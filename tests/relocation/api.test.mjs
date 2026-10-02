@@ -21,7 +21,7 @@ test.after(async () => {
   await unlink(dbPath).catch(() => {});
 });
 
-test("production live-demo switch enables only fictional demo sessions", async () => {
+test("production live-demo switch enables personalized demo-scoped journeys", async () => {
   const originalNodeEnv = process.env.NODE_ENV;
   const originalLiveDemo = process.env.YALA_LIVE_DEMO;
   process.env.NODE_ENV = "production";
@@ -46,6 +46,8 @@ test("production live-demo switch enables only fictional demo sessions", async (
     const demo = await response.json();
     assert.equal(response.status, 200);
     assert.equal(demo.employees.length, 5);
+    assert.equal(demo.views.length, 5);
+    assert.equal(demo.hrView.aggregate.cases, 5);
 
     const employeeHub = await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
       headers: { authorization: `Bearer ${demo.employees[0].sessionToken}` },
@@ -55,10 +57,20 @@ test("production live-demo switch enables only fictional demo sessions", async (
     const profileCreation = await profilesRoute.POST(new Request("http://bankable.test/api/relocation/profiles", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ workType: "freelancer", adults: 1, children: 0, minMonthlyAed: 12000 }),
+      body: JSON.stringify({ displayName: "Fictional Live Judge", workType: "freelancer", adults: 1, children: 0, minMonthlyAed: 12000, maxMonthlyAed: 18000 }),
     }));
-    assert.equal(profileCreation.status, 503);
-    assert.match((await profileCreation.json()).error, /Only the seeded fictional demo is enabled/);
+    const createdProfile = await profileCreation.json();
+    assert.equal(profileCreation.status, 200);
+    assert.ok(createdProfile.sessionToken);
+    assert.equal(createdProfile.view.profile.displayName, "Fictional Live Judge");
+    assert.equal(createdProfile.view.profile.workType, "freelancer");
+    assert.ok(createdProfile.view.recommendations.length > 0);
+    assert.ok(createdProfile.view.housingSearch.annualBudgetAed > 0);
+    const manualHub = await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
+      headers: { authorization: `Bearer ${createdProfile.sessionToken}` },
+    }));
+    assert.equal(manualHub.status, 200);
+    assert.equal((await manualHub.json()).view.profile.id, createdProfile.profile.id);
 
     const programCreation = await programsRoute.POST(new Request("http://bankable.test/api/relocation/programs", {
       method: "POST",
@@ -71,11 +83,29 @@ test("production live-demo switch enables only fictional demo sessions", async (
         annualAllowanceAed: 100000,
       }),
     }));
-    assert.equal(programCreation.status, 503);
+    const createdProgram = await programCreation.json();
+    assert.equal(programCreation.status, 200);
+    assert.equal(createdProgram.view.aggregate.cases, 0);
+    const issuedInvite = await invitesRoute.POST(new Request("http://bankable.test/api/relocation/invites", {
+      method: "POST",
+      headers: { authorization: `Bearer ${createdProgram.hrSessionToken}`, "content-type": "application/json" },
+      body: JSON.stringify({ employeeLabel: "Fictional employee" }),
+    }));
+    assert.equal(issuedInvite.status, 200);
+    const invite = await issuedInvite.json();
+    const accepted = await acceptInviteRoute.POST(new Request(`http://bankable.test/api/relocation/invites/${invite.inviteId}/accept`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ token: invite.token, profile: { displayName: "Fictional Invitee", workType: "employee", adults: 1, children: 0, minMonthlyAed: 18000 } }),
+    }), { params: Promise.resolve({ inviteId: invite.inviteId }) });
+    assert.equal(accepted.status, 200);
+    const acceptedBody = await accepted.json();
+    assert.equal(acceptedBody.view.profile.displayName, "Fictional Invitee");
+    assert.equal(acceptedBody.view.case.programId, createdProgram.program.id);
 
     delete process.env.YALA_LIVE_DEMO;
     const disabledAgain = await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
-      headers: { authorization: `Bearer ${demo.employees[0].sessionToken}` },
+      headers: { authorization: `Bearer ${createdProfile.sessionToken}` },
     }));
     assert.equal(disabledAgain.status, 503);
   } finally {
