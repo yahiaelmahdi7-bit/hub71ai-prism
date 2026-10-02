@@ -17,9 +17,10 @@ export const EMPTY_STORE: RelocationStoreData = {
 };
 
 type DatabaseRow = { body: string };
-type EventLedgerRow = { body: string };
+type EventLedgerRow = { id?: string; body: string };
 type StatementSync = {
   get: (...params: unknown[]) => unknown;
+  all: (...params: unknown[]) => unknown[];
   run: (...params: unknown[]) => unknown;
 };
 type DatabaseSync = {
@@ -34,6 +35,7 @@ const sqlite = process.getBuiltinModule("node:sqlite") as unknown as {
 
 export class SqliteRelocationStore {
   private readonly filePath: string;
+  private mutationQueue: Promise<unknown> = Promise.resolve();
 
   constructor(filePath: string) {
     this.filePath = filePath;
@@ -56,34 +58,44 @@ export class SqliteRelocationStore {
   }
 
   async write(data: RelocationStoreData): Promise<void> {
-    const db = this.open();
-    try {
-      db.exec("begin immediate");
-      this.writeWithDb(db, data);
-      db.exec("commit");
-    } catch (error) {
-      db.exec("rollback");
-      throw error;
-    } finally {
-      db.close();
-    }
+    await this.enqueueMutation(() => {
+      const db = this.open();
+      try {
+        db.exec("begin immediate");
+        this.writeWithDb(db, data);
+        db.exec("commit");
+      } catch (error) {
+        db.exec("rollback");
+        throw error;
+      } finally {
+        db.close();
+      }
+    });
   }
 
-  async update(mutator: (data: RelocationStoreData) => RelocationStoreData | Promise<RelocationStoreData>, seed = true) {
-    const db = this.open();
-    try {
-      db.exec("begin immediate");
-      const current = this.readWithDb(db, seed);
-      const next = await mutator(current);
-      this.writeWithDb(db, next);
-      db.exec("commit");
-      return next;
-    } catch (error) {
-      db.exec("rollback");
-      throw error;
-    } finally {
-      db.close();
-    }
+  async update(mutator: (data: RelocationStoreData) => RelocationStoreData, seed = false) {
+    return this.enqueueMutation(() => {
+      const db = this.open();
+      try {
+        db.exec("begin immediate");
+        const current = this.readWithDb(db, seed);
+        const next = mutator(current);
+        this.writeWithDb(db, next);
+        db.exec("commit");
+        return next;
+      } catch (error) {
+        db.exec("rollback");
+        throw error;
+      } finally {
+        db.close();
+      }
+    });
+  }
+
+  private enqueueMutation<T>(operation: () => T): Promise<T> {
+    const next = this.mutationQueue.then(operation, operation);
+    this.mutationQueue = next.catch(() => undefined);
+    return next;
   }
 
   private open(): DatabaseSync {
@@ -120,6 +132,12 @@ export class SqliteRelocationStore {
   }
 
   private writeWithDb(db: DatabaseSync, data: RelocationStoreData) {
+    const priorEvents = db.prepare("select id, body from relocation_event_ledger").all() as EventLedgerRow[];
+    const nextEventIds = new Set(data.events.map((event) => event.id));
+    const missingEvent = priorEvents.find((event) => event.id && !nextEventIds.has(event.id));
+    if (missingEvent?.id) {
+      throw new Error(`Status event ${missingEvent.id} is append-only and cannot be removed.`);
+    }
     const existingEvents = new Map<string, string>();
     for (const event of data.events) {
       const body = JSON.stringify(event);

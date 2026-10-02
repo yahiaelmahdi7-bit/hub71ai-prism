@@ -47,6 +47,14 @@ flowchart TD
 
 The company and individual routes share the same personal hub, recommendation engine, and status ledger. A company adds a move program, policy, employee invites, and an employer view; it does not duplicate the employee app.
 
+## Connected page flow
+
+The landing page at `/` introduces the three journeys. `/start` chooses one, `/move` creates or resumes a private plan, `/company` creates a team program, and `/join` accepts an invitation into the same private journey. A company opens its separate workspace at `/company/dashboard`.
+
+Public `/areas` and `/setup` directories lead to focused detail pages with source links and a useful next action. The private workspace has distinct housing, workspace, setup, finance, profile and timeline pages. Onboarding forms do not repeat on every dashboard page. Direct visits, back navigation and refresh preserve the relevant browser session.
+
+A fresh browser has no demo records selected. A new company starts with no employees and can create its first invite link. A private plan with no affordable homes still offers work and official setup actions, explains the housing gap and lets the person edit the same profile. Empty timelines show a first action. The fictional five-employee demonstration is an explicit choice.
+
 ## Screens to build
 
 | Screen | Minimum input or content | Main action |

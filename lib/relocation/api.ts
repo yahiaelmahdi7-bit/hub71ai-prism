@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { buildRecommendations, createEstablishedCompanyDemo, hrProgramView, personHub } from "./data.ts";
+import { getRentalCatalog } from "../properties/catalog.ts";
 import { SqliteRelocationStore, defaultStorePath } from "./store.ts";
 import { grantConsent, hashToken, randomToken, recordExternalOpen, reportManualStatus, revokeConsent } from "./status.ts";
 import type {
@@ -71,6 +72,7 @@ export async function seedDemoWithCapabilities() {
         id: `session-${person.id}-${crypto.randomUUID()}`,
         label: person.displayName,
         personId: person.id,
+        activeCaseId: data.cases.find((relocationCase) => relocationCase.programId === program.id && relocationCase.personId === person.id)?.id,
       });
       return { person, token, session };
     });
@@ -96,7 +98,7 @@ export async function seedDemoWithCapabilities() {
 }
 
 export async function readSeeded() {
-  return relocationStore.read(true);
+  return relocationStore.read(false);
 }
 
 export async function requireActor(request: Request): Promise<{ data: RelocationStoreData; actor: CapabilityActor }> {
@@ -117,7 +119,7 @@ export function publicProfile(profile: PersonProfile) {
 
 export function requirePersonHub(data: RelocationStoreData, actor: CapabilityActor) {
   if (actor.kind !== "person") throw new Error("Person session is required.");
-  return personHub(data, actor.personId);
+  return personHub(data, actor.personId, actor.activeCaseId);
 }
 
 export function requireHrView(data: RelocationStoreData, actor: CapabilityActor, programId: string) {
@@ -143,7 +145,7 @@ export async function createProgram(body: Record<string, unknown>) {
     hasUaeEntity,
     jurisdiction,
     officeAreaId: requiredAreaId(body.officeAreaId, "officeAreaId"),
-    teamSize: requiredWholeNumber(body.teamSize, "teamSize", 1),
+    teamSize: requiredWholeNumber(body.teamSize, "teamSize", 0),
     moveDate: requiredDate(body.moveDate, "moveDate"),
     housingPolicy: {
       annualAllowanceAed: requiredMoney(body.annualAllowanceAed, "annualAllowanceAed", 0),
@@ -171,12 +173,9 @@ export async function createProgram(body: Record<string, unknown>) {
 export async function createPrivateProfile(body: Record<string, unknown>) {
   const createdAt = new Date().toISOString();
   const profile = profileFromInput(body, createdAt);
-  const relocationCase = personalCase(profile.id, null, {
-    annualAllowanceAed: typeof body.annualAllowanceAed === "number" ? requiredMoney(body.annualAllowanceAed, "annualAllowanceAed", 0) : Number.MAX_SAFE_INTEGER,
-    maxRentShareOfIncome: optionalShare(body.maxRentShareOfIncome, 0.33),
-  }, false, createdAt);
+  const relocationCase = personalCase(profile.id, null, personalHousingPolicy(body), false, createdAt);
   const tasks = personalTasks(relocationCase.id, createdAt, false);
-  const { token, session } = createSession({ kind: "person", id: `session-${profile.id}-${crypto.randomUUID()}`, label: profile.displayName, personId: profile.id });
+  const { token, session } = createSession({ kind: "person", id: `session-${profile.id}-${crypto.randomUUID()}`, label: profile.displayName, personId: profile.id, activeCaseId: relocationCase.id });
   await relocationStore.update((current) => ({
     ...current,
     people: [...current.people, profile],
@@ -186,6 +185,54 @@ export async function createPrivateProfile(body: Record<string, unknown>) {
     sessions: [...current.sessions, session],
   }), false);
   return createProfileResponse(profile, relocationCase, token);
+}
+
+export async function updatePrivateProfile(request: Request, body: Record<string, unknown>) {
+  const { actor } = await requireActor(request);
+  if (actor.kind !== "person") throw new Error("Person session is required.");
+  const updatedAt = new Date().toISOString();
+  let view: ReturnType<typeof requirePersonHub> | null = null;
+
+  await relocationStore.update((current) => {
+    const existing = requiredPerson(current, actor.personId);
+    const activeCase = activeCaseFor(current, actor);
+    const mergedInput = {
+      displayName: body.displayName ?? existing.displayName,
+      workType: body.workType ?? existing.workType,
+      adults: body.adults ?? existing.household.adults,
+      children: body.children ?? existing.household.children,
+      minMonthlyAed: body.minMonthlyAed ?? existing.income.minMonthlyAed,
+      maxMonthlyAed: body.maxMonthlyAed ?? existing.income.maxMonthlyAed,
+      preferredAreaIds: body.preferredAreaIds ?? existing.preferredAreaIds,
+    };
+    const validated = profileFromInput(mergedInput, existing.createdAt);
+    const profile: PersonProfile = {
+      ...existing,
+      displayName: validated.displayName,
+      workType: validated.workType,
+      household: validated.household,
+      income: validated.income,
+      preferredAreaIds: validated.preferredAreaIds,
+      updatedAt,
+    };
+    const program = activeCase.programId ? current.programs.find((item) => item.id === activeCase.programId) ?? null : null;
+    const next: RelocationStoreData = {
+      ...current,
+      people: current.people.map((item) => item.id === profile.id ? profile : item),
+      recommendations: {
+        ...current.recommendations,
+        [activeCase.id]: buildRecommendations(profile, program),
+      },
+      sessions: current.sessions.map((session) => session.actor.kind === "person" && session.actor.personId === profile.id
+        ? { ...session, actor: { ...session.actor, label: profile.displayName } }
+        : session),
+    };
+    view = requirePersonHub(next, { ...actor, label: profile.displayName, activeCaseId: activeCase.id });
+    return next;
+  });
+
+  if (!view) throw new Error("Profile update failed.");
+  return { view };
 }
 
 export async function createInvite(request: Request, body: Record<string, unknown>) {
@@ -235,6 +282,7 @@ export async function acceptInvite(inviteId: string, body: Record<string, unknow
       id: `session-${profile.id}-${crypto.randomUUID()}`,
       label: profile.displayName,
       personId: profile.id,
+      activeCaseId: relocationCase.id,
     });
     const acceptEvent = {
       id: `event-${relocationCase.id}-${invite.id}`,
@@ -260,7 +308,11 @@ export async function acceptInvite(inviteId: string, body: Record<string, unknow
         [relocationCase.id]: current.recommendations[relocationCase.id] ?? buildRecommendations(profile, program),
       },
       events: [...current.events, acceptEvent],
-      sessions: existingSession ? current.sessions : [...current.sessions, session],
+      sessions: existingSession
+        ? current.sessions.map((item) => item.id === existingSession.session.id && item.actor.kind === "person"
+          ? { ...item, actor: { ...item.actor, activeCaseId: relocationCase.id } }
+          : item)
+        : [...current.sessions, session],
       pendingInvites: (current.pendingInvites ?? []).map((item) => item.id === invite.id ? { ...item, acceptedAt: createdAt, acceptedPersonId: profile.id } : item),
     };
   });
@@ -346,15 +398,29 @@ function profileFromInput(body: ProfileInput, createdAt: string): PersonProfile 
   return {
     id: `person-${crypto.randomUUID()}`,
     displayName: optionalString(body.displayName, "Private mover"),
-    workType: body.workType === "freelancer" || body.workType === "self_employed" ? body.workType : "employee",
+    workType: requiredWorkType(body.workType),
     household: { adults, children },
     income: { minMonthlyAed, maxMonthlyAed },
-    preferredAreaIds: Array.isArray(body.preferredAreaIds) ? body.preferredAreaIds.filter((item): item is string => typeof item === "string" && AREA_ID_PATTERN.test(item)) : [],
+    preferredAreaIds: Array.isArray(body.preferredAreaIds) ? body.preferredAreaIds.filter((item): item is string => typeof item === "string" && isKnownAreaId(item)) : [],
     createdAt,
     updatedAt: createdAt,
     synthetic: false,
     privateEvidence: { incomeDocuments: [], identityEvidence: [], bankResults: [] },
   };
+}
+
+function personalHousingPolicy(body: Record<string, unknown>) {
+  return {
+    annualAllowanceAed: typeof body.annualAllowanceAed === "number" ? requiredMoney(body.annualAllowanceAed, "annualAllowanceAed", 0) : Number.MAX_SAFE_INTEGER,
+    maxRentShareOfIncome: optionalShare(body.maxRentShareOfIncome, 0.33),
+  };
+}
+
+function activeCaseFor(data: RelocationStoreData, actor: Extract<CapabilityActor, { kind: "person" }>) {
+  const cases = data.cases.filter((item) => item.personId === actor.personId);
+  const relocationCase = actor.activeCaseId ? cases.find((item) => item.id === actor.activeCaseId) : cases.at(-1);
+  if (!relocationCase) throw new Error(`No case for ${actor.personId}.`);
+  return relocationCase;
 }
 
 function personalCase(
@@ -408,6 +474,54 @@ function personalTasks(caseId: string, updatedAt: string, sharedWithEmployer: bo
       updatedAt,
       owner: "person",
       nextAction: "Open provider booking or contact page; provider owns booking confirmation.",
+      blocker: null,
+    },
+    {
+      id: `task-setup-${caseId}`,
+      caseId,
+      title: "Start the relevant official setup service",
+      category: "setup",
+      resourceId: null,
+      actionUrl: null,
+      sourceIds: [],
+      sharedWithEmployer,
+      state: "not_started",
+      source,
+      updatedAt,
+      owner: sharedWithEmployer ? "organization" : "person",
+      nextAction: "Open the official service and record a reference only after provider submission.",
+      blocker: null,
+    },
+    {
+      id: `task-residence-${caseId}`,
+      caseId,
+      title: "Track residence and work-permit handoff",
+      category: "residence",
+      resourceId: null,
+      actionUrl: null,
+      sourceIds: [],
+      sharedWithEmployer,
+      state: "not_started",
+      source,
+      updatedAt,
+      owner: sharedWithEmployer ? "organization" : "person",
+      nextAction: "Use the official provider flow and record a reference once submitted.",
+      blocker: null,
+    },
+    {
+      id: `task-insurance-${caseId}`,
+      caseId,
+      title: "Arrange Abu Dhabi health insurance",
+      category: "insurance",
+      resourceId: null,
+      actionUrl: null,
+      sourceIds: [],
+      sharedWithEmployer,
+      state: "not_started",
+      source,
+      updatedAt,
+      owner: sharedWithEmployer ? "organization" : "person",
+      nextAction: "Provider or broker confirms policy status; Bankable records only evidence-backed updates.",
       blocker: null,
     },
     {
@@ -489,9 +603,10 @@ function requiredProgram(data: RelocationStoreData, programId: string) {
 }
 
 function requiredActionState(value: unknown) {
+  if (value === "resolved") return "saved";
   if (value === "saved" || value === "reported_submitted" || value === "reported_booked" || value === "blocked") return value;
   if (value === "confirmed") throw new Error("confirmed requires a provider integration and cannot be client-reported.");
-  throw new Error("state must be saved, reported_submitted, reported_booked, or blocked.");
+  throw new Error("state must be saved, resolved, reported_submitted, reported_booked, or blocked.");
 }
 
 function asFields(value: unknown) {
@@ -535,7 +650,15 @@ function optionalShare(value: unknown, fallback: number) {
 
 function requiredDate(value: unknown, field: string) {
   const text = requiredString(value, field);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(text) || Number.isNaN(Date.parse(`${text}T00:00:00Z`))) throw new Error(`${field} must be a YYYY-MM-DD date.`);
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (!match) throw new Error(`${field} must be a YYYY-MM-DD date.`);
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) {
+    throw new Error(`${field} must be a real YYYY-MM-DD date.`);
+  }
   return text;
 }
 
@@ -548,8 +671,18 @@ function optionalFutureDate(value: unknown, fallback: string, field: string) {
 
 function requiredAreaId(value: unknown, field: string) {
   const text = requiredString(value, field);
-  if (!AREA_ID_PATTERN.test(text)) throw new Error(`${field} must be an area id slug.`);
+  if (!AREA_ID_PATTERN.test(text) || !isKnownAreaId(text)) throw new Error(`${field} must be a supported Abu Dhabi area id.`);
   return text;
+}
+
+function isKnownAreaId(value: string) {
+  const catalog = getRentalCatalog();
+  return [...catalog.snapshot, ...catalog.synthetic].some((home) => home.areaId === value);
+}
+
+function requiredWorkType(value: unknown) {
+  if (value === "employee" || value === "freelancer" || value === "self_employed") return value;
+  throw new Error("workType must be employee, freelancer, or self_employed.");
 }
 
 function validJurisdiction(value: unknown, hasUaeEntity: boolean): MoveProgram["jurisdiction"] {

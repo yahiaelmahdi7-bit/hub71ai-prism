@@ -7,6 +7,7 @@ const privateRoutes = [
   "/api/relocation?view=person&personId=person-sara",
   "/api/relocation?view=hr&programId=program-falcon-october-2026",
   "/api/relocation/profiles",
+  "/api/relocation/profiles/me",
   "/api/relocation/programs",
   "/api/relocation/programs/program-falcon-october-2026/hr",
   "/api/relocation/consents",
@@ -26,7 +27,7 @@ test("private HTTP reads reject anonymous and forged actor headers", options, as
       "x-bankable-actor-label": "Untrusted caller",
     }]) {
       const response = await fetch(target(path), { headers });
-      assert.ok([401, 403, 404].includes(response.status), `${path} exposed a private read: HTTP ${response.status}`);
+      assert.ok([401, 403, 404, 405].includes(response.status), `${path} exposed a private read: HTTP ${response.status}`);
       const body = await response.text();
       assert.doesNotMatch(body, /incomeDocuments|identityEvidence|bankResults|minMonthlyAed|privateEvidence/, `${path} returned private fields on rejection`);
     }
@@ -57,10 +58,12 @@ test("default property HTTP feed is dated and separates synthetic homes", option
   const response = await fetch(target("/api/properties?limit=12"));
   assert.equal(response.status, 200);
   const payload = await response.json();
-  assert.ok(Array.isArray(payload.snapshot), "Default feed must expose dated snapshot inventory");
+  assert.equal(payload.snapshot.sourceKind, "snapshot");
+  assert.ok(Number.isFinite(Date.parse(payload.snapshot.checkedAt)));
+  assert.ok(Array.isArray(payload.snapshot.listings), "Default feed must expose dated snapshot inventory");
   assert.ok(Array.isArray(payload.synthetic), "Synthetic inventory must be separate");
   assert.equal(payload.sourceAttempts.length, 0, "Default feed must not silently scrape property portals");
-  for (const home of payload.snapshot) {
+  for (const home of payload.snapshot.listings) {
     assert.equal(home.synthetic, false);
     assert.equal(home.sourceKind, "snapshot");
     assert.equal(home.availability, "unconfirmed");

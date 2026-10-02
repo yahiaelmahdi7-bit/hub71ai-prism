@@ -41,6 +41,17 @@ for (const groupName of ["areas", "workspaces", "services", "financialFactors"])
   }
 }
 
+for (const area of catalog.areas) {
+  const summary = area.summary.toLowerCase();
+  assert.doesNotMatch(summary, /property finder|snapshot|calibration/, `${area.id} summary must not cite uncataloged property evidence`);
+  assert.doesNotMatch(summary, /commute time|car-based|lifestyle-led|premium/, `${area.id} summary must not invent lifestyle or commute positioning`);
+
+  if (area.sourceIds.length === 1 && area.sourceIds[0] === "adrec-rental-index") {
+    assert.match(summary, /adrec|rental-index|rental benchmarking|area filter/, `${area.id} must describe ADREC-only support as benchmark guidance`);
+    assert.match(summary, /dated|source|evidence|listing/, `${area.id} must require separate dated evidence for specific recommendations`);
+  }
+}
+
 for (const factor of catalog.financialFactors) {
   assert.equal(factor.providerDecides, true, `${factor.id} must stay provider-decided`);
 }

@@ -15,10 +15,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-khalifa-city-150462347.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 40000, "period": "yearly", "annualizedAed": 40000, "note": "Observed directly on opened listing page." },
+      "observedPrice": {
+        "amountAed": 40000,
+        "period": "yearly",
+        "annualizedAed": 40000,
+        "note": "Observed directly on opened listing page."
+      },
       "verification": "page_opened",
-      "supportedClaims": ["AED 40,000 yearly", "studio", "1 bath", "550 ft²", "Khalifa City, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "supportedClaims": [
+        "AED 40,000 yearly",
+        "studio",
+        "1 bath",
+        "550 ft²",
+        "Khalifa City, Abu Dhabi"
+      ],
+      "limitations": [
+        "Availability must be confirmed with the portal or agent."
+      ]
     },
     {
       "id": "pf-khalifa-1br-143750243",
@@ -27,10 +40,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-khalifa-city-khalifa-city-a-143750243.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 75000, "period": "yearly", "annualizedAed": 75000, "note": "Page title says 6500/Month, but the opened page body states AED 75,000 yearly and 12 cheques; Bankable uses the observed yearly rent." },
+      "observedPrice": {
+        "amountAed": 75000,
+        "period": "yearly",
+        "annualizedAed": 75000,
+        "note": "Page title says 6500/Month, but the opened page body states AED 75,000 yearly and 12 cheques; Bankable uses the observed yearly rent."
+      },
       "verification": "page_opened",
-      "supportedClaims": ["AED 75,000 yearly", "1 bed", "1 bath", "1,200 ft²", "Khalifa City A, Khalifa City, Abu Dhabi"],
-      "limitations": ["The opened page says this apartment is no longer available; keep as non-contactable dated market evidence only."]
+      "supportedClaims": [
+        "AED 75,000 yearly",
+        "1 bed",
+        "1 bath",
+        "1,200 ft²",
+        "Khalifa City A, Khalifa City, Abu Dhabi"
+      ],
+      "limitations": [
+        "The opened page says this apartment is no longer available; keep as non-contactable dated market evidence only."
+      ]
     },
     {
       "id": "pf-al-reem-2br-110500789",
@@ -39,10 +65,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-reem-island-shams-abu-dhabi-110500789.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 117000, "period": "yearly", "annualizedAed": 117000, "note": "Observed directly on opened listing page." },
-      "verification": "page_opened",
-      "supportedClaims": ["AED 117,000 yearly", "2 beds", "2 baths", "1,280 ft²", "Shams Abu Dhabi, Al Reem Island, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "observedPrice": {
+        "amountAed": 117000,
+        "period": "yearly",
+        "annualizedAed": 117000,
+        "note": "Observed from search results only, not an opened individual listing page."
+      },
+      "verification": "search_only",
+      "supportedClaims": [
+        "AED 117,000 yearly",
+        "2 beds",
+        "2 baths",
+        "1,280 ft²",
+        "Shams Abu Dhabi, Al Reem Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Search result excerpt only; not eligible for Bankable contact action."
+      ]
     },
     {
       "id": "pf-al-reem-search-20261002",
@@ -51,10 +90,23 @@
       "url": "https://www.propertyfinder.ae/en/rent/abu-dhabi/apartments-for-rent-al-reem-island.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 78000, "period": "yearly", "annualizedAed": 78000, "note": "Observed from search results only, not an opened individual listing page." },
+      "observedPrice": {
+        "amountAed": 78000,
+        "period": "yearly",
+        "annualizedAed": 78000,
+        "note": "Observed from search results only, not an opened individual listing page."
+      },
       "verification": "search_only",
-      "supportedClaims": ["AED 78,000 yearly", "1 bed", "1 bath", "686 ft²", "Meera 2, Shams Abu Dhabi, Al Reem Island, Abu Dhabi"],
-      "limitations": ["Search result excerpt only; not eligible for Bankable contact action."]
+      "supportedClaims": [
+        "AED 78,000 yearly",
+        "1 bed",
+        "1 bath",
+        "686 ft²",
+        "Meera 2, Shams Abu Dhabi, Al Reem Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Search result excerpt only; not eligible for Bankable contact action."
+      ]
     },
     {
       "id": "pf-al-maryah-1br-143733993",
@@ -63,10 +115,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-maryah-island-al-maryah-vista-143733993.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 80000, "period": "yearly", "annualizedAed": 80000, "note": "Observed directly on opened listing page." },
+      "observedPrice": {
+        "amountAed": 80000,
+        "period": "yearly",
+        "annualizedAed": 80000,
+        "note": "Observed directly on opened listing page."
+      },
       "verification": "page_opened",
-      "supportedClaims": ["AED 80,000 yearly", "1 bed", "1 bath", "522 ft²", "Al Maryah Vista, Al Maryah Island, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "supportedClaims": [
+        "AED 80,000 yearly",
+        "1 bed",
+        "1 bath",
+        "522 ft²",
+        "Al Maryah Vista, Al Maryah Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Availability must be confirmed with the portal or agent."
+      ]
     },
     {
       "id": "pf-al-maryah-1br-144622199",
@@ -75,10 +140,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-maryah-island-144622199.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 125000, "period": "yearly", "annualizedAed": 125000, "note": "Observed directly on opened listing page." },
-      "verification": "page_opened",
-      "supportedClaims": ["AED 125,000 yearly", "1 bed", "2 baths", "865 ft²", "Al Maryah Island, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "observedPrice": {
+        "amountAed": 125000,
+        "period": "yearly",
+        "annualizedAed": 125000,
+        "note": "Observed from search results only, not an opened individual listing page."
+      },
+      "verification": "search_only",
+      "supportedClaims": [
+        "AED 125,000 yearly",
+        "1 bed",
+        "2 baths",
+        "865 ft²",
+        "Al Maryah Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Search result excerpt only; not eligible for Bankable contact action."
+      ]
     },
     {
       "id": "pf-yas-search-20261002",
@@ -87,10 +165,23 @@
       "url": "https://www.propertyfinder.ae/en/rent/abu-dhabi/apartments-for-rent-yas-island.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 110000, "period": "yearly", "annualizedAed": 110000, "note": "Observed from search results only, not an opened individual listing page." },
+      "observedPrice": {
+        "amountAed": 110000,
+        "period": "yearly",
+        "annualizedAed": 110000,
+        "note": "Observed from search results only, not an opened individual listing page."
+      },
       "verification": "search_only",
-      "supportedClaims": ["AED 110,000 yearly", "1 bed", "2 baths", "883 ft²", "Views B, Yas Golf Collection, Yas Island, Abu Dhabi"],
-      "limitations": ["Search result excerpt only; not eligible for Bankable contact action."]
+      "supportedClaims": [
+        "AED 110,000 yearly",
+        "1 bed",
+        "2 baths",
+        "883 ft²",
+        "Views B, Yas Golf Collection, Yas Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Search result excerpt only; not eligible for Bankable contact action."
+      ]
     },
     {
       "id": "pf-al-raha-2br-150052731",
@@ -99,10 +190,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-al-raha-beach-p-2657-150052731.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 105000, "period": "yearly", "annualizedAed": 105000, "note": "Observed directly on opened listing page." },
+      "observedPrice": {
+        "amountAed": 105000,
+        "period": "yearly",
+        "annualizedAed": 105000,
+        "note": "Observed directly on opened listing page."
+      },
       "verification": "page_opened",
-      "supportedClaims": ["AED 105,000 yearly", "2 beds", "3 baths", "1,195 ft²", "P-2657, Al Raha Beach, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "supportedClaims": [
+        "AED 105,000 yearly",
+        "2 beds",
+        "3 baths",
+        "1,195 ft²",
+        "P-2657, Al Raha Beach, Abu Dhabi"
+      ],
+      "limitations": [
+        "Availability must be confirmed with the portal or agent."
+      ]
     },
     {
       "id": "pf-saadiyat-studio-149077723",
@@ -111,10 +215,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-code-149077723.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 64000, "period": "yearly", "annualizedAed": 64000, "note": "Observed directly on opened listing page." },
+      "observedPrice": {
+        "amountAed": 64000,
+        "period": "yearly",
+        "annualizedAed": 64000,
+        "note": "Observed directly on opened listing page."
+      },
       "verification": "page_opened",
-      "supportedClaims": ["AED 64,000 yearly", "studio", "1 bath", "462 ft²", "Saadiyat Code, Saadiyat Island, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "supportedClaims": [
+        "AED 64,000 yearly",
+        "studio",
+        "1 bath",
+        "462 ft²",
+        "Saadiyat Code, Saadiyat Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Availability must be confirmed with the portal or agent."
+      ]
     },
     {
       "id": "pf-saadiyat-1br-150034266",
@@ -123,10 +240,23 @@
       "url": "https://www.propertyfinder.ae/en/plp/rent/apartment-for-rent-abu-dhabi-saadiyat-island-saadiyat-beach-saadiyat-beach-residences-150034266.html",
       "kind": "property_portal",
       "checkedAt": "2026-10-02T10:50:00+04:00",
-      "observedPrice": { "amountAed": 115000, "period": "yearly", "annualizedAed": 115000, "note": "Observed directly on opened listing page." },
+      "observedPrice": {
+        "amountAed": 115000,
+        "period": "yearly",
+        "annualizedAed": 115000,
+        "note": "Observed directly on opened listing page."
+      },
       "verification": "page_opened",
-      "supportedClaims": ["AED 115,000 yearly", "1 bed", "2 baths", "861 ft²", "Saadiyat Beach Residences, Saadiyat Beach, Saadiyat Island, Abu Dhabi"],
-      "limitations": ["Availability must be confirmed with the portal or agent."]
+      "supportedClaims": [
+        "AED 115,000 yearly",
+        "1 bed",
+        "2 baths",
+        "861 ft²",
+        "Saadiyat Beach Residences, Saadiyat Beach, Saadiyat Island, Abu Dhabi"
+      ],
+      "limitations": [
+        "Availability must be confirmed with the portal or agent."
+      ]
     }
   ],
   "homes": [

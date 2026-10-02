@@ -31,7 +31,7 @@ export type {
 };
 
 export type CapabilityActor =
-  | { kind: "person"; id: string; label: string; personId: string }
+  | { kind: "person"; id: string; label: string; personId: string; activeCaseId?: string }
   | { kind: "organization"; id: string; label: string; organizationId: string; programId: string }
   | { kind: "bankable"; id: string; label: string };
 
@@ -63,6 +63,8 @@ export type Recommendation =
       actionUrl: string | null;
       actionLabel: string | null;
       canContact: boolean;
+      category?: RelocationCategory;
+      resourceId?: string | null;
       reasons: string[];
       sources: SourceRecord[];
     };

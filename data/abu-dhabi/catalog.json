@@ -374,13 +374,13 @@
     {
       "id": "al-reem-island",
       "name": "Al Reem Island",
-      "summary": "A useful shortlist area for employees who want Abu Dhabi island apartment inventory near Al Maryah and ADGM-side workplaces.",
-      "sourceIds": ["wework-hub71", "cloudspaces-adgm", "adgm-office-space"]
+      "summary": "Included for ADREC rental-index benchmarking only; attach dated home or provider evidence before recommending a specific home, and do not infer commute, amenities or rent levels.",
+      "sourceIds": ["adrec-rental-index"]
     },
     {
       "id": "khalifa-city",
       "name": "Khalifa City",
-      "summary": "Supported by current Property Finder snapshot records in the housing catalog; use listing facts rather than unsourced lifestyle claims.",
+      "summary": "Included for rental benchmarking through ADREC rental-index guidance; use only as an area filter until a dated listing or provider source supports a specific home or action.",
       "sourceIds": ["adrec-rental-index"]
     },
     {
@@ -398,25 +398,25 @@
     {
       "id": "yas-island",
       "name": "Yas Island",
-      "summary": "Supported by Cloud Spaces Yas Mall and current housing-search calibration; useful when matching homes around a Yas-side workspace.",
+      "summary": "Supported as a workspace location by Cloud Spaces Yas Mall; use dated home or rental-index evidence separately for any housing recommendation.",
       "sourceIds": ["cloudspaces-yas", "cloudspaces-locations"]
     },
     {
       "id": "al-raha-beach",
       "name": "Al Raha Beach",
-      "summary": "Supported by current Property Finder snapshot records in the housing catalog; rank only after rent and allowance filters.",
+      "summary": "Included for rental benchmarking through ADREC rental-index guidance; rank homes only after affordability, allowance and listing-source checks pass.",
       "sourceIds": ["adrec-rental-index"]
     },
     {
       "id": "al-khalidiyah",
       "name": "Al Khalidiyah",
-      "summary": "A supported housing-search area in the existing property calibration dataset; avoid unsourced commute or lifestyle claims.",
+      "summary": "Included for rental benchmarking through ADREC rental-index guidance; avoid commute, amenity or rent-level claims unless a dated source is attached.",
       "sourceIds": ["adrec-rental-index"]
     },
     {
       "id": "al-nahyan",
       "name": "Al Nahyan",
-      "summary": "A supported housing-search area in the existing property calibration dataset; use current listing prices when ranking.",
+      "summary": "Included for rental benchmarking through ADREC rental-index guidance; use dated listing records for any specific price or availability claim.",
       "sourceIds": ["adrec-rental-index"]
     }
   ],

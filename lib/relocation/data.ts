@@ -116,9 +116,13 @@ export function buildRecommendations(profile: PersonProfile, program: MoveProgra
   ];
 }
 
-export function personHub(data: RelocationStoreData, personId: string): PublicPersonHub {
+export function personHub(data: RelocationStoreData, personId: string, activeCaseId?: string): PublicPersonHub {
   const profile = required(data.people.find((person) => person.id === personId), `Unknown person ${personId}`);
-  const relocationCase = required(data.cases.find((item) => item.personId === personId), `No case for ${personId}`);
+  const personCases = data.cases.filter((item) => item.personId === personId);
+  const relocationCase = required(
+    activeCaseId ? personCases.find((item) => item.id === activeCaseId) : personCases.at(-1),
+    `No case for ${personId}`,
+  );
   const recommendations = data.recommendations[relocationCase.id] ?? [];
   const housingSearch = housingSearchFor(profile, relocationCase.housingPolicy);
   const { privateEvidence, ...publicProfile } = profile;
@@ -177,7 +181,7 @@ export function hrProgramView(data: RelocationStoreData, programId: string, orga
             category: task.category,
             state: latest?.state ?? task.state,
             owner: latest?.owner ?? task.owner,
-            nextAction: latest?.nextAction ?? task.nextAction,
+            nextAction: task.nextAction,
           };
         }),
       blockers: tasks
@@ -185,7 +189,7 @@ export function hrProgramView(data: RelocationStoreData, programId: string, orga
         .filter((event): event is StatusEvent => event !== undefined && event.state === "blocked")
         .map((event) => {
           const task = required(tasksById.get(event.taskId), "Missing shared task");
-          return `${task.category}: ${event.owner} next action - ${event.nextAction}`;
+          return `${task.category}: ${event.owner} next action - ${task.nextAction}`;
         }),
       sharedPrivateScopes,
     };
@@ -232,7 +236,9 @@ export function financeFactors(profile: PersonProfile, policy = { annualAllowanc
     factors: [
       "CBUAE important ratios require lender review of income, obligations and mortgage exposure before approval.",
       "Deposit, agency fee, cheque schedule and move-in cash are unknown until the listing or provider confirms terms.",
-      `Housing allowance caps annual rent at AED ${policy.annualAllowanceAed.toLocaleString("en-US")}; affordability still uses the person's private income range.` ,
+      policy.annualAllowanceAed === Number.MAX_SAFE_INTEGER
+        ? "No company housing allowance is attached; affordability uses the person's private income range and planning rent-share assumption."
+        : `Housing allowance caps annual rent at AED ${policy.annualAllowanceAed.toLocaleString("en-US")}; affordability still uses the person's private income range.`,
       "Only the lender can approve or pre-approve a product; Bankable shows readiness factors only.",
     ],
     blockedBy,
@@ -267,9 +273,13 @@ function householdFromDemo(household: string) {
 }
 
 function baseTasks(program: MoveProgram, caseId: string, updatedAt: string): RelocationTask[] {
-  const jurisdiction = program.jurisdiction ?? "mainland";
-  const setupService = referenceCatalog.services.find((service) => service.audience === "company_setup" && service.jurisdictions.includes(jurisdiction));
-  const residenceService = referenceCatalog.services.find((service) => service.audience === "employer" && service.category === "residence" && service.jurisdictions.includes(jurisdiction));
+  const jurisdiction = program.jurisdiction;
+  const setupService = jurisdiction
+    ? referenceCatalog.services.find((service) => service.audience === "company_setup" && service.jurisdictions.includes(jurisdiction))
+    : undefined;
+  const residenceService = jurisdiction
+    ? referenceCatalog.services.find((service) => service.audience === "employer" && service.category === "residence" && service.jurisdictions.includes(jurisdiction))
+    : undefined;
 
   return [
     task(caseId, "housing", "Shortlist a home within policy and cash budget", "person", null, null, "Open a contactable observed listing or keep a synthetic planning option saved.", true, updatedAt),
@@ -277,11 +287,11 @@ function baseTasks(program: MoveProgram, caseId: string, updatedAt: string): Rel
     task(
       caseId,
       "setup",
-      setupService?.title ?? `${jurisdiction.toUpperCase()} establishment handoff`,
+      setupService?.title ?? "Confirm company jurisdiction before establishment handoff",
       "organization",
       setupService?.sourceIds[0] ?? null,
       setupService?.actionUrl ?? null,
-      setupService?.nextAction ?? "Open the jurisdiction-specific official service and record reference when available.",
+      setupService?.nextAction ?? "Confirm whether the entity route is mainland, ADGM, or KEZAD before opening an official service.",
       true,
       updatedAt,
     ),
@@ -292,7 +302,7 @@ function baseTasks(program: MoveProgram, caseId: string, updatedAt: string): Rel
       "organization",
       residenceService?.sourceIds[0] ?? null,
       residenceService?.actionUrl ?? null,
-      residenceService?.nextAction ?? "Use the jurisdiction-specific employer or free-zone channel and record a reference only after evidence exists.",
+      residenceService?.nextAction ?? "Confirm the employer route before opening a work-permit or residence provider channel.",
       true,
       updatedAt,
     ),
@@ -369,6 +379,8 @@ function workspaceRecommendations(profile: PersonProfile): Recommendation[] {
     actionUrl: workspace.actionUrl,
     actionLabel: workspace.actionLabel,
     canContact: true,
+    category: "workspace" as const,
+    resourceId: workspace.id,
     reasons: ["Public workspace provider page.", workspace.address],
     sources: sourcesForIds(workspace.sourceIds),
   }));
@@ -376,12 +388,13 @@ function workspaceRecommendations(profile: PersonProfile): Recommendation[] {
 
 function serviceRecommendations(profile: PersonProfile, program: MoveProgram | null): Recommendation[] {
   const jurisdiction = program?.jurisdiction;
-  return referenceCatalog.services
+  const services = referenceCatalog.services
     .filter((service) => service.audience !== "company_setup")
     .filter((service) => service.workTypes.includes(profile.workType))
     .filter((service) => service.audience !== "employer" || Boolean(program))
-    .filter((service) => !jurisdiction || service.jurisdictions.includes(jurisdiction))
-    .map((service) => ({
+    .filter((service) => service.audience !== "employer" || Boolean(jurisdiction))
+    .filter((service) => !jurisdiction || service.jurisdictions.includes(jurisdiction));
+  const recommendations: Recommendation[] = services.map((service) => ({
       id: `service-${service.id}-${profile.id}`,
       type: "official_service" as const,
       title: service.title,
@@ -389,9 +402,30 @@ function serviceRecommendations(profile: PersonProfile, program: MoveProgram | n
       actionUrl: service.actionUrl,
       actionLabel: "Open official service",
       canContact: true,
+      category: service.category as RelocationCategory,
+      resourceId: service.id,
       reasons: [service.nextAction, ...service.limitations.slice(0, 1)],
       sources: sourcesForIds(service.sourceIds),
     }));
+  if (program && !jurisdiction) {
+    recommendations.unshift({
+      id: `service-confirm-employer-channel-${profile.id}`,
+      type: "official_service" as const,
+      title: "Confirm employer jurisdiction before official setup handoff",
+      areaId: program.officeAreaId,
+      actionUrl: null,
+      actionLabel: null,
+      canContact: false,
+      category: "setup" as const,
+      resourceId: "confirm-employer-channel",
+      reasons: [
+        "HR must confirm whether this move uses mainland, ADGM, or KEZAD before Bankable recommends a specific work-permit, residence, or setup channel.",
+        "Bankable should not present all jurisdiction branches as one generic legal checklist.",
+      ],
+      sources: [],
+    });
+  }
+  return recommendations;
 }
 
 function financeRecommendation(profile: PersonProfile, program: MoveProgram | null): Recommendation {
@@ -403,7 +437,9 @@ function financeRecommendation(profile: PersonProfile, program: MoveProgram | nu
     actionUrl: null,
     actionLabel: null,
     canContact: false,
-    reasons: financeFactors(profile, program?.housingPolicy).factors,
+    category: "finance" as const,
+    resourceId: "cbuae-mortgage-ratios",
+    reasons: financeFactors(profile, program?.housingPolicy ?? { annualAllowanceAed: Number.MAX_SAFE_INTEGER, maxRentShareOfIncome: 0.33 }).factors,
     sources: [
       sourceRecord(
         "cbuae-mortgage-ratios",

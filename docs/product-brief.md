@@ -8,6 +8,8 @@ The first market is Abu Dhabi. The first build connects one personal journey wit
 
 ## The first experience
 
+The website is a connected application: a focused landing page, source-linked area and service information pages, a short onboarding flow, a private move workspace, and a separate company workspace. Each page supports a decision or action. The application works from a fresh browser and empty program without loading demo data automatically.
+
 Ask only what work the person does, who is moving with them, and their income. They may enter income manually or let the existing document reader help. Ask further questions only when they would change a recommendation.
 
 The first screen returns a small set of suitable areas and homes, a realistic move and housing budget, nearby places to work, a setup path, and direct action buttons. When a person selects a property, Bankable updates the required cash and finance fit for that specific choice. Their profile and live journey timeline carry across the experience.
@@ -48,7 +50,7 @@ Start with real, user-initiated contact and provider booking links. [WhatsApp cl
 
 For this short-lived hackathon prototype, attempt a small, rate-limited sample of publicly visible Abu Dhabi rentals from [Dubizzle Abu Dhabi rental search](https://abudhabi.dubizzle.com/en/property-for-rent/residential/), with [Property Finder Abu Dhabi search](https://www.propertyfinder.ae/en/rent/abu-dhabi/properties-for-rent.html) as a separately attributed fallback when Dubizzle blocks requests. Preserve each listing URL, asking rent, source, and fetch time. Keep real listings distinct from synthetic records calibrated to observed prices. Link contact actions back to the original portal; do not claim a partnership or claim an agent replied merely because a contact page opened. Do not base the app on [`aksiksi/dubizzle`](https://github.com/aksiksi/dubizzle): its README says it has been broken since 2016, it focuses on Motors, and the repo is archived. Both [Dubizzle's terms](https://www.dubizzle.com/legalhub/terms/) and [Property Finder's terms](https://www.propertyfinder.com/ae/terms-and-conditions/) prohibit automated scraping/database building, so this extraction is a bounded demo experiment, not a production integration. Remove it or replace it with authorized access before any public launch.
 
-For finance, show a property-specific readiness explanation using sourced lender requirements and [CBUAE mortgage limits](https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios). A lender owns approval and pre-approval. Bankable may show a numeric approval probability only after it has real lender outcome data to validate it; until then it shows the factors that help or block an application and connects the user to the lender. User financial information goes to a provider only with explicit, recipient-specific consent.
+For finance, show a property-specific readiness explanation using sourced lender requirements and [CBUAE mortgage limits](https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios). A lender owns approval and pre-approval. Bankable shows readiness factors without approval probabilities. User financial information goes to a provider only with explicit, recipient-specific consent. Fees, payment terms and commute times stay unknown until there is evidence for them.
 
 ## First release success
 

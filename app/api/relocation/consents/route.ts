@@ -6,7 +6,12 @@ export async function GET(request: Request) {
   try {
     const { data, actor } = await requireActor(request);
     if (actor.kind !== "person") throw new Error("Person session is required.");
-    return json({ consents: data.consents.filter((consent) => consent.personId === actor.personId) });
+    const now = Date.now();
+    return json({
+      consents: data.consents.filter(
+        (consent) => consent.personId === actor.personId && !consent.revokedAt && Date.parse(consent.expiresAt) > now,
+      ),
+    });
   } catch (error) {
     return jsonError(error, 401);
   }

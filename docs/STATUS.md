@@ -3,7 +3,7 @@
 ## Product direction update (2026-10-02)
 - The current product direction is the Abu Dhabi relocation action hub in [product-brief.md](product-brief.md). This supersedes the earlier banking-only story ladder as the main user experience.
 - Banking, credit, and mortgages remain important connected actions. Document extraction is a supporting evidence feature.
-- The first data slice is a bounded hackathon rental pull at `/api/properties`, with Dubizzle attempted first and an explicitly attributed Property Finder fallback. Synthetic examples are generated separately from dated calibration bands; see [property-data.md](property-data.md). This is not a production-cleared portal integration.
+- The default `/api/properties` data is a dated, source-linked snapshot; synthetic examples are separated and have no contact links. Live portal pulls are explicit diagnostics only; see [property-data.md](property-data.md). This is not a production-cleared portal integration.
 
 ## Settled (Yahia's decisions, do not re-litigate)
 - Solo build; Yahia directs the project-scoped `bankable-*` crew in Codex (with `.claude/agents` retained as the detailed role-contract source); the PRODUCT runs on OpenAI (`lib/openai.ts`).
@@ -35,3 +35,12 @@
 - Resume hook activated Forge. Grounding context and PRD/test-spec artifacts are in `.rcs/context/` and `.rcs/plans/`; execution follows the existing Next.js relocation product plan.
 - The first UI draft is visible on the existing local dev server at port 3000. It still needs API integration and removal of temporary market fixtures; it is not a completed user flow. Root captured `docs/qa/first-ui-1440.png`; the observed visual verdict is 84/revise, with hero hierarchy and real-action wiring pending.
 - Eleven initial catalog/property tests passed. Root added HTTP authorization/source-boundary checks; these are pending the in-progress backend replacement (current route builds return 500 during module replacement). No final delivery gate has passed yet.
+
+## Connected flow and empty-state delivery
+
+- The user requires distinct landing/information/onboarding/workspace pages, not one long repeated page. Functional fresh and empty states are acceptance criteria. The fictional five-person demo is opt-in.
+- Backend now persists profiles, programs, invitations, scoped sessions, consents and append-only status events in SQLite. New programs begin without employees; private plans begin without timeline progress. Invites are hashed, expiring and single-use. Profile edits retain journey identity and history.
+- Catalog: 20 official/provider sources, eight areas, four workspaces, eleven official services and four financial-readiness factors. Property snapshot has ten market records; five support original listing actions. All availability remains unconfirmed. Synthetic homes are non-contactable.
+- Fresh verification: 34 Node tests passed; three HTTP tests were skipped by the ordinary unit command and separately passed against the running local app. The live minimal personal/company/invite/privacy smoke passed before expanded profile/blocker coverage. Final responsive browser and build checks remain pending the focused-page revision.
+- User-reported Timeline/invite defects are assigned to UX: real Timeline route, plain invite/progress wording, an enabled invite action for an active company, and an explained empty state before program creation.
+- HR projections use server-owned next actions; personal free-text notes and income/evidence remain private. Unknown company jurisdiction never defaults to mainland. The local scoped-session implementation still needs production identity and durable hosted storage before public deployment.

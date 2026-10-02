@@ -1,22 +1,27 @@
 .page { position: relative; min-width: 0; overflow: clip; background: #f8f6ef; color: #10253f; }
 .header { position: absolute; top: 0; left: 0; right: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 2rem; min-height: 82px; padding: 0 max(4vw, calc((100vw - 1320px) / 2)); border-bottom: 1px solid rgba(255,255,255,.3); color: #fff; }
 .brand { display: inline-flex; align-items: center; gap: .65rem; color: inherit; font-weight: 760; font-size: 1.08rem; text-decoration: none; }
-.brandMark { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; color: #fff; font: 700 1.15rem Georgia, serif; }
+.brandMark { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.7); border-radius: 9px; color: #fff; font-size: 1rem; font-weight: 750; }
 .nav { display: flex; align-items: center; gap: clamp(1rem, 3vw, 3rem); }
 .nav a, .headerCta { color: #fff; font-size: .92rem; font-weight: 630; text-decoration: none; }
 .nav a:hover, .secondary:hover, .footer a:hover { color: #d9c39e; }
-.headerCta { display: inline-flex; gap: 1rem; align-items: center; padding: .72rem 1rem; border: 1px solid rgba(255,255,255,.65); border-radius: 3px; }
+.headerCta { display: inline-flex; gap: 1rem; align-items: center; padding: .72rem 1rem; border: 1px solid rgba(255,255,255,.65); border-radius: 999px; }
 .headerCta:hover { background: rgba(255,255,255,.15); }
-.hero { display: flex; flex-direction: column; justify-content: space-between; min-height: min(850px, 100svh); padding: clamp(10rem, 15vw, 13rem) clamp(1.25rem, 5vw, 5rem) 0; background: linear-gradient(90deg, rgba(5,22,39,.82) 0%, rgba(5,22,39,.65) 36%, rgba(5,22,39,.18) 72%), url('/abu-dhabi-portal.jpg') 60% center / cover no-repeat; }
+.hero { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: min(850px, 100svh); overflow: hidden; padding: clamp(10rem, 15vw, 13rem) clamp(1.25rem, 5vw, 5rem) 0; background: #173a56; }
+.heroMedia { position: absolute; inset: -6% 0; transform: translate3d(0, var(--parallax-y, 0px), 0); will-change: transform; }
+.heroMedia img { object-fit: cover; object-position: center 51%; }
+.heroShade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,30,50,.88) 0%, rgba(8,30,50,.62) 40%, rgba(8,30,50,.06) 83%), linear-gradient(0deg, rgba(5,22,39,.82), transparent 31%); }
+.heroCopy, .heroRoutes { position: relative; z-index: 1; }
 .heroCopy { min-width: 0; max-width: 670px; }
 .eyebrow { margin: 0 0 1.2rem; color: #0d766d; font-size: .73rem; font-weight: 790; letter-spacing: .14em; text-transform: uppercase; }
-.hero h1, .sectionHead h2, .teams h2 { margin: 0; font-family: var(--font-serif), Georgia, serif; font-weight: 620; letter-spacing: -.035em; }
-.hero h1 { max-width: 12ch; color: #fff; font-size: clamp(3.5rem, 5.4vw, 5.6rem); line-height: 1.03; }
-.hero h1 em { color: #e7d2b2; font-weight: 480; }
+.hero h1, .sectionHead h2, .teams h2 { margin: 0; font-family: var(--font-inter), Arial, sans-serif; font-weight: 560; letter-spacing: -.055em; }
+.hero h1 { max-width: 12ch; color: #fff; font-size: clamp(3.5rem, 5.4vw, 5.6rem); line-height: 1.04; }
+.hero h1 em { color: #e4d0b2; font-style: normal; font-weight: 560; }
 .hero .eyebrow { color: #d2ddd8; }
 .intro { max-width: 28rem; margin: 1.65rem 0 0; color: #e7edee; font-size: clamp(1.04rem, 1.4vw, 1.18rem); line-height: 1.65; }
 .heroActions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.6rem; margin-top: 2rem; }
-.primary { display: inline-flex; justify-content: space-between; align-items: center; gap: 1.7rem; min-height: 52px; padding: .8rem 1.2rem; border-radius: 3px; background: #f6f0e4; color: #10253f; font-weight: 690; text-decoration: none; }
+.primary { display: inline-flex; justify-content: space-between; align-items: center; gap: 1.7rem; min-height: 52px; padding: .8rem 1.35rem; border-radius: 999px; background: #f6f0e4; color: #10253f; font-weight: 690; text-decoration: none; transition: transform .2s ease, background .2s ease; }
+.primary:hover { transform: translateY(-2px); }
 .primary:hover { background: #fff; }
 .secondary { color: #10253f; font-weight: 670; text-decoration: none; }
 .hero .secondary { color: #fff; }
@@ -38,12 +43,43 @@
 .pathCard:last-child { border-bottom: 1px solid #d0d4d0; }
 .pathCard:hover { color: #0d766d; padding-left: .7rem; }
 .number { color: #0d766d; font-size: .72rem; font-weight: 750; letter-spacing: .12em; }
-.pathCard h3, .pillar h3 { margin: 0; font-family: var(--font-serif), Georgia, serif; font-size: clamp(1.5rem, 2vw, 1.9rem); font-weight: 620; }
+.pathCard h3, .pillar h3 { margin: 0; font-family: var(--font-inter), Arial, sans-serif; font-size: clamp(1.5rem, 2vw, 1.9rem); font-weight: 600; letter-spacing: -.035em; }
 .pathCard p, .pillar p { max-width: 31ch; margin: 0; color: #51647a; font-size: .95rem; line-height: 1.55; }
 .pathAction { display: flex; justify-content: space-between; gap: 1rem; color: #0d766d; font-size: .9rem; font-weight: 720; }
+.providerSection { padding: 2rem clamp(1.25rem, 5vw, 5rem) 5rem; background: #fffcf7; }
+.providerPanel { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; max-width: 1280px; min-height: 520px; overflow: hidden; margin: auto; border-radius: 28px; background: #f3f6f5; }
+.providerCopy { position: relative; z-index: 1; padding: clamp(2rem, 5vw, 5rem); }
+.providerCopy h2 { max-width: 12ch; margin: 0; color: #10253f; font-family: var(--font-inter), Arial, sans-serif; font-size: clamp(2.5rem, 3.7vw, 4rem); font-weight: 590; letter-spacing: -.055em; line-height: 1.08; }
+.providerCopy > p:not(.eyebrow) { max-width: 29rem; margin: 1.5rem 0 0; color: #50627a; font-size: 1.05rem; line-height: 1.6; }
+.providerCta { display: inline-flex; align-items: center; gap: 1.6rem; min-height: 48px; margin-top: 2rem; padding: .7rem 1.2rem; border-radius: 999px; background: #0d766d; color: #fff; font-weight: 690; text-decoration: none; }
+.providerCta:hover { background: #095b54; }
+.providerCopy small { display: block; max-width: 29rem; margin-top: 1.1rem; color: #66778b; font-size: .76rem; line-height: 1.45; }
+.providerArt { position: relative; min-height: 520px; isolation: isolate; }
+.providerArt::before { content: ''; position: absolute; z-index: -1; inset: 4% -10% -12% -15%; background: radial-gradient(circle at 72% 30%, rgba(102, 181, 219, .49), transparent 43%), radial-gradient(circle at 54% 76%, rgba(85, 189, 160, .38), transparent 45%); filter: blur(15px); }
+.providerTile { position: absolute; display: flex; flex-direction: column; justify-content: space-between; width: 190px; height: 145px; padding: 1.05rem 1.15rem; border: 1px solid rgba(16, 37, 63, .06); border-radius: 21px; background: rgba(255,255,255,.96); box-shadow: 0 24px 48px rgba(16, 37, 63, .13); color: #10253f; text-decoration: none; transform: rotate(var(--tilt)); transition: transform .25s ease, box-shadow .25s ease; }
+.providerTile:hover { z-index: 5; transform: translateY(-8px) rotate(0deg); box-shadow: 0 32px 56px rgba(16, 37, 63, .2); }
+.providerMark { align-self: flex-start; color: #0d766d; font-size: 1.8rem; font-weight: 820; letter-spacing: -.08em; line-height: 1; }
+.providerName { font-size: .9rem; font-weight: 760; }
+.providerKind { display: flex; justify-content: space-between; gap: 1rem; color: #607086; font-size: .73rem; font-weight: 650; }
+.providerProperty { top: 31%; left: 0; --tilt: -12deg; }
+.providerProperty .providerMark { color: #db4f65; }
+.providerTamm { top: 6%; left: 30%; --tilt: 8deg; }
+.providerTamm .providerMark { color: #312b7a; }
+.providerAdgm { top: 22%; right: 2%; --tilt: 12deg; }
+.providerAdgm .providerMark { color: #134a7b; font-size: 1.42rem; letter-spacing: -.06em; }
+.providerAdib { top: 56%; left: 26%; --tilt: 9deg; }
+.providerAdib .providerMark { color: #654492; font-size: 1.45rem; letter-spacing: -.06em; }
+.providerKezad { top: 59%; right: 0; --tilt: -9deg; }
+.providerKezad .providerMark { color: #415b8c; font-size: 1.35rem; letter-spacing: -.05em; }
 .pillarGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.pillar { min-height: 230px; padding: 1.35rem; border-top: 2px solid #88a79c; background: rgba(255,255,255,.48); }
+.pillar { min-height: 230px; padding: 1.35rem 0; border-top: 1px solid #a9b9b4; color: inherit; text-decoration: none; transition: border-color .2s ease, transform .2s ease; }
+.pillar:hover { border-color: #0d766d; transform: translateY(-3px); }
+.pillar .number { display: flex; justify-content: space-between; padding-right: .75rem; }
 .pillar h3 { margin-top: 2rem; }
+.ambientFilm { position: relative; max-width: 1280px; height: clamp(260px, 32vw, 470px); overflow: hidden; margin: 3.5rem auto 0; border-radius: 18px; background: #c1c1d0 url('/abu-dhabi-mosque-poster.jpg') center / cover no-repeat; }
+.ambientFilm::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgba(8, 30, 50, .6)); pointer-events: none; }
+.ambientFilm video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 46%; }
+.ambientFilm figcaption { position: absolute; z-index: 1; right: 1.5rem; bottom: 1.25rem; color: #fff; font-size: .74rem; font-weight: 650; letter-spacing: .04em; }
 .teams { display: grid; grid-template-columns: 1fr .8fr; gap: 5rem; align-items: end; padding: 5.5rem max(5vw, calc((100vw - 1280px) / 2)); background: #10253f; color: #fff; }
 .teams .eyebrow { color: #a8d0c4; }
 .teams h2 { max-width: 12ch; font-size: clamp(2.7rem, 4.4vw, 4.3rem); line-height: 1.1; }
@@ -52,6 +88,41 @@
 .teams a { display: inline-flex; gap: 2rem; margin-top: 1.3rem; padding-bottom: .5rem; border-bottom: 1px solid #a8d0c4; color: #fff; font-weight: 680; text-decoration: none; }
 .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 2rem clamp(1.25rem, 5vw, 5rem); background: #0d2037; color: #bfcfd3; font-size: .82rem; }
 .footer a { color: #fff; text-decoration: none; }
-@media (max-width: 1000px) { .hero { min-height: 760px; } .hero h1 { font-size: clamp(3.2rem, 6vw, 4.8rem); } .pillarGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pathCard { grid-template-columns: 50px minmax(150px, .75fr) minmax(180px, 1fr); } .pathAction { grid-column: 2 / -1; } }
-@media (max-width: 720px) { .header { min-height: 66px; padding: 0 1.25rem; gap: .75rem; } .nav { display: none; } .headerCta { padding: .58rem .7rem; font-size: .78rem; } .hero { min-height: 740px; padding: 8.5rem 1.25rem 0; background-position: 70% center; } .hero h1 { font-size: clamp(3rem, 11vw, 4.3rem); } .intro { font-size: 1rem; } .heroRoutes { grid-template-columns: 1fr; margin-top: 2.5rem; } .heroRoutes > span { min-height: 40px; padding: .8rem 0 0; border: 0; } .heroRoutes a { min-height: 49px; padding: .65rem 0; border: 0; border-top: 1px solid rgba(255,255,255,.25); } .paths, .explore { padding: 4rem 1.25rem; } .sectionHead { display: block; } .sectionHead > p, .sectionHead > a { display: inline-block; margin-top: 1rem; } .pathGrid, .pillarGrid { grid-template-columns: minmax(0, 1fr); } .pathCard { grid-template-columns: 40px minmax(0, 1fr); gap: .6rem; min-height: 0; padding: 1.25rem 0; } .pathCard p, .pathAction { grid-column: 2; } .pathAction { margin-top: .35rem; } .teams { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; padding: 4rem 1.25rem; } .teams h2 { font-size: 2.8rem; } .footer { padding: 2rem 1.25rem; } }
-@media (prefers-reduced-motion: reduce) { .pathCard { transition: none; } }
+@media (max-width: 1000px) { .hero { min-height: 760px; } .hero h1 { font-size: clamp(3.2rem, 6vw, 4.8rem); } .pillarGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pathCard { grid-template-columns: 50px minmax(150px, .75fr) minmax(180px, 1fr); } .pathAction { grid-column: 2 / -1; } .providerPanel { grid-template-columns: 1fr; } .providerArt { min-height: 390px; } .providerTile { width: 175px; height: 125px; } .providerCopy { padding-bottom: 0; } }
+@media (max-width: 720px) {
+  .header { min-height: 66px; padding: 0 1.25rem; gap: .75rem; }
+  .nav { position: absolute; top: 66px; left: 0; right: 0; display: flex; justify-content: space-around; gap: .5rem; min-height: 44px; padding: 0 1rem; border-bottom: 1px solid rgba(255,255,255,.24); background: rgba(5,22,39,.65); }
+  .nav a { display: inline-flex; align-items: center; font-size: .76rem; }
+  .headerCta { padding: .58rem .7rem; font-size: .78rem; }
+  .hero { min-height: 770px; padding: 9.7rem 1.25rem 0; }
+  .heroMedia img { object-position: 56% center; }
+  .hero h1 { font-size: clamp(3rem, 11vw, 4.3rem); }
+  .intro { font-size: 1rem; }
+  .heroRoutes { grid-template-columns: 1fr; margin-top: 2.5rem; }
+  .heroRoutes > span { min-height: 40px; padding: .8rem 0 0; border: 0; }
+  .heroRoutes a { min-height: 49px; padding: .65rem 0; border: 0; border-top: 1px solid rgba(255,255,255,.25); }
+  .paths, .explore { padding: 4rem 1.25rem; }
+  .sectionHead { display: block; }
+  .sectionHead > p, .sectionHead > a { display: inline-block; margin-top: 1rem; }
+  .pathGrid, .pillarGrid { grid-template-columns: minmax(0, 1fr); }
+  .pathCard { grid-template-columns: 40px minmax(0, 1fr); gap: .6rem; min-height: 0; padding: 1.25rem 0; }
+  .pathCard p, .pathAction { grid-column: 2; }
+  .pathAction { margin-top: .35rem; }
+  .providerSection { padding: 1rem 1.25rem 4rem; }
+  .providerPanel { border-radius: 18px; }
+  .providerCopy { padding: 2rem 1.5rem 0; }
+  .providerCopy h2 { font-size: clamp(2.35rem, 10vw, 3.15rem); }
+  .providerArt { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; min-height: 0; padding: 2.5rem 1.5rem 2rem; }
+  .providerTile { position: relative; inset: auto; width: auto; height: 112px; padding: .85rem; border-radius: 15px; transform: none; }
+  .providerTile:hover { transform: translateY(-3px); }
+  .providerTile:last-child { grid-column: 1 / -1; }
+  .providerMark { font-size: 1.35rem; }
+  .providerName { font-size: .82rem; }
+  .providerKind { font-size: .67rem; }
+  .ambientFilm { height: 290px; margin-top: 2.5rem; border-radius: 12px; }
+  .ambientFilm figcaption { right: 1rem; bottom: .9rem; font-size: .69rem; }
+  .teams { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; padding: 4rem 1.25rem; }
+  .teams h2 { font-size: 2.8rem; }
+  .footer { padding: 2rem 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) { .pathCard, .primary, .pillar, .providerTile { transition: none; } .heroMedia { transform: none; will-change: auto; } }

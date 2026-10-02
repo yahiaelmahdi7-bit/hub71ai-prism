@@ -4,9 +4,10 @@ import assert from "node:assert/strict";
 const base = new URL(process.env.BANKABLE_TEST_URL ?? "http://127.0.0.1:3000");
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(base.hostname), "Run the relocation smoke against a local instance");
 
-async function request(path, { body, token, allowFailure = false } = {}) {
+async function request(path, { body, token, method, allowFailure = false } = {}) {
   const response = await fetch(new URL(path, base), {
-    method: body === undefined ? "GET" : "POST",
+    signal: AbortSignal.timeout(20000),
+    method: method ?? (body === undefined ? "GET" : "POST"),
     headers: {
       Accept: "application/json",
       ...(body === undefined ? {} : { "Content-Type": "application/json" }),
@@ -31,9 +32,22 @@ try {
   assert.ok(personal.sessionToken);
   const privateHub = (await request("/api/relocation/profiles/me", { token: personal.sessionToken })).payload.view;
   assert.equal(privateHub.profile.workType, "freelancer");
+  assert.equal(privateHub.timeline.length, 0, "New profiles must start without invented progress");
   assert.equal(privateHub.budget.estimatedInitialCashAed, null, "Unknown lease terms cannot become a fabricated cash estimate");
   assert.ok(privateHub.recommendations.some((item) => item.type === "official_service"));
   console.log("PASS: personal three-answer start produces a persisted private housing/setup plan");
+
+  const noHomes = (await request("/api/relocation/profiles/me", {
+    method: "PATCH", token: personal.sessionToken, body: { minMonthlyAed: 1000, maxMonthlyAed: 1000 },
+  })).payload.view;
+  assert.equal(noHomes.profile.id, privateHub.profile.id);
+  assert.equal(noHomes.case.id, privateHub.case.id);
+  assert.equal(noHomes.housingSearch.matches.length, 0);
+  assert.ok(noHomes.housingSearch.excluded.length > 0);
+  assert.ok(noHomes.recommendations.some((item) => item.type === "official_service"));
+  assert.ok(noHomes.recommendations.some((item) => item.type === "workspace"));
+  assert.doesNotMatch(noHomes.financeReadiness.factors.join(" "), /9,007,199,254,740,991/);
+  console.log("PASS: a no-home plan remains useful and profile edits preserve the journey");
 
   const moveDate = new Date(Date.now() + 45 * 86400000).toISOString().slice(0, 10);
   const company = (await request("/api/relocation/programs", {
@@ -41,13 +55,16 @@ try {
   })).payload;
   assert.ok(company.hrSessionToken);
   const hrPath = `/api/relocation/programs/${company.program.id}/hr`;
-  privateFieldsAbsent((await request(hrPath, { token: company.hrSessionToken })).payload);
+  const emptyProgram = (await request(hrPath, { token: company.hrSessionToken })).payload;
+  privateFieldsAbsent(emptyProgram);
+  assert.equal(emptyProgram.view.aggregate.cases, 0);
+  assert.equal(emptyProgram.view.aggregate.invited, 0);
 
   const invite = (await request("/api/relocation/invites", {
     token: company.hrSessionToken,
-    body: { displayName: "Fictional smoke employee" },
+    body: { employeeLabel: "Fictional smoke employee" },
   })).payload;
-  const inviteBody = { token: invite.token, workType: "employee", adults: 2, children: 1, minMonthlyAed: 28000, maxMonthlyAed: 28000 };
+  const inviteBody = { token: invite.token, profile: { workType: "employee", adults: 2, children: 1, minMonthlyAed: 28000, maxMonthlyAed: 28000 } };
   const joined = (await request(`/api/relocation/invites/${invite.inviteId}/accept`, { body: inviteBody })).payload;
   assert.ok(joined.sessionToken);
   const replay = await request(`/api/relocation/invites/${invite.inviteId}/accept`, { body: inviteBody, allowFailure: true });
@@ -73,6 +90,25 @@ try {
   privateFieldsAbsent(hr);
   assert.ok(hr.employees.some((employee) => employee.personId === joinedHub.profile.id));
   console.log("PASS: employee actions keep opened provenance and HR sees only permitted progress");
+
+  const sharedTask = joinedHub.tasks.find((task) => task.sharedWithEmployer);
+  assert.ok(sharedTask);
+  const privateNote = "Fictional private identity and bank note";
+  const blocked = (await request("/api/relocation/actions/status", {
+    token: joined.sessionToken,
+    body: { caseId: joinedHub.case.id, taskId: sharedTask.id, state: "blocked", blocker: privateNote, nextAction: privateNote },
+  })).payload.latestEvent;
+  assert.equal(blocked.state, "blocked");
+  assert.equal(blocked.source.kind, "user_report");
+  const blockedHr = (await request(hrPath, { token: company.hrSessionToken })).payload.view;
+  assert.equal(blockedHr.aggregate.blocked, 1);
+  assert.ok(!JSON.stringify(blockedHr).includes(privateNote), "Private free text cannot leak into HR progress");
+  await request("/api/relocation/actions/status", {
+    token: joined.sessionToken,
+    body: { caseId: joinedHub.case.id, taskId: sharedTask.id, state: "resolved" },
+  });
+  assert.equal((await request(hrPath, { token: company.hrSessionToken })).payload.view.aggregate.blocked, 0);
+  console.log("PASS: reported blockers and resolution reach HR without exposing personal notes");
 
   const denied = await request(hrPath, { token: personal.sessionToken, allowFailure: true });
   assert.ok([401, 403, 404].includes(denied.status));

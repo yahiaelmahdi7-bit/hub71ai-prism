@@ -39,6 +39,10 @@ This file summarizes the primary-source catalog used by the relocation hub. The 
 | `cloudspaces-adgm` | <https://www.cloudspaces.ae/en-location/abu-dhabi-global-market> | ADGM workspace, booking/contact action and address. |
 | `adgm-office-space` | <https://www.adgm.com/operating-in-adgm/office-space> | ADGM office and business centre context. |
 
+## Area-source boundaries
+
+Area records are planning filters, not neighborhood endorsements. `al-maryah-island`, `yas-island`, and `masdar-city` have direct workspace or official location support in the catalog. `al-reem-island`, `khalifa-city`, `al-raha-beach`, `al-khalidiyah`, and `al-nahyan` currently use ADREC rental-index support as benchmark guidance only; any specific home, price, availability, commute, amenity, or lifestyle claim needs a separate dated listing or provider source beside the recommendation.
+
 ## Boundaries
 
 - Government, licensing, visa, insurance, workspace booking and lender decisions belong to the actual provider.

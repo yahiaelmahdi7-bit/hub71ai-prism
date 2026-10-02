@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
-import type { ActionState, CapabilityActor, ConsentGrant, RelocationStoreData, StatusEvent } from "./types.ts";
+import referenceCatalog from "../../data/abu-dhabi/catalog.json" with { type: "json" };
+import type { ActionState, CapabilityActor, ConsentGrant, RelocationCategory, RelocationStoreData, StatusEvent } from "./types.ts";
 
 const CLIENT_FORBIDDEN_STATES = new Set<ActionState>(["confirmed"]);
 
@@ -86,17 +87,18 @@ export function recordExternalOpen(
   input: { caseId: string; targetId: string },
   actor: CapabilityActor,
 ): RelocationStoreData {
-  const action = findAction(data, input.caseId, input.targetId);
+  const action = findAction(data, input.caseId, input.targetId, actor);
   if (!action.url) throw new Error("Target has no server-owned external URL to open.");
   return appendStatusEvent(
     data,
     {
       caseId: input.caseId,
-      taskId: input.targetId,
+      taskId: action.taskId,
       state: "opened",
       owner: action.owner,
       nextAction: action.nextAction,
       blocker: null,
+      reference: action.url,
     },
     actor,
   );
@@ -139,23 +141,52 @@ export function revokeConsent(data: RelocationStoreData, consentId: string, acto
   };
 }
 
-function findAction(data: RelocationStoreData, caseId: string, targetId: string) {
+function findAction(data: RelocationStoreData, caseId: string, targetId: string, actor?: CapabilityActor) {
   const task = data.tasks.find((item) => item.caseId === caseId && item.id === targetId);
-  if (task) return { url: task.actionUrl, owner: task.owner, nextAction: task.nextAction };
+  if (task) {
+    if (actor?.kind === "organization" && !task.sharedWithEmployer) throw new Error("HR cannot open private tasks.");
+    return { taskId: task.id, url: task.actionUrl, owner: task.owner, nextAction: task.nextAction };
+  }
   const recommendation = data.recommendations[caseId]?.find((item) => item.id === targetId);
   if (!recommendation) throw new Error(`Unknown action target ${targetId}.`);
+  const category = recommendationCategory(recommendation);
+  const linkedTask = data.tasks.find((item) => item.caseId === caseId && item.category === category);
+  if (actor?.kind === "organization" && linkedTask?.sharedWithEmployer !== true) {
+    throw new Error("HR cannot open private recommendations.");
+  }
   if (recommendation.type === "home") {
     return {
+      taskId: linkedTask?.id ?? targetId,
       url: recommendation.home.listingUrl,
-      owner: "person",
+      owner: linkedTask?.owner ?? "person",
       nextAction: "Open original listing page. Availability, reply and booking remain unconfirmed until provider or user evidence exists.",
     };
   }
   return {
+    taskId: linkedTask?.id ?? targetId,
     url: recommendation.actionUrl,
-    owner: recommendation.type === "finance_readiness" ? "person" : "person",
-    nextAction: recommendation.actionLabel ?? "Open external service.",
+    owner: linkedTask?.owner ?? "person",
+    nextAction: recommendation.actionLabel ?? linkedTask?.nextAction ?? "Open external service.",
   };
+}
+
+function recommendationCategory(recommendation: NonNullable<RelocationStoreData["recommendations"][string]>[number]): RelocationCategory {
+  if (recommendation.type === "home") return "housing";
+  if (recommendation.type === "workspace") return "workspace";
+  if (recommendation.type === "finance_readiness") return "finance";
+  if (recommendation.category) return recommendation.category;
+  if (recommendation.resourceId) {
+    const service = referenceCatalog.services.find((item) => item.id === recommendation.resourceId);
+    if (service) return service.category as RelocationCategory;
+  }
+  const serviceId = recommendation.id.match(/^service-(.+)-person-/)?.[1];
+  if (serviceId) {
+    const service = referenceCatalog.services.find((item) => item.id === serviceId);
+    if (service) return service.category as RelocationCategory;
+  }
+  const serviceByTitle = referenceCatalog.services.find((item) => item.title === recommendation.title);
+  if (serviceByTitle) return serviceByTitle.category as RelocationCategory;
+  throw new Error(`Cannot resolve action category for ${recommendation.id}.`);
 }
 
 function canAccessCase(actor: CapabilityActor, personId: string, programId: string | null) {

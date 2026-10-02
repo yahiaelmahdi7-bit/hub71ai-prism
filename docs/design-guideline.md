@@ -1,29 +1,40 @@
 # Bankable Relocation Design Guideline
 
-Bankable should feel like a calm Abu Dhabi relocation desk: official enough for HR and useful enough for an employee trying to act today. The first screen is a working product surface, not a document checker or marketing page.
+Bankable is now a connected multipage relocation product, not a single long dashboard. The landing page introduces the three journeys, `/start` chooses the journey, and active work happens on focused screens for private movers and HR.
+
+## Route Structure
+
+- `/` and `/landing`: concise landing and navigation to the product routes.
+- `/start`: route choice only: My move, Join my company’s move, Move my team, plus an explicit fictional demo option.
+- `/move`: private onboarding when no profile exists; compact private overview when a profile is restored.
+- `/move/profile`: edit the existing private plan without creating a duplicate or losing timeline history.
+- `/move/homes`, `/move/setup`, `/move/workspaces`, `/move/finance`, `/move/timeline`: focused private tabs for inventory, official services, providers, readiness/evidence and status events.
+- `/join`: invite acceptance. Users with a saved private session can use their existing profile; otherwise they create a private profile.
+- `/company`: company program intake only.
+- `/company/dashboard`: HR-only aggregate dashboard, zero-employee empty state and invite link creation.
+- `/areas` and `/areas/[areaId]`: catalog-derived planning inputs with source links and 404 for unknown areas.
+- `/setup` and `/setup/[jurisdiction]`: source-linked mainland, ADGM and KEZAD handoffs kept separate.
 
 ## Visual System
 
 - Palette: warm ivory background, deep navy text, restrained teal actions, muted gold attention states and clear red blockers.
-- Typography: Source Serif headings give institutional character; Inter supports dense operational data.
-- Layout: a short route/intake header leads into a two-column operations hub. At 1024px and mobile widths, the rail and hub collapse into a single-column workflow.
-- Components: panels are purposeful work surfaces. Homes, employees, metrics, setup routes and timeline entries use compact cards with source/date/status labels.
+- Typography: Source Serif headings for institutional character; Inter for dense operational content.
+- Layout: focused task pages use compact headers, a shared top navigation and small section tabs. Active dashboards avoid the oversized marketing hero.
+- Components: homes, timeline events, HR rows, invite panels and official setup cards carry source/date/status labels near the action.
 
 ## Product Rules Reflected In UI
 
-- Three routes are visible: My move, Join my company's move, Move my team.
-- Company setup asks mainland, ADGM or KEZAD only when the company says the UAE entity is not ready.
-- The five-person company scenario is labeled fictional and loads private employee journeys only through local bearer-session bootstrap.
-- Public preview shows HR-safe employee labels and aggregate progress, not private personal hubs.
-- Homes come from the relocation API. Contact buttons appear only when a listing is non-synthetic, contactable and source-linked.
-- Opening external listings or official services records `opened` only; submission, booking, contact and approval remain provider- or user-reported.
-- HR view states its privacy boundary and excludes personal financial or identity evidence without recipient-specific consent.
-- Mainland, ADGM and KEZAD routes remain distinct.
-- Finance shows readiness factors only and no approval probability. Initial cash is shown as unknown until verified lease/payment terms exist.
+- Demo data is opt-in and labeled fictional.
+- External actions record `opened` only. User-reported submitted/booked/blocked statuses are labeled as reports, never provider confirmations.
+- Private profiles restore from the browser session and can be edited through `/move/profile`; edits preserve the journey and history.
+- Solo movers never see a fake unlimited allowance cap. Their rent budget is described as a private planning cap from income share.
+- Zero income or allowance values are accepted when explicitly entered, producing honest no-match or blocker states instead of substituted defaults.
+- HR sees aggregate progress, deadlines, policy fit and shared blockers only. Private income documents, bank results and identity evidence remain hidden unless consent is granted.
+- Area and setup pages derive public claims from `data/abu-dhabi/catalog.json` and show clickable source URLs.
 
 ## Accessibility
 
-- All primary controls are native buttons, links, inputs or selects.
-- Focus states are visible with high contrast outlines.
+- Primary controls are native links, buttons, inputs or selects.
+- Focus states are visible with high-contrast outlines.
 - Color is paired with text status labels.
-- Body text is sized for readability and collapses without horizontal scrolling at mobile widths.
+- Focused pages keep body text at readable sizes and collapse without horizontal scrolling.

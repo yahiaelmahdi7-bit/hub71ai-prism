@@ -1,0 +1,12 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { areaDirectory } from "@/components/relocation-directories";
+
+export default async function AreaDetailPage({ params }: { params: Promise<{ areaId: string }> }) {
+  const { areaId } = await params;
+  const area = areaDirectory.find((item) => item.id === areaId);
+  if (!area) notFound();
+  return <main className="min-h-screen"><Header /><section className="area-detail-hero"><figure><img src={area.image.src} alt={area.image.alt} /><figcaption>{area.image.credit}</figcaption></figure><div><p className="kicker">Area guide</p><h1>{area.name}</h1><p className="lead">{area.summary}</p><div className="hero-actions"><Link className="primary-action" href={`/move?area=${encodeURIComponent(area.id)}`}>Use in my move</Link><Link href="/homes">View housing approach</Link></div></div></section><section className="area-guide-layout"><article className="plain-panel"><h2>Practical fit</h2><ul className="check-list">{area.bestFor.map((item) => <li key={item}>{item}</li>)}</ul></article><article className="plain-panel"><h2>What to do next</h2><ul className="check-list">{area.practicalActions.map((item) => <li key={item}>{item}</li>)}</ul></article><article className="plain-panel"><h2>Useful facts</h2><ul className="check-list">{area.highlights.map((item) => <li key={item}>{item}</li>)}</ul></article><article className="plain-panel"><h2>Limits</h2><ul className="check-list">{area.caveats.map((item) => <li key={item}>{item}</li>)}</ul></article></section><section className="plain-panel info-panel"><h2>Sources</h2><SourceList sources={area.sources} /></section></main>;
+}
+function Header() { return <header className="topbar"><Link href="/" className="brand"><span className="brand-mark">B</span><span>Bankable</span></Link><nav><Link href="/areas">Areas</Link><Link href="/move">My move</Link><Link href="/company">Company</Link></nav></header>; }
+function SourceList({ sources }: { sources: { id: string; publisher: string; title: string; url: string; checkedAt: string; verification?: string }[] }) { return <ul className="check-list">{sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.publisher}: {source.title}</a> · {source.verification === "search_only" ? "search result only" : source.verification === "access_blocked" ? "source unavailable" : "opened source"} · checked {source.checkedAt}</li>)}</ul>; }

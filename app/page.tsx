@@ -1,5 +1,1 @@
-import { BankableRelocationApp } from "@/components/BankableRelocationApp";
-
-export default function Home() {
-  return <BankableRelocationApp />;
-}
+export { default } from "./landing/page";
