@@ -4,9 +4,9 @@ The prototype backend uses SQLite at `BANKABLE_DB_PATH`, defaulting to `.bankabl
 
 ## Capability sessions
 
-Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype session tokens are returned only by local onboarding/bootstrap and are stored hashed. The API ignores `x-bankable-actor-*` headers. Session issuance, invite acceptance and all session-authenticated relocation routes fail closed when `NODE_ENV=production`; the current SQLite store and capability sessions are not production identity or hosted persistence.
+Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype session tokens are stored hashed. The API ignores `x-bankable-actor-*` headers. In production, set `YALA_LIVE_DEMO=true` only for the short-lived hackathon demonstration: this enables bootstrap for the fictional five-person fixture and accepts only its `demoOnly` sessions. It does not enable ordinary profile/program session issuance or invite acceptance. Remove the flag after the demo. Do not enter real personal data: the SQLite store and capability sessions are not production identity or durable hosted persistence.
 
-`POST /api/relocation/bootstrap` is disabled when `NODE_ENV=production`. In development it seeds the established-company demo if missing and returns fresh capability tokens. Profile/program creation and invite acceptance also issue prototype sessions and are disabled in production until production identity and durable storage are configured:
+`POST /api/relocation/bootstrap` is disabled by default in production and returns 403 unless `YALA_LIVE_DEMO=true`. In development, or when that production-only demo switch is enabled, it seeds/reuses the established-company fixture and returns fresh demo capability tokens. Profile/program creation and invite acceptance remain disabled in production until production identity and durable storage are configured:
 
 ```json
 {
@@ -21,12 +21,12 @@ Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype sessi
 | Route | Method | Auth | Purpose |
 | --- | --- | --- | --- |
 | `/api/relocation/bootstrap` | `GET` | none | Preview HR-safe demo summary; no employee private hubs or tokens. |
-| `/api/relocation/bootstrap` | `POST` | dev only | Seed or reuse demo and return HR/person capability tokens. |
+| `/api/relocation/bootstrap` | `POST` | dev; production only with `YALA_LIVE_DEMO=true` | Seed or reuse fictional demo and return demo-only HR/person capability tokens. |
 | `/api/relocation` | `GET ?op=me` | person bearer | Return the caller's private hub. |
 | `/api/relocation` | `GET ?op=hr&programId=...` | HR bearer | Return HR aggregate projection for that program. |
-| `/api/relocation` | `POST operation=create_profile` | none | Create private profile/case and return a person session. |
-| `/api/relocation` | `POST operation=create_program` | none | Create company program and return an HR session. |
-| `/api/relocation/profiles` | `POST` | none | Same as `create_profile`. |
+| `/api/relocation` | `POST operation=create_profile` | none; dev only | Create private profile/case and return a person session. |
+| `/api/relocation` | `POST operation=create_program` | none; dev only | Create company program and return an HR session. |
+| `/api/relocation/profiles` | `POST` | none; dev only | Same as `create_profile`. |
 | `/api/relocation/profiles/me` | `GET` | person bearer | Private person hub. |
 | `/api/relocation/profiles/me` | `PATCH` | person bearer | Update the caller's reusable profile fields and recalculate the active case recommendations; keeps profile/case ids and timeline. |
 | `/api/relocation/properties/selection` | `POST` | person bearer | Select or clear an affordable, policy-fitting recommended rental with `{ caseId, listingId }`; persists the case selection and returns the updated private hub. Send `listingId: null` to clear. |
@@ -34,7 +34,7 @@ Authenticated routes use `Authorization: Bearer <sessionToken>`. Prototype sessi
 | `/api/relocation/programs` | `POST` | none | Same as `create_program`. |
 | `/api/relocation/programs/:programId/hr` | `GET` | HR bearer | HR-safe program view. |
 | `/api/relocation/invites` | `POST` | HR bearer | Create a one-time program invite without accessing a private profile; optional `{ employeeLabel, expiresAt }`, returns `{ inviteId, token, expiresAt }`. |
-| `/api/relocation/invites/:inviteId/accept` | `POST` | invite token body | Accept invite once with `{ token, profile }` or `{ token, existingSessionToken }`; creates or attaches the employee's private case and returns a person session. |
+| `/api/relocation/invites/:inviteId/accept` | `POST` | invite token body; dev only | Accept invite once with `{ token, profile }` or `{ token, existingSessionToken }`; creates or attaches the employee's private case and returns a person session. |
 | `/api/relocation/actions/opened` | `POST` | person or HR bearer | Record server-known task/recommendation target as `opened`; request body is `{ caseId, targetId }`. |
 | `/api/relocation/actions/status` | `POST` | person or HR bearer | Manual progress report for permitted tasks only: `{ caseId, taskId, state, reference?, blocker?, nextAction? }`. Allows `saved`, `resolved` (stored as `saved`), `reported_submitted`, `reported_booked`, `blocked`; rejects `confirmed`. |
 | `/api/relocation/consents` | `GET` | person bearer | List caller's consent grants. |
@@ -58,4 +58,4 @@ A private mover profile requires only the input groups needed to build the first
 
 A company program requires `hasUaeEntity`, `officeAreaId`, `teamSize`, `moveDate`, and `annualAllowanceAed`. `organizationName` is optional, and `teamSize` may be `0` for an empty program before invites are accepted. `jurisdiction` is required only when `hasUaeEntity` is `false`; allowed establishment branches are `mainland`, `adgm`, and `kezad`. Office areas must be supported Abu Dhabi area ids, dates must be real `YYYY-MM-DD` dates, and invalid `workType` values are rejected rather than silently treated as employees.
 
-Authenticated reads do not auto-seed demo data. The Falcon demo is added only by explicit local `POST /api/relocation/bootstrap`, and bootstrap appends to existing user data while preserving previously issued sessions.
+Authenticated reads do not auto-seed demo data. The Falcon demo is added only by explicit `POST /api/relocation/bootstrap`; bootstrap appends to existing local data while preserving previously issued sessions. In the live demo, use fictional fixture data only; demo sessions are rejected if `YALA_LIVE_DEMO` is unset.

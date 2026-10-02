@@ -42,6 +42,7 @@ export type CapabilitySession = {
   createdAt: string;
   expiresAt: string;
   devOnly: true;
+  demoOnly?: true;
 };
 
 export type Recommendation =

@@ -30,18 +30,25 @@ export function jsonError(error: unknown, status: number) {
   return json({ error: error instanceof Error ? error.message : "Unknown relocation API error." }, responseStatus);
 }
 
-export function bootstrapAllowed() {
+export function liveDemoBootstrapAllowed() {
+  return process.env.NODE_ENV !== "production" || process.env.YALA_LIVE_DEMO === "true";
+}
+
+function prototypeSessionsAllowed() {
   return process.env.NODE_ENV !== "production";
 }
 
 class PrototypeSessionsDisabledError extends Error {
   constructor() {
-    super("Prototype relocation sessions are disabled in production. Configure production identity and durable storage before enabling these routes.");
+    super(process.env.NODE_ENV === "production" && process.env.YALA_LIVE_DEMO === "true"
+      ? "Only the seeded fictional demo is enabled in production. Real profile and company sessions require production identity and durable storage."
+      : "Prototype relocation sessions are disabled in production. Configure production identity and durable storage before enabling these routes.");
     this.name = "PrototypeSessionsDisabledError";
   }
 }
 
 export async function seedDemoWithCapabilities() {
+  if (!liveDemoBootstrapAllowed()) throw new PrototypeSessionsDisabledError();
   const demo = createEstablishedCompanyDemo();
   const programId = "program-falcon-october-2026";
   const organizationId = "org-falcon-analytics";
@@ -73,7 +80,7 @@ export async function seedDemoWithCapabilities() {
       label: `${organization.name} HR`,
       organizationId: organization.id,
       programId: program.id,
-    });
+    }, true);
     const employeeTokens = people.map((person) => {
       const { token, session } = createSession({
         kind: "person",
@@ -81,7 +88,7 @@ export async function seedDemoWithCapabilities() {
         label: person.displayName,
         personId: person.id,
         activeCaseId: data.cases.find((relocationCase) => relocationCase.programId === program.id && relocationCase.personId === person.id)?.id,
-      });
+      }, true);
       return { person, token, session };
     });
 
@@ -110,12 +117,15 @@ export async function readSeeded() {
 }
 
 export async function requireActor(request: Request): Promise<{ data: RelocationStoreData; actor: CapabilityActor }> {
-  if (!bootstrapAllowed()) throw new PrototypeSessionsDisabledError();
+  if (!prototypeSessionsAllowed() && !liveDemoBootstrapAllowed()) throw new PrototypeSessionsDisabledError();
   const token = bearerToken(request);
   if (!token) throw new Error("Bearer session token is required.");
   const data = await readSeeded();
   const session = data.sessions.find((item) => item.tokenHash === hashToken(token));
   if (!session) throw new Error("Session token is invalid.");
+  if (!prototypeSessionsAllowed() && (!liveDemoBootstrapAllowed() || session.demoOnly !== true)) {
+    throw new PrototypeSessionsDisabledError();
+  }
   if (Date.parse(session.expiresAt) <= Date.now()) throw new Error("Session token has expired.");
   return { data, actor: session.actor };
 }
@@ -272,7 +282,7 @@ export async function createInvite(request: Request, body: Record<string, unknow
 }
 
 export async function acceptInvite(inviteId: string, body: Record<string, unknown>) {
-  if (!bootstrapAllowed()) throw new PrototypeSessionsDisabledError();
+  if (!prototypeSessionsAllowed()) throw new PrototypeSessionsDisabledError();
   const token = requiredString(body.token, "token");
   const createdAt = new Date().toISOString();
   let response: ReturnType<typeof createProfileResponse> | null = null;
@@ -619,8 +629,8 @@ function inviteAcceptanceTask(invite: PendingInvite, caseId: string, personId: s
   };
 }
 
-function createSession(actor: CapabilityActor): { token: string; session: CapabilitySession } {
-  if (!bootstrapAllowed()) throw new PrototypeSessionsDisabledError();
+function createSession(actor: CapabilityActor, demoOnly = false): { token: string; session: CapabilitySession } {
+  if (!prototypeSessionsAllowed() && (!demoOnly || !liveDemoBootstrapAllowed())) throw new PrototypeSessionsDisabledError();
   const token = randomToken();
   const createdAt = new Date().toISOString();
   return {
@@ -632,6 +642,7 @@ function createSession(actor: CapabilityActor): { token: string; session: Capabi
       createdAt,
       expiresAt: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(),
       devOnly: true,
+      ...(demoOnly ? { demoOnly: true as const } : {}),
     },
   };
 }

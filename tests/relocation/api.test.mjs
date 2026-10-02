@@ -6,6 +6,7 @@ const dbPath = `/tmp/bankable-relocation-api-${process.pid}.sqlite`;
 process.env.BANKABLE_DB_PATH = dbPath;
 
 const bootstrapRoute = await import("../../app/api/relocation/bootstrap/route.ts");
+const relocationRoute = await import("../../app/api/relocation/route.ts");
 const meRoute = await import("../../app/api/relocation/profiles/me/route.ts");
 const hrRoute = await import("../../app/api/relocation/programs/[programId]/hr/route.ts");
 const openedRoute = await import("../../app/api/relocation/actions/opened/route.ts");
@@ -18,6 +19,71 @@ const { relocationStore } = await import("../../lib/relocation/api.ts");
 
 test.after(async () => {
   await unlink(dbPath).catch(() => {});
+});
+
+test("production live-demo switch enables only fictional demo sessions", async () => {
+  const originalNodeEnv = process.env.NODE_ENV;
+  const originalLiveDemo = process.env.YALA_LIVE_DEMO;
+  process.env.NODE_ENV = "production";
+  delete process.env.YALA_LIVE_DEMO;
+
+  try {
+    const disabled = await bootstrapRoute.POST();
+    assert.equal(disabled.status, 403);
+    const disabledGeneric = await relocationRoute.POST(new Request("http://bankable.test/api/relocation", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ operation: "bootstrap_demo" }),
+    }));
+    assert.equal(disabledGeneric.status, 403);
+
+    process.env.YALA_LIVE_DEMO = "1";
+    const invalidFlag = await bootstrapRoute.POST();
+    assert.equal(invalidFlag.status, 403);
+
+    process.env.YALA_LIVE_DEMO = "true";
+    const response = await bootstrapRoute.POST();
+    const demo = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(demo.employees.length, 5);
+
+    const employeeHub = await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
+      headers: { authorization: `Bearer ${demo.employees[0].sessionToken}` },
+    }));
+    assert.equal(employeeHub.status, 200);
+
+    const profileCreation = await profilesRoute.POST(new Request("http://bankable.test/api/relocation/profiles", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ workType: "freelancer", adults: 1, children: 0, minMonthlyAed: 12000 }),
+    }));
+    assert.equal(profileCreation.status, 503);
+    assert.match((await profileCreation.json()).error, /Only the seeded fictional demo is enabled/);
+
+    const programCreation = await programsRoute.POST(new Request("http://bankable.test/api/relocation/programs", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        hasUaeEntity: true,
+        officeAreaId: "al-maryah-island",
+        teamSize: 1,
+        moveDate: "2026-12-01",
+        annualAllowanceAed: 100000,
+      }),
+    }));
+    assert.equal(programCreation.status, 503);
+
+    delete process.env.YALA_LIVE_DEMO;
+    const disabledAgain = await meRoute.GET(new Request("http://bankable.test/api/relocation/profiles/me", {
+      headers: { authorization: `Bearer ${demo.employees[0].sessionToken}` },
+    }));
+    assert.equal(disabledAgain.status, 503);
+  } finally {
+    if (originalNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = originalNodeEnv;
+    if (originalLiveDemo === undefined) delete process.env.YALA_LIVE_DEMO;
+    else process.env.YALA_LIVE_DEMO = originalLiveDemo;
+  }
 });
 
 test("bootstrap returns capability tokens without leaking all private hubs", async () => {

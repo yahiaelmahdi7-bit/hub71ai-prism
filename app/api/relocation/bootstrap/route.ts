@@ -1,5 +1,5 @@
 import { createEstablishedCompanyDemo, hrProgramView } from "../../../../lib/relocation/data.ts";
-import { bootstrapAllowed, json, jsonError, seedDemoWithCapabilities } from "../../../../lib/relocation/api.ts";
+import { liveDemoBootstrapAllowed, json, jsonError, seedDemoWithCapabilities } from "../../../../lib/relocation/api.ts";
 
 export const runtime = "nodejs";
 
@@ -19,7 +19,7 @@ export async function GET() {
 
 export async function POST() {
   try {
-    if (!bootstrapAllowed()) return json({ error: "Demo bootstrap is disabled in production." }, 403);
+    if (!liveDemoBootstrapAllowed()) return json({ error: "Demo bootstrap is disabled in production." }, 403);
     return json(await seedDemoWithCapabilities());
   } catch (error) {
     return jsonError(error, 400);

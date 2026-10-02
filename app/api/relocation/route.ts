@@ -3,6 +3,7 @@ import {
   createProgram,
   json,
   jsonError,
+  liveDemoBootstrapAllowed,
   requireActor,
   requireHrView,
   requirePersonHub,
@@ -31,7 +32,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const operation = String(body.operation ?? body.action ?? "");
 
-    if (operation === "bootstrap_demo") return json(await seedDemoWithCapabilities());
+    if (operation === "bootstrap_demo") {
+      if (!liveDemoBootstrapAllowed()) return json({ error: "Demo bootstrap is disabled in production." }, 403);
+      return json(await seedDemoWithCapabilities());
+    }
     if (operation === "create_profile") return json(await createPrivateProfile(body));
     if (operation === "create_program") return json(await createProgram(body));
 
